@@ -1,0 +1,152 @@
+import { OrderHistoryColumn } from "@/utils/interface";
+import {
+    useDisclosure,
+    Button,
+    Drawer,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+    DrawerHeader,
+    DrawerBody,
+    Input,
+    DrawerFooter,
+    List,
+    ListIcon,
+    ListItem,
+    VStack,
+    Divider,
+    InputGroup,
+    Text,
+} from "@chakra-ui/react";
+import React, { use, useEffect } from "react";
+import { MdCheckCircle } from "react-icons/md";
+
+function OrderHistoryDrawer({
+    isOpen,
+    onClose,
+    OrderHistoryColumn,
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    OrderHistoryColumn: OrderHistoryColumn;
+}) {
+    const {
+        balance,
+        email,
+        id,
+        membersId,
+        name,
+        nickname,
+        result,
+        timeExecuted,
+        trade,
+        tradeAmount,
+        tradePNL,
+        type,
+    } = OrderHistoryColumn;
+
+    const isWon = tradePNL > 0;
+
+    const [additionalValue, setAdditionalValue] = React.useState<number>(0);
+
+    const [newBalance, setNewBalance] = React.useState<number>(balance);
+
+    const [newTradeAmount, setNewTradeAmount] =
+        React.useState<number>(tradeAmount);
+
+    const [newTradePNL, setNewTradePNL] = React.useState<number>(tradePNL);
+
+    useEffect(() => {
+        if (isWon) {
+            setNewBalance(balance + additionalValue);
+            setNewTradeAmount(tradeAmount + additionalValue);
+            setNewTradePNL(tradePNL + additionalValue);
+        } else {
+            setNewBalance(balance - additionalValue);
+            setNewTradeAmount(tradeAmount + additionalValue);
+            setNewTradePNL(tradePNL - additionalValue);
+        }
+    }, [additionalValue]);
+    return (
+        <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
+            <DrawerContent>
+                <DrawerCloseButton />
+                <DrawerHeader>Order History Changer</DrawerHeader>
+
+                <DrawerBody mb={10}>
+                    <List spacing={6}>
+                        <ListItem>
+                            <ListIcon as={MdCheckCircle} color="green.500" />
+                            Name : {name}
+                        </ListItem>
+                        <ListItem>
+                            <ListIcon as={MdCheckCircle} color="green.500" />
+                            Nick Name: {nickname}
+                        </ListItem>
+                        <ListItem>
+                            <ListIcon as={MdCheckCircle} color="green.500" />
+                            Email: {email}
+                        </ListItem>
+                        <ListItem>
+                            <ListIcon as={MdCheckCircle} color="green.500" />
+                            Current Balance: {balance.toLocaleString()} KRW{" "}
+                            {additionalValue != 0 &&
+                                !isNaN(additionalValue) &&
+                                `----> ( ${newBalance.toLocaleString()} KRW )`}
+                        </ListItem>
+                        <ListItem>
+                            <ListIcon as={MdCheckCircle} color="green.500" />
+                            Time Executed: {timeExecuted}
+                        </ListItem>
+                        <ListItem>
+                            <ListIcon as={MdCheckCircle} color="green.500" />
+                            User Trade: {trade}
+                        </ListItem>
+                        <ListItem>
+                            <ListIcon as={MdCheckCircle} color="green.500" />
+                            PNL: {tradePNL.toLocaleString()} KRW
+                            {additionalValue !== 0 &&
+                                !isNaN(additionalValue) &&
+                                `----> ( ${newTradePNL.toLocaleString()} KRW )`}
+                        </ListItem>
+                        <ListItem>
+                            <ListIcon as={MdCheckCircle} color="green.500" />
+                            Trade Amount: {tradeAmount.toLocaleString()} KRW
+                            {additionalValue !== 0 &&
+                                !isNaN(additionalValue) &&
+                                `----> ( ${newTradeAmount.toLocaleString()} KRW )`}
+                        </ListItem>
+                    </List>
+                    <VStack mt={5}>
+                        <Divider />
+                        <VStack
+                            w={"100%"}
+                            justifyContent={"flex-start"}
+                            alignItems={"flex-start"}
+                        >
+                            <Text fontWeight={"bold"}>
+                                Input amount to add in Trade Amount :
+                            </Text>
+                            <Input
+                                onChange={(e) =>
+                                    setAdditionalValue(parseInt(e.target.value))
+                                }
+                                type="number"
+                                placeholder="Trade Amount"
+                            />
+                        </VStack>
+                    </VStack>
+                </DrawerBody>
+
+                <DrawerFooter>
+                    <Button variant="outline" mr={3} onClick={onClose}>
+                        Cancel
+                    </Button>
+                    <Button colorScheme="blue">Save</Button>
+                </DrawerFooter>
+            </DrawerContent>
+        </Drawer>
+    );
+}
+
+export default OrderHistoryDrawer;

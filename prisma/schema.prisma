@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model accounts {
+  id                  String  @id
+  user_id             String
+  type                String
+  provider            String
+  provider_account_id String
+  refresh_token       String? @db.Text
+  access_token        String? @db.Text
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String? @db.Text
+  session_state       String?
+  users               users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([provider, provider_account_id])
+  @@index([user_id], map: "accounts_user_id_fkey")
+}
+
+model bank {
+  id   String @id @unique(map: "Bank_id_key")
+  name String @unique(map: "Bank_name_key")
+}
+
+model members {
+  id              String         @id @unique(map: "Members_id_key")
+  email           String         @unique(map: "Members_email_key")
+  role            Role           @default(USER)
+  name            String?
+  password        String?
+  confirmpassword String?
+  nickname        String?
+  birthdate       String?
+  phonenumber     String?
+  accountholder   String?
+  accountnumber   String?
+  bank            String?
+  referrer        String?
+  balance         Int?           @default(0)
+  membertrades    membertrades[]
+  transaction     transaction[]
+}
+
+model membertrades {
+  id           String            @id @unique(map: "MemberTrades_id_key")
+  timeExecuted DateTime          @default(now())
+  trade        Boolean
+  tradeAmount  Int
+  tradePNL     Int
+  membersId    String
+  type         membertrades_type
+  members      members           @relation(fields: [membersId], references: [id], map: "MemberTrades_membersId_fkey")
+
+  @@index([membersId], map: "MemberTrades_membersId_fkey")
+}
+
+model recenttrades {
+  id           String            @id @unique(map: "RecentTrades_id_key")
+  type         recenttrades_type
+  tradinghours DateTime
+  result       Boolean
+}
+
+model sessions {
+  id            String   @id
+  session_token String   @unique
+  user_id       String
+  expires       DateTime
+  users         users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id], map: "sessions_user_id_fkey")
+}
+
+model transaction {
+  id          String             @id @unique(map: "Transaction_id_key")
+  type        transaction_type
+  amount      Int
+  status      transaction_status
+  description String
+  membersId   String
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime
+  members     members            @relation(fields: [membersId], references: [id], map: "Transaction_membersId_fkey")
+
+  @@index([membersId], map: "Transaction_membersId_fkey")
+}
+
+model users {
+  id             String     @id
+  name           String?
+  email          String?    @unique
+  email_verified DateTime?
+  image          String?
+  password       String?
+  accounts       accounts[]
+  sessions       sessions[]
+}
+
+model verificationtokens {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum recenttrades_type {
+  btc_1_min
+  btc_3_mins
+  btc_5_mins
+  wti_1_min
+  wti_3_mins
+  wti_5_mins
+  us100_1_min
+  us100_3_mins
+  us100_5_mins
+  gold_1_min
+  gold_3_mins
+  gold_5_mins
+}
+
+enum transaction_type {
+  deposit
+  withdrawal
+}
+
+enum transaction_status {
+  pending
+  completed
+  failed
+}
+
+enum membertrades_type {
+  btc_1_min
+  btc_3_mins
+  btc_5_mins
+  wti_1_min
+  wti_3_mins
+  wti_5_mins
+  us100_1_min
+  us100_3_mins
+  us100_5_mins
+  gold_1_min
+  gold_3_mins
+  gold_5_mins
+}
+
+enum Role {
+  ADMIN
+  MASTER_AGENT
+  AGENT
+  USER
+}
