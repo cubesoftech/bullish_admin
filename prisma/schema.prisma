@@ -46,6 +46,7 @@ model members {
   bank            String?
   referrer        String?
   balance         Int?           @default(0)
+  inquiries       Inquiries[]
   membertrades    membertrades[]
   transaction     transaction[]
 }
@@ -111,6 +112,27 @@ model verificationtokens {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Announcement {
+  id        String   @id
+  title     String
+  content   String   @db.VarChar(5000)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inquiries {
+  id        String   @id
+  title     String
+  content   String   @db.VarChar(5000)
+  answer    String   @db.VarChar(5000)
+  memberId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  members   members? @relation(fields: [membersId], references: [id])
+  alreadyAnswered Boolean @default(false)
+  membersId String?
 }
 
 enum recenttrades_type {
