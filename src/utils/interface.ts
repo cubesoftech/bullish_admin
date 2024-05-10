@@ -98,3 +98,54 @@ export interface AnnouncementInterface {
   content: string;
   dateCreated: Date;
 }
+
+export interface MasterAgentInterface {
+  name: string;
+  email: string;
+  password: string;
+  nickname: string;
+  royalty: number;
+}
+
+export interface ArrayMasterAgent {
+  masteragents: Masteragent[];
+}
+
+export interface ArrayAgent {
+  agents: Agent[];
+}
+
+export interface Agent {
+  id: string;
+  memberId: string;
+  royalty: number;
+  referralCode: string;
+  referredmembers: Members[];
+  masteragentsId: string;
+  member: Member;
+}
+export interface Masteragent {
+  id: string;
+  memberId: string;
+  royalty: number;
+  agents: Agent[];
+  member: Member;
+}
+
+export interface Member {
+  id: string;
+  email: string;
+  role: string;
+  name: string;
+  password: string;
+  confirmpassword: string;
+  nickname: string;
+  birthdate: any;
+  phonenumber: any;
+  accountholder: any;
+  accountnumber: any;
+  bank: any;
+  referrer: any;
+  balance: number;
+  agentsId: any;
+}

@@ -20,6 +20,7 @@ import Image from "next/image";
 import logo from "../../../assets/logo_white.png";
 import { useAuthentication, useNavigation } from "@/utils/storage";
 import { LinkItems } from "@/utils";
+import { GiFamilyTree } from "react-icons/gi";
 
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -80,8 +81,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </NavItem>
       ))}
       <Divider my="4" />
+      <NavItem index={LinkItems.length + 2} icon={GiFamilyTree}>
+        Branch
+      </NavItem>
+      <Divider my="4" />
       <NavItem index={LinkItems.length + 1} icon={FiLogOut}>
-        Logout
+        Log out
       </NavItem>
     </Box>
   );
@@ -96,7 +101,6 @@ const NavItem = ({ index, icon, children, ...rest }: NavItemProps) => {
   const { changeMenu, selectedMenu } = useNavigation();
   const { changeAuthentication } = useAuthentication();
   const handleClick = () => {
-    console.log("index", index);
     if (index === LinkItems.length + 1) {
       changeAuthentication(false);
     } else {

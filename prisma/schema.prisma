@@ -49,6 +49,25 @@ model members {
   inquiries       Inquiries[]
   membertrades    membertrades[]
   transaction     transaction[]
+  agents          agents?        @relation(fields: [agentsId], references: [id])
+  agentsId        String?
+}
+
+model masteragents {
+  id       String   @id @unique(map: "MasterAgents_id_key")
+  memberId String
+  agents   agents[]
+  royalty  Int
+}
+
+model agents {
+  id              String        @id @unique(map: "Agents_id_key")
+  memberId        String
+  referredmembers members[]
+  royalty         Int
+  referralCode    String
+  masteragents    masteragents? @relation(fields: [masteragentsId], references: [id])
+  masteragentsId  String?
 }
 
 model membertrades {
@@ -123,16 +142,16 @@ model Announcement {
 }
 
 model Inquiries {
-  id        String   @id
-  title     String
-  content   String   @db.VarChar(5000)
-  answer    String   @db.VarChar(5000)
-  memberId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  members   members? @relation(fields: [membersId], references: [id])
-  alreadyAnswered Boolean @default(false)
-  membersId String?
+  id              String   @id
+  title           String
+  content         String   @db.VarChar(5000)
+  answer          String   @db.VarChar(5000)
+  memberId        String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  members         members? @relation(fields: [membersId], references: [id])
+  alreadyAnswered Boolean  @default(false)
+  membersId       String?
 }
 
 enum recenttrades_type {

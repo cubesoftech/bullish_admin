@@ -7,10 +7,12 @@ import OrderHistory from "../Dashboard/OrderHistory";
 import GameSetting from "../Dashboard/GameSettings";
 import Announcement from "../Dashboard/Announcement";
 import Inquiry from "../Dashboard/Inquiry";
+import { LinkItems } from "@/utils";
+import Agents from "../Dashboard/Agents";
 
 export default function Main() {
   const { selectedMenu } = useNavigation();
-
+  const agents = LinkItems.length + 2;
   return (
     <SideNavigation>
       {selectedMenu === 0 && <Withdrawals />}
@@ -20,6 +22,7 @@ export default function Main() {
       {selectedMenu === 5 && <Announcement />}
       {selectedMenu === 6 && <OrderHistory />}
       {selectedMenu === 7 && <Inquiry />}
+      {selectedMenu === agents && <Agents />}
     </SideNavigation>
   );
 }
