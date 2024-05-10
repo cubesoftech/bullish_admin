@@ -27,7 +27,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-export default function UserTable({
+export default function InquiryTable({
   data,
   columns,
   pagination,
@@ -53,8 +53,6 @@ export default function UserTable({
     },
     // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
   });
-
-  console.log(table.getSelectedRowModel().rows);
 
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>

@@ -22,7 +22,7 @@ export interface UserColumn {
   balance: number;
 }
 
-export interface OrderHistoryColumn {
+export interface OrderHistoryColumnInterface {
   id: string;
   timeExecuted: string;
   trade: string;

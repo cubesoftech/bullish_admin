@@ -1,4 +1,3 @@
-import { AnnouncementInterface } from "../../utils/interface";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../utils/index";
 

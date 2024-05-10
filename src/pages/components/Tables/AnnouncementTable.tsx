@@ -10,7 +10,7 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React from "react";
 import AddAnnouncement from "../Drawer/AddAnouncement";
 import { Announcement } from "@prisma/client";
 import EditAnnouncement from "../Drawer/EditAnnouncement";
