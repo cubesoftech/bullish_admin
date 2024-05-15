@@ -17,42 +17,46 @@ export default function UserManagement() {
       {
         accessorKey: "name",
         cell: (info) => info.getValue(),
+        header: "이름",
         footer: "Name",
       },
       {
         accessorKey: "email",
         accessorFn: (row) => row.email,
         id: "email",
+        header: "이메일",
         cell: (info) => info.getValue(),
         footer: "Email",
       },
       {
         accessorKey: "nickname",
+        header: "닉네임",
         cell: (info) => info.getValue(),
         footer: "Nickname",
       },
       {
         accessorKey: "bank",
+        header: "은행",
         cell: (info) => info.getValue(),
         footer: "Bank",
       },
       {
         accessorKey: "accountnumber",
         accessorFn: (row) => row.accountnumber,
-        header: "Account Number",
+        header: "계좌 번호",
         cell: (info) => info.getValue(),
         footer: "Account Number",
       },
       {
         accessorKey: "accountholder",
-        header: "Account Holder",
+        header: "계좌 주",
         cell: (info) => info.getValue(),
         footer: "Account Holder",
       },
       {
         accessorKey: "balance",
         cell: (info) => info.getValue(),
-        header: "Balance (KRW)",
+        header: "잔액",
         footer: "Balance",
       },
     ],
@@ -132,7 +136,7 @@ export default function UserManagement() {
             }}
             as={FiStar}
           />
-          <Heading>User Management</Heading>
+          <Heading>사용자 관리</Heading>
         </HStack>
       </HStack>
       <UserTable

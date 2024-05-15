@@ -17,12 +17,14 @@ export default function UserManagement() {
       {
         accessorKey: "title",
         cell: (info) => info.getValue(),
+        header: "제목",
         footer: "Title",
       },
       {
         accessorKey: "email",
         accessorFn: (row) => row.email,
         id: "email",
+        header: "이메일",
         cell: (info) => info.getValue(),
         footer: "Email",
       },
@@ -30,9 +32,11 @@ export default function UserManagement() {
         accessorKey: "alreadyAnswered",
         cell: (info) => (info.getValue() ? "Yes" : "No"),
         footer: "Nickname",
+        header: "답변 여부",
       },
       {
         accessorKey: "createdAt",
+        header: "생성 날짜",
         cell: (info) => {
           const date = new Date(info.getValue() as string);
           return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
@@ -112,7 +116,7 @@ export default function UserManagement() {
             }}
             as={FiStar}
           />
-          <Heading>Inquiry</Heading>
+          <Heading>문의</Heading>
         </HStack>
       </HStack>
       <InquiryTable

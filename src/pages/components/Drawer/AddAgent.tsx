@@ -88,12 +88,12 @@ function AddAgent({
     <Drawer isOpen={isOpen} placement="left" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Add Agent</DrawerHeader>
+        <DrawerHeader>에이전트 추가</DrawerHeader>
 
         <DrawerBody mb={10}>
           <VStack spacing={4}>
             <VStack spacing={1} w={"100%"} alignItems={"flex-start"}>
-              <Text>Name</Text>
+              <Text>이름</Text>
               <Input
                 value={payload.name}
                 onChange={(e) =>
@@ -103,7 +103,7 @@ function AddAgent({
               />
             </VStack>
             <VStack spacing={1} w={"100%"} alignItems={"flex-start"}>
-              <Text>Email</Text>
+              <Text>이메일</Text>
               <Input
                 value={payload.email}
                 onChange={(e) =>
@@ -113,7 +113,7 @@ function AddAgent({
               />
             </VStack>
             <VStack spacing={1} w={"100%"} alignItems={"flex-start"}>
-              <Text>Nickname</Text>
+              <Text>건강 상태</Text>
               <Input
                 value={payload.nickname}
                 onChange={(e) =>
@@ -123,7 +123,7 @@ function AddAgent({
               />
             </VStack>
             <VStack spacing={1} w={"100%"} alignItems={"flex-start"}>
-              <Text>Password</Text>
+              <Text>비밀번호</Text>
               <Input
                 value={payload.password}
                 onChange={(e) =>
@@ -133,7 +133,7 @@ function AddAgent({
               />
             </VStack>
             <VStack spacing={1} w={"100%"} alignItems={"flex-start"}>
-              <Text>Royalty</Text>
+              <Text>왕족</Text>
               <Input
                 type="number"
                 value={payload.royalty}
@@ -148,10 +148,10 @@ function AddAgent({
 
         <DrawerFooter>
           <Button variant="outline" mr={3} onClick={onClose}>
-            Cancel
+            취소
           </Button>
           <Button onClick={handleSave} colorScheme="blue">
-            Save
+            구하다
           </Button>
         </DrawerFooter>
       </DrawerContent>

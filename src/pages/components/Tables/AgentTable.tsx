@@ -47,13 +47,13 @@ function AgentsTable() {
         <Thead>
           <Tr>
             <Th>#</Th>
-            <Th>Name</Th>
-            <Th>Nick Name</Th>
-            <Th>Email</Th>
-            <Th>Password</Th>
-            <Th>Royalty</Th>
-            <Th>Total Agents</Th>
-            <Th>Action</Th>
+            <Th>이름</Th>
+            <Th>닉네임</Th>
+            <Th>이메일</Th>
+            <Th>비밀번호</Th>
+            <Th>왕족</Th>
+            <Th>총 상담원</Th>
+            <Th>행위</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -66,7 +66,7 @@ function AgentsTable() {
       <AddMasterAgent isOpen={isOpen} onClose={onClose} />
       <HStack justifyContent={"flex-end"} w={"100%"}>
         <Button onClick={onOpen} colorScheme="purple">
-          Add Master Agent
+          마스터 에이전트 추가
         </Button>
       </HStack>
     </VStack>
@@ -122,14 +122,14 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
       <Td>
         <HStack>
           <Button onClick={onOpen} colorScheme="purple" variant={"outline"}>
-            View Sub Agents
+            하위 에이전트 보기
           </Button>
           <Button
             onClick={deleteAgent}
             colorScheme="orange"
             variant={"outline"}
           >
-            Remove
+            제거하다
           </Button>
         </HStack>
       </Td>

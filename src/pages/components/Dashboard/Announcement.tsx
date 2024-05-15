@@ -23,7 +23,7 @@ export default function Announcement() {
             }}
             as={TfiAnnouncement}
           />
-          <Heading>ANNOUNCEMENT</Heading>
+          <Heading>발표</Heading>
         </HStack>
       </HStack>
       <AnnouncementTable />

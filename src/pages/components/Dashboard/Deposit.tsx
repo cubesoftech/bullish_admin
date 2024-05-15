@@ -17,43 +17,51 @@ export default function Deposits() {
       {
         accessorKey: "name",
         cell: (info) => info.getValue(),
+        header: "이름",
         footer: "Name",
       },
       {
         accessorKey: "email",
         accessorFn: (row) => row.email,
         id: "email",
+        header: "이메일",
         cell: (info) => info.getValue(),
         footer: "Email",
       },
       {
         accessorKey: "bank",
+        header: "은행",
         cell: (info) => info.getValue(),
         footer: "Bank",
       },
       {
         accessorKey: "accountNumber",
+        header: "계좌 번호",
         accessorFn: (row) => row.accountNumber,
         cell: (info) => info.getValue(),
         footer: "Account Number",
       },
       {
         accessorKey: "accountHolder",
+        header: "계좌 주",
         cell: (info) => info.getValue(),
         footer: "Account Holder",
       },
       {
         accessorKey: "amount",
+        header: "금액",
         cell: (info) => info.getValue(),
         footer: "Amount in KRW",
       },
       {
         accessorKey: "Date Requested",
+        header: "요청 날짜",
         cell: (info) => info.getValue(),
         footer: "Date Requested",
       },
       {
         accessorKey: "status",
+        header: "상태",
         cell: (info) => info.getValue(),
         footer: "Status",
       },
@@ -143,7 +151,7 @@ export default function Deposits() {
             }}
             as={FiTrendingUp}
           />
-          <Heading>DEPOSITS</Heading>
+          <Heading>매장</Heading>
         </HStack>
       </HStack>
       <MyTable

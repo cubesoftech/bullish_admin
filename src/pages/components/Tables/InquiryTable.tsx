@@ -109,7 +109,7 @@ export default function InquiryTable({
                 })}
                 <Td>
                   <Button colorScheme="orange" size={"sm"} variant={"outline"}>
-                    Modify
+                    수정하다
                   </Button>
                 </Td>
               </Tr>
@@ -174,7 +174,7 @@ export default function InquiryTable({
         >
           {[1, 10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
-              Show {pageSize}
+              보여주다 {pageSize}
             </option>
           ))}
         </Select>

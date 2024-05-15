@@ -93,7 +93,7 @@ export default function OrderHistoryTable({
                   </Th>
                 );
               })}
-              <Th>Action</Th>
+              <Th>행동</Th>
             </Tr>
           ))}
         </Thead>
@@ -160,7 +160,7 @@ export default function OrderHistoryTable({
         >
           {[1, 10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
-              Show {pageSize}
+              보여주다 {pageSize}
             </option>
           ))}
         </Select>
@@ -193,7 +193,7 @@ function OrderHistoryRow({ row }: { row: Row<OrderHistoryColumnInterface> }) {
           size={"sm"}
           variant={"outline"}
         >
-          Modify
+          수정하다
         </Button>
       </Td>
     </Tr>

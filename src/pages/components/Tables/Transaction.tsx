@@ -67,14 +67,19 @@ export default function TransactionTable({
 
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
-      <ChakraTable size={"sm"} variant={"striped"} colorScheme="messenger">
+      <ChakraTable
+        overflowY={"scroll"}
+        size={"sm"}
+        variant={"striped"}
+        colorScheme="messenger"
+      >
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
                   <Th key={header.id} colSpan={header.colSpan}>
-                    <div
+                    <HStack
                       {...{
                         className: header.column.getCanSort()
                           ? "cursor-pointer select-none"
@@ -91,11 +96,9 @@ export default function TransactionTable({
                         desc: " 🔽",
                       }[header.column.getIsSorted() as string] ?? null}
                       {header.column.getCanFilter() ? (
-                        <div>
-                          <Filter column={header.column} table={table} />
-                        </div>
+                        <Filter column={header.column} table={table} />
                       ) : null}
-                    </div>
+                    </HStack>
                   </Th>
                 );
               })}
@@ -172,7 +175,7 @@ export default function TransactionTable({
         >
           {[1, 10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
-              Show {pageSize}
+              보여주다 {pageSize}
             </option>
           ))}
         </Select>
@@ -218,7 +221,7 @@ function TransactionRow({
             size={"sm"}
             variant={"outline"}
           >
-            Modify
+            수정하다
           </Button>
         </Td>
       )}
@@ -240,11 +243,7 @@ function Filter({
   const columnFilterValue = column.getFilterValue();
 
   return typeof firstValue === "number" ? (
-    <HStack
-      spacing={1}
-      className="flex space-x-2"
-      onClick={(e) => e.stopPropagation()}
-    >
+    <HStack spacing={1} onClick={(e) => e.stopPropagation()}>
       <Input
         w={100}
         border={"1px"}

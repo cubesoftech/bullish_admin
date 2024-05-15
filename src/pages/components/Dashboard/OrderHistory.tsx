@@ -20,42 +20,45 @@ export default function OrderHistory() {
       {
         accessorKey: "email",
         cell: (info) => info.getValue(),
+        header: "이메일",
         footer: "Email",
       },
       {
         accessorKey: "balance",
         accessorFn: (row) => row.balance,
         id: "balance",
+        header: "잔액",
         cell: (info) => info.getValue(),
         footer: "Current Balance",
       },
       {
         accessorKey: "timeExecuted",
+        header: "주문 시간",
         cell: (info) => info.getValue(),
         footer: "Time Executed",
       },
       {
         accessorKey: "trade",
         accessorFn: (row) => row.trade,
-        header: "Trade",
+        header: "거래",
         cell: (info) => info.getValue(),
         footer: "Trade",
       },
       {
         accessorKey: "result",
         accessorFn: (row) => row.result,
-        header: "Result",
+        header: "결과",
         cell: (info) => info.getValue(),
       },
       {
         accessorFn: (row) => row.tradeAmount,
-        header: "Trade Amount",
+        header: "거래 금액",
         cell: (info) => info.getValue(),
         accessorKey: "tradeAmount",
       },
       {
         accessorFn: (row) => row.tradePNL,
-        header: "Trade PNL",
+        header: "거래 PNL",
         cell: (info) => info.getValue(),
         accessorKey: "tradePNL",
       },
@@ -141,7 +144,7 @@ export default function OrderHistory() {
             }}
             as={FiRotateCcw}
           />
-          <Heading>ORDER HISTORY</Heading>
+          <Heading>주문 내역</Heading>
         </HStack>
       </HStack>
       <OrderHistoryTable

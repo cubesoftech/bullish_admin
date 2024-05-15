@@ -23,7 +23,7 @@ export default function Agents() {
             }}
             as={GiFamilyTree}
           />
-          <Heading>Master Agents</Heading>
+          <Heading>마스터 에이전트</Heading>
         </HStack>
       </HStack>
       <AgentsTable />

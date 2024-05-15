@@ -68,7 +68,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+      <Flex h="20" alignItems="center" mx={20} justifyContent="space-between">
         <Image src={logo} alt="logo" width={200} height={200} />
 
         <CloseButton
@@ -86,7 +86,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {role === "ADMIN" && (
         <>
           <NavItem index={LinkItems.length + 2} icon={GiFamilyTree}>
-            Branch
+            나뭇가지
           </NavItem>
 
           <Divider my="4" />
@@ -94,7 +94,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       )}
 
       <NavItem index={LinkItems.length + 1} icon={FiLogOut}>
-        Log out
+        로그 아웃
       </NavItem>
     </Box>
   );

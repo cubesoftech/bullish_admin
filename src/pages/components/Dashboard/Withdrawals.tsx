@@ -17,46 +17,51 @@ export default function Withdrawals() {
       {
         accessorKey: "name",
         cell: (info) => info.getValue(),
+        header: "이름",
         footer: "Name",
       },
       {
         accessorKey: "email",
         accessorFn: (row) => row.email,
         id: "email",
+        header: "이메일",
         cell: (info) => info.getValue(),
         footer: "Email",
       },
       {
         accessorKey: "bank",
         cell: (info) => info.getValue(),
+        header: "은행",
         footer: "Bank",
       },
       {
         accessorKey: "accountNumber",
         accessorFn: (row) => row.accountNumber,
-        header: "Account Number",
+        header: "계좌 번호",
         cell: (info) => info.getValue(),
         footer: "Account Number",
       },
       {
         accessorKey: "accountHolder",
-        header: "Account Holder",
+        header: "계좌 주",
         cell: (info) => info.getValue(),
         footer: "Account Holder",
       },
       {
         accessorKey: "amount",
         cell: (info) => info.getValue(),
-        header: "Amount in KRW",
+        header: "금액",
         footer: "Amount",
       },
       {
         accessorKey: "Date Requested",
+        header: "요청 날짜",
         cell: (info) => info.getValue(),
         footer: "Date Requested",
       },
       {
         accessorKey: "status",
+        header: "상태",
         cell: (info) => info.getValue(),
         footer: "Status",
       },
@@ -144,7 +149,7 @@ export default function Withdrawals() {
             }}
             as={FiHome}
           />
-          <Heading>WITHDRAWALS</Heading>
+          <Heading>인출</Heading>
         </HStack>
       </HStack>
       <MyTable

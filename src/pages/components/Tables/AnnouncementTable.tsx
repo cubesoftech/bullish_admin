@@ -68,9 +68,9 @@ function AnnouncementTable() {
         <Thead>
           <Tr>
             <Th>#</Th>
-            <Th>Title</Th>
-            <Th>Date Created</Th>
-            {isAdmin && <Th>Actions</Th>}
+            <Th>제목</Th>
+            <Th>생성 일자</Th>
+            {isAdmin && <Th>행위</Th>}
           </Tr>
         </Thead>
         <Tbody>
@@ -92,13 +92,13 @@ function AnnouncementTable() {
                     />
                     <HStack>
                       <Button colorScheme="blue" onClick={editOnOpen}>
-                        Edit
+                        편집하다
                       </Button>
                       <Button
                         onClick={() => deleteAnnouncement(announcement.id)}
                         colorScheme="red"
                       >
-                        Delete
+                        삭제
                       </Button>
                     </HStack>
                   </Td>
@@ -111,7 +111,7 @@ function AnnouncementTable() {
       <AddAnnouncement isOpen={isOpen} onClose={onClose} />
       <HStack justifyContent={"flex-end"} w={"100%"}>
         <Button onClick={onOpen} colorScheme="purple">
-          Add Announcement
+          공지사항 추가
         </Button>
       </HStack>
     </VStack>

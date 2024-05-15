@@ -84,7 +84,7 @@ function SubAgentDrawer({
 
         <DrawerFooter>
           <Button variant="outline" mr={3} onClick={onClose}>
-            Cancel
+            취소
           </Button>
           <Button
             colorScheme="green"
@@ -92,7 +92,7 @@ function SubAgentDrawer({
             mr={3}
             onClick={agentOnOpen}
           >
-            Add Agent
+            에이전트 추가
           </Button>
         </DrawerFooter>
       </DrawerContent>

@@ -38,7 +38,7 @@ export default function GameSetting() {
             }}
             as={FiCompass}
           />
-          <Heading>GAME SETTINGS</Heading>
+          <Heading>게임 설정</Heading>
         </HStack>
       </HStack>
       <Setting />
@@ -136,7 +136,7 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
       alignItems={"flex-start"}
       spacing={10}
     >
-      <Text fontWeight={"bold"}>Return on Win</Text>
+      <Text fontWeight={"bold"}>승리 시 복귀</Text>
       <NumberInput
         step={0.01}
         onChange={async (e) => {
@@ -194,7 +194,7 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
 
   return (
     <VStack alignItems={"flex-start"} spacing={7}>
-      <Text fontWeight={"bold"}>Return on Win</Text>
+      <Text fontWeight={"bold"}>승리 시 복귀</Text>
       {tradingTime.map((time) => {
         return (
           <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
@@ -263,7 +263,7 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
   };
   return (
     <VStack alignItems={"flex-start"} spacing={7}>
-      <Text fontWeight={"bold"}>Trading Status</Text>
+      <Text fontWeight={"bold"}>거래현황</Text>
       {tradingStatus.map((status) => {
         return (
           <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
@@ -326,7 +326,7 @@ const BalanceSetting = ({ setting }: { setting: SiteSettting }) => {
       alignItems={"flex-start"}
       spacing={10}
     >
-      <Text fontWeight={"bold"}>Minimum Amount</Text>
+      <Text fontWeight={"bold"}>최소 금액</Text>
       <NumberInput
         onChange={async (e) => {
           await updateSetting(Number(e));

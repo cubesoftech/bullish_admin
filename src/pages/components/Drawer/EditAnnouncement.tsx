@@ -58,7 +58,7 @@ function EditAnnouncement({
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Modify Announcement</DrawerHeader>
+        <DrawerHeader>수정하다 Announcement</DrawerHeader>
 
         <DrawerBody mb={10}>
           <VStack

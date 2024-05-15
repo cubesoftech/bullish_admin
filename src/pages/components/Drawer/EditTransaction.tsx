@@ -72,7 +72,7 @@ function EditTransaction({
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader>
-          Modify {isWithdrawal ? "Withdrawal" : "Deposit"}
+          수정하다 {isWithdrawal ? "Withdrawal" : "Deposit"}
         </DrawerHeader>
 
         <DrawerBody mb={10}>
