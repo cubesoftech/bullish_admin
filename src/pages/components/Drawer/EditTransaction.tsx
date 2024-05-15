@@ -71,9 +71,7 @@ function EditTransaction({
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>
-          수정하다 {isWithdrawal ? "Withdrawal" : "Deposit"}
-        </DrawerHeader>
+        <DrawerHeader>{isWithdrawal ? "출금요청" : "입금요청"}</DrawerHeader>
 
         <DrawerBody mb={10}>
           <VStack
@@ -86,7 +84,7 @@ function EditTransaction({
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
             >
-              <Text>Email</Text>
+              <Text>이메일</Text>
               <Input width={"100%"} readOnly defaultValue={email} />
             </VStack>
             <VStack
@@ -94,7 +92,7 @@ function EditTransaction({
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
             >
-              <Text>Amount (KRW) </Text>
+              <Text>금액 (KRW) </Text>
               <Input
                 width={"100%"}
                 readOnly
@@ -106,7 +104,7 @@ function EditTransaction({
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
             >
-              <Text>Select Transaction Status</Text>
+              <Text>요청상태</Text>
               <Select
                 w={"100%"}
                 onChange={(e) =>
@@ -114,9 +112,9 @@ function EditTransaction({
                 }
                 defaultValue={transactionStatus}
               >
-                <option value={"pending"}>Pending</option>
-                <option value={"completed"}>Completed</option>
-                <option value={"failed"}>Failed</option>
+                <option value={"pending"}>대기</option>
+                <option value={"completed"}>완료</option>
+                <option value={"failed"}>취소</option>
               </Select>
             </VStack>
           </VStack>
@@ -124,10 +122,10 @@ function EditTransaction({
 
         <DrawerFooter>
           <Button variant="outline" mr={3} onClick={onClose}>
-            Cancel
+            취소
           </Button>
           <Button colorScheme="blue" onClick={updateUser}>
-            Update
+            업데이트
           </Button>
         </DrawerFooter>
       </DrawerContent>

@@ -134,47 +134,47 @@ function OrderHistoryDrawer({
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Order History Changer</DrawerHeader>
+        <DrawerHeader>배팅기록조작</DrawerHeader>
 
         <DrawerBody mb={10}>
           <List spacing={6}>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              Name : {name}
+              이름 : {name}
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              Nick Name: {nickname}
+              닉네임: {nickname}
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              Email: {email}
+              이메일: {email}
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              Current Balance: {balance.toLocaleString()} KRW{" "}
+              보유잔액: {balance.toLocaleString()} KRW{" "}
               {additionalValue != 0 &&
                 !isNaN(additionalValue) &&
                 `----> ( ${newBalance.toLocaleString()} KRW )`}
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              Time Executed: {timeExecuted}
+              주문 시간: {timeExecuted}
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              User Trade: {trade}
+              거래: {trade}
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              PNL: {tradePNL.toLocaleString()} KRW
+              수익결과: {tradePNL.toLocaleString()} KRW
               {additionalValue !== 0 &&
                 !isNaN(additionalValue) &&
                 `----> ( ${newTradePNL.toLocaleString()} KRW )`}
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              Trade Amount: {tradeAmount.toLocaleString()} KRW
+              거래금액: {tradeAmount.toLocaleString()} KRW
               {additionalValue !== 0 &&
                 !isNaN(additionalValue) &&
                 `----> ( ${newTradeAmount.toLocaleString()} KRW )`}
@@ -187,13 +187,11 @@ function OrderHistoryDrawer({
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
             >
-              <Text fontWeight={"bold"}>
-                Input amount to add in Trade Amount :
-              </Text>
+              <Text fontWeight={"bold"}>수정할 거래금액을 입력해주세요 :</Text>
               <Input
                 onChange={(e) => setAdditionalValue(parseInt(e.target.value))}
                 type="number"
-                placeholder="Trade Amount"
+                placeholder="거래금액"
               />
             </VStack>
           </VStack>
@@ -201,10 +199,10 @@ function OrderHistoryDrawer({
 
         <DrawerFooter>
           <Button variant="outline" mr={3} onClick={onClose}>
-            Cancel
+            취소
           </Button>
           <Button onClick={handleSave} colorScheme="blue">
-            Save
+            저장
           </Button>
         </DrawerFooter>
       </DrawerContent>

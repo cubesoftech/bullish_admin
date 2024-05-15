@@ -41,14 +41,14 @@ export default function OrderHistory() {
         accessorKey: "trade",
         accessorFn: (row) => row.trade,
         header: "거래",
-        cell: (info) => info.getValue(),
+        cell: (info) => (info.getValue() === "LONG" ? "롱" : "쇼트"),
         footer: "Trade",
       },
       {
         accessorKey: "result",
         accessorFn: (row) => row.result,
         header: "결과",
-        cell: (info) => info.getValue(),
+        cell: (info) => (info.getValue() === "LONG" ? "롱" : "쇼트"),
       },
       {
         accessorFn: (row) => row.tradeAmount,

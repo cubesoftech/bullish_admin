@@ -62,7 +62,7 @@ export default function Withdrawals() {
       {
         accessorKey: "status",
         header: "상태",
-        cell: (info) => info.getValue(),
+        cell: (info) => (info.getValue() === "pending" ? "대기중" : "완료"),
         footer: "Status",
       },
     ],

@@ -58,7 +58,7 @@ function EditAnnouncement({
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>수정하다 Announcement</DrawerHeader>
+        <DrawerHeader>수정</DrawerHeader>
 
         <DrawerBody mb={10}>
           <VStack
@@ -66,7 +66,7 @@ function EditAnnouncement({
             alignItems={"flex-start"}
             spacing={1}
           >
-            <Text>Title</Text>
+            <Text>제목</Text>
             <Input value={title} placeholder="Title" />
           </VStack>
           <VStack
@@ -74,7 +74,7 @@ function EditAnnouncement({
             alignItems={"flex-start"}
             spacing={1}
           >
-            <Text>Content</Text>
+            <Text>내용</Text>
             <Editor
               apiKey="kqfwcl6lfz745rmfuf2022x9kwpwwyll2a3wc1pjjfqrfc8w"
               onInit={(_evt, editor) => (editorRef.current = editor)}
@@ -119,10 +119,10 @@ function EditAnnouncement({
 
         <DrawerFooter>
           <Button variant="outline" mr={3} onClick={onClose}>
-            Cancel
+            취소
           </Button>
           <Button onClick={handleEdit} colorScheme="blue">
-            Save Modification
+            변경사항 저장
           </Button>
         </DrawerFooter>
       </DrawerContent>

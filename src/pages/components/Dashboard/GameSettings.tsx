@@ -136,7 +136,7 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
       alignItems={"flex-start"}
       spacing={10}
     >
-      <Text fontWeight={"bold"}>승리 시 복귀</Text>
+      <Text fontWeight={"bold"}>배당수정</Text>
       <NumberInput
         step={0.01}
         onChange={async (e) => {
@@ -194,7 +194,7 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
 
   return (
     <VStack alignItems={"flex-start"} spacing={7}>
-      <Text fontWeight={"bold"}>승리 시 복귀</Text>
+      <Text fontWeight={"bold"}>배팅마감수정</Text>
       {tradingTime.map((time) => {
         return (
           <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>

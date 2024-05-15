@@ -62,7 +62,12 @@ export default function Deposits() {
       {
         accessorKey: "status",
         header: "상태",
-        cell: (info) => info.getValue(),
+        cell: (info) =>
+          info.getValue() === "pending"
+            ? "대기중"
+            : info.getValue() === "completed"
+            ? "완료"
+            : "취소",
         footer: "Status",
       },
     ],
@@ -151,7 +156,7 @@ export default function Deposits() {
             }}
             as={FiTrendingUp}
           />
-          <Heading>매장</Heading>
+          <Heading>입금</Heading>
         </HStack>
       </HStack>
       <MyTable

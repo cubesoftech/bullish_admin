@@ -70,7 +70,7 @@ function AnnouncementTable() {
             <Th>#</Th>
             <Th>제목</Th>
             <Th>생성 일자</Th>
-            {isAdmin && <Th>행위</Th>}
+            {isAdmin && <Th>수정</Th>}
           </Tr>
         </Thead>
         <Tbody>
@@ -92,7 +92,7 @@ function AnnouncementTable() {
                     />
                     <HStack>
                       <Button colorScheme="blue" onClick={editOnOpen}>
-                        편집하다
+                        편집
                       </Button>
                       <Button
                         onClick={() => deleteAnnouncement(announcement.id)}

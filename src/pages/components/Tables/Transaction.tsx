@@ -102,7 +102,7 @@ export default function TransactionTable({
                   </Th>
                 );
               })}
-              {isAdmin && <Th>Action</Th>}
+              {isAdmin && <Th>수정</Th>}
             </Tr>
           ))}
         </Thead>
@@ -175,7 +175,7 @@ export default function TransactionTable({
         >
           {[1, 10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
-              보여주다 {pageSize}
+              페이지당 보이기 {pageSize}
             </option>
           ))}
         </Select>
@@ -221,7 +221,7 @@ function TransactionRow({
             size={"sm"}
             variant={"outline"}
           >
-            수정하다
+            수정
           </Button>
         </Td>
       )}

@@ -129,7 +129,7 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
             colorScheme="orange"
             variant={"outline"}
           >
-            제거하다
+            삭제
           </Button>
         </HStack>
       </Td>

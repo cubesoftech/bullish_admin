@@ -86,7 +86,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {role === "ADMIN" && (
         <>
           <NavItem index={LinkItems.length + 2} icon={GiFamilyTree}>
-            나뭇가지
+            에이전트 트리
           </NavItem>
 
           <Divider my="4" />

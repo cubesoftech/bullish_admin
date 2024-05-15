@@ -93,7 +93,7 @@ export default function OrderHistoryTable({
                   </Th>
                 );
               })}
-              <Th>행동</Th>
+              <Th>수정</Th>
             </Tr>
           ))}
         </Thead>
@@ -193,7 +193,7 @@ function OrderHistoryRow({ row }: { row: Row<OrderHistoryColumnInterface> }) {
           size={"sm"}
           variant={"outline"}
         >
-          수정하다
+          수정
         </Button>
       </Td>
     </Tr>
