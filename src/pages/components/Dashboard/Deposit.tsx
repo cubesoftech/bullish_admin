@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { VStack, Heading, Icon, HStack } from "@chakra-ui/react";
+import { VStack, Heading, Icon, HStack, useToast } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUserTransaction, TransactionColumn } from "@/utils/interface";
 import axios from "axios";
@@ -63,10 +63,13 @@ export default function Deposits() {
 
   const [data, setData] = React.useState<TransactionColumn[]>([]);
 
+  const [refetch, setRefetch] = React.useState(true);
+
   const requestAllWithdrawals = async () => {
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllWithdrawals?page=${page}`;
+    setData([]);
+    const url = `/api/getAllDeposits?page=${page}`;
     while (hasMoreData) {
       const res = await axios.get<ArrayUserTransaction>(url);
       let { hasMore, withdrawals } = res.data;
@@ -102,10 +105,24 @@ export default function Deposits() {
     }
   };
 
-  useEffect(() => {
-    requestAllWithdrawals();
-  }, []);
+  const toast = useToast();
 
+  useEffect(() => {
+    try {
+      if (refetch) {
+        requestAllWithdrawals();
+        setRefetch(false);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while fetching data",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [refetch]);
   return (
     <VStack spacing={5}>
       <HStack
@@ -134,6 +151,10 @@ export default function Deposits() {
         setPagination={setPagination}
         columns={columns}
         data={data}
+        isWithdrawal={false}
+        refetch={() => {
+          setRefetch(true);
+        }}
       />
     </VStack>
   );

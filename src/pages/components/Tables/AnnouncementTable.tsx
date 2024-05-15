@@ -17,6 +17,7 @@ import EditAnnouncement from "../Drawer/EditAnnouncement";
 import useSwr from "swr";
 import axios from "axios";
 import { useSWRConfig } from "swr";
+import { useAuthentication } from "@/utils/storage";
 
 function AnnouncementTable() {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -59,6 +60,8 @@ function AnnouncementTable() {
     }
   );
 
+  const { role } = useAuthentication();
+  const isAdmin = role === "ADMIN";
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
       <Table size={"sm"} variant={"striped"} colorScheme="cyan">
@@ -67,7 +70,7 @@ function AnnouncementTable() {
             <Th>#</Th>
             <Th>Title</Th>
             <Th>Date Created</Th>
-            <Th>Actions</Th>
+            {isAdmin && <Th>Actions</Th>}
           </Tr>
         </Thead>
         <Tbody>
@@ -80,24 +83,26 @@ function AnnouncementTable() {
                 <Td>
                   {date.toLocaleDateString()} {date.toLocaleTimeString()}
                 </Td>
-                <Td>
-                  <EditAnnouncement
-                    isOpen={editIsOpen}
-                    onClose={editOnClose}
-                    announcement={announcement}
-                  />
-                  <HStack>
-                    <Button colorScheme="blue" onClick={editOnOpen}>
-                      Edit
-                    </Button>
-                    <Button
-                      onClick={() => deleteAnnouncement(announcement.id)}
-                      colorScheme="red"
-                    >
-                      Delete
-                    </Button>
-                  </HStack>
-                </Td>
+                {isAdmin && (
+                  <Td>
+                    <EditAnnouncement
+                      isOpen={editIsOpen}
+                      onClose={editOnClose}
+                      announcement={announcement}
+                    />
+                    <HStack>
+                      <Button colorScheme="blue" onClick={editOnOpen}>
+                        Edit
+                      </Button>
+                      <Button
+                        onClick={() => deleteAnnouncement(announcement.id)}
+                        colorScheme="red"
+                      >
+                        Delete
+                      </Button>
+                    </HStack>
+                  </Td>
+                )}
               </Tr>
             );
           })}

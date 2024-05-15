@@ -12,22 +12,25 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import { MasterAgentInterface } from "@/utils/interface";
+import { AgentInterface } from "@/utils/interface";
 import { useSWRConfig } from "swr";
 
-function AddMasterAgent({
+function AddAgent({
   isOpen,
   onClose,
+  masterAgentId,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  masterAgentId: string;
 }) {
-  const [payload, setPayload] = React.useState<MasterAgentInterface>({
+  const [payload, setPayload] = React.useState<AgentInterface>({
     email: "",
     name: "",
     nickname: "",
     password: "",
     royalty: 0,
+    masterAgentId: masterAgentId,
   });
   const toast = useToast();
 
@@ -49,7 +52,7 @@ function AddMasterAgent({
       });
       return;
     }
-    const url = "/api/createMasterAgent";
+    const url = "/api/addAgent";
     fetch(url, {
       method: "POST",
       headers: {
@@ -82,10 +85,10 @@ function AddMasterAgent({
   };
 
   return (
-    <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
+    <Drawer isOpen={isOpen} placement="left" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Add Master Agent</DrawerHeader>
+        <DrawerHeader>Add Agent</DrawerHeader>
 
         <DrawerBody mb={10}>
           <VStack spacing={4}>
@@ -156,4 +159,4 @@ function AddMasterAgent({
   );
 }
 
-export default AddMasterAgent;
+export default AddAgent;

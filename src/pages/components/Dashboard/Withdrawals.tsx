@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { VStack, Heading, Icon, HStack } from "@chakra-ui/react";
+import { VStack, Heading, Icon, HStack, useToast } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUserTransaction, TransactionColumn } from "@/utils/interface";
 import axios from "axios";
@@ -66,6 +66,8 @@ export default function Withdrawals() {
 
   const [data, setData] = React.useState<TransactionColumn[]>([]);
 
+  const [refetch, setRefetch] = React.useState(true);
+
   const requestAllWithdrawals = async () => {
     let hasMoreData = true;
     let page = 1;
@@ -103,9 +105,24 @@ export default function Withdrawals() {
     }
   };
 
+  const toast = useToast();
+
   useEffect(() => {
-    requestAllWithdrawals();
-  }, []);
+    try {
+      if (refetch) {
+        requestAllWithdrawals();
+        setRefetch(false);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while fetching data",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [refetch]);
 
   return (
     <VStack spacing={5}>
@@ -135,6 +152,10 @@ export default function Withdrawals() {
         setPagination={setPagination}
         columns={columns}
         data={data}
+        isWithdrawal={true}
+        refetch={() => {
+          setRefetch;
+        }}
       />
     </VStack>
   );

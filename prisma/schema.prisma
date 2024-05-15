@@ -154,6 +154,26 @@ model Inquiries {
   membersId       String?
 }
 
+model sitesettings {
+  id        String   @id
+  returnOnWin Float
+  oneMinLock  Int
+  threeMinLock Int
+  fiveMinLock Int
+  btc Boolean
+  wti Boolean
+  nasdaq Boolean
+  gold Boolean
+  minimumAmount Int
+}
+
+enum tradingstocks {
+  btc
+  wti
+  nasdaq
+  gold
+}
+
 enum recenttrades_type {
   btc_1_min
   btc_3_mins

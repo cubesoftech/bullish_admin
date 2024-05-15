@@ -61,7 +61,10 @@ export default function UserManagement() {
 
   const [data, setData] = React.useState<UserColumn[]>([]);
 
+  const [refetch, setRefetch] = React.useState(true);
+
   const requestAllUsers = async () => {
+    setData([]);
     let hasMoreData = true;
     let page = 1;
     const url = `/api/getAllUsers?page=${page}`;
@@ -103,8 +106,11 @@ export default function UserManagement() {
   };
 
   useEffect(() => {
-    requestAllUsers();
-  }, []);
+    if (refetch) {
+      requestAllUsers();
+      setRefetch(false);
+    }
+  }, [refetch]);
 
   return (
     <VStack spacing={5}>
@@ -134,6 +140,7 @@ export default function UserManagement() {
         setPagination={setPagination}
         columns={columns}
         data={data}
+        setRefetch={setRefetch}
       />
     </VStack>
   );

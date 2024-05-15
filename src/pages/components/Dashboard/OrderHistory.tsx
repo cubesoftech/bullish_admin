@@ -18,9 +18,9 @@ export default function OrderHistory() {
   const columns = useMemo<ColumnDef<OrderHistoryColumnInterface>[]>(
     () => [
       {
-        accessorKey: "name",
+        accessorKey: "email",
         cell: (info) => info.getValue(),
-        footer: "Name",
+        footer: "Email",
       },
       {
         accessorKey: "balance",

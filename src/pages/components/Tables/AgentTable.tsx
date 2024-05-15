@@ -9,9 +9,10 @@ import {
   HStack,
   Button,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import React from "react";
-import useSwr from "swr";
+import useSwr, { mutate } from "swr";
 import axios from "axios";
 import { useSWRConfig } from "swr";
 import AddMasterAgent from "../Drawer/AddMasterAgent";
@@ -22,12 +23,6 @@ function AgentsTable() {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const { mutate } = useSWRConfig();
-
-  const {
-    isOpen: editIsOpen,
-    onClose: editOnClose,
-    onOpen: editOnOpen,
-  } = useDisclosure();
 
   const [masterAgent, setMasterAgent] = React.useState<ArrayMasterAgent>({
     masteragents: [],
@@ -63,20 +58,15 @@ function AgentsTable() {
         </Thead>
         <Tbody>
           {masterAgent.masteragents.map((agent, index) => {
-            return MasterAgent(
-              agent,
-              index,
-              editIsOpen,
-              editOnClose,
-              editOnOpen
-            );
+            const { id } = agent;
+            return <MasterAgent agent={agent} index={index} />;
           })}
         </Tbody>
       </Table>
       <AddMasterAgent isOpen={isOpen} onClose={onClose} />
       <HStack justifyContent={"flex-end"} w={"100%"}>
         <Button onClick={onOpen} colorScheme="purple">
-          Add Agent
+          Add Master Agent
         </Button>
       </HStack>
     </VStack>
@@ -85,18 +75,43 @@ function AgentsTable() {
 
 export default AgentsTable;
 
-function MasterAgent(
-  agent: Masteragent,
-  index: number,
-  isOpen: boolean,
-  onClose: () => void,
-  onOpen: () => void
-) {
-  const { agents } = agent;
+function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
+  const { agents, id } = agent;
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const toast = useToast();
+
+  const deleteAgent = async () => {
+    const url = "/api/deleteMasterAgent";
+    try {
+      const res = await axios.post(url, { id });
+      mutate("/api/getAllMasterAgents");
+      toast({
+        title: "Success",
+        description: "Agent has been deleted",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error has occured",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
   //agents is an array of agent under the master agent
   return (
     <Tr key={agent.id}>
-      <SubAgentDrawer agent={agents} isOpen={isOpen} onClose={onClose} />
+      <SubAgentDrawer
+        masterAgentId={id}
+        agent={agents}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
       <Td>{index + 1}</Td>
       <Td>{agent.member.name}</Td>
       <Td>{agent.member.nickname}</Td>
@@ -108,6 +123,13 @@ function MasterAgent(
         <HStack>
           <Button onClick={onOpen} colorScheme="purple" variant={"outline"}>
             View Sub Agents
+          </Button>
+          <Button
+            onClick={deleteAgent}
+            colorScheme="orange"
+            variant={"outline"}
+          >
+            Remove
           </Button>
         </HStack>
       </Td>

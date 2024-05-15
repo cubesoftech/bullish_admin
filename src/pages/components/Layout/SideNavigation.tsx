@@ -19,7 +19,7 @@ import { IconType } from "react-icons";
 import Image from "next/image";
 import logo from "../../../assets/logo_white.png";
 import { useAuthentication, useNavigation } from "@/utils/storage";
-import { LinkItems } from "@/utils";
+import { LinkItems, LinkItemsMasterAgent } from "@/utils";
 import { GiFamilyTree } from "react-icons/gi";
 
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
@@ -56,6 +56,8 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const { role } = useAuthentication();
+  const linkItems = role === "ADMIN" ? LinkItems : LinkItemsMasterAgent;
   return (
     <Box
       bgColor={"blackAlpha.900"}
@@ -75,16 +77,22 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           onClick={onClose}
         />
       </Flex>
-      {LinkItems.map((link) => (
+      {linkItems.map((link) => (
         <NavItem index={link.index} key={link.name} icon={link.icon}>
           {link.name}
         </NavItem>
       ))}
       <Divider my="4" />
-      <NavItem index={LinkItems.length + 2} icon={GiFamilyTree}>
-        Branch
-      </NavItem>
-      <Divider my="4" />
+      {role === "ADMIN" && (
+        <>
+          <NavItem index={LinkItems.length + 2} icon={GiFamilyTree}>
+            Branch
+          </NavItem>
+
+          <Divider my="4" />
+        </>
+      )}
+
       <NavItem index={LinkItems.length + 1} icon={FiLogOut}>
         Log out
       </NavItem>
@@ -102,7 +110,7 @@ const NavItem = ({ index, icon, children, ...rest }: NavItemProps) => {
   const { changeAuthentication } = useAuthentication();
   const handleClick = () => {
     if (index === LinkItems.length + 1) {
-      changeAuthentication(false);
+      changeAuthentication(false, "ADMIN");
     } else {
       changeMenu(index);
     }

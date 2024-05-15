@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   flexRender,
   Column,
+  Row,
 } from "@tanstack/react-table";
 import React from "react";
 import {
@@ -25,19 +26,27 @@ import {
   Button,
   Select,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
+import EditUser from "../Drawer/EditUser";
 
 export default function UserTable({
   data,
   columns,
   pagination,
   setPagination,
+  setRefetch,
 }: {
   data: UserColumn[];
   columns: ColumnDef<UserColumn>[];
   pagination: PaginationState;
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
+  setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const refetch = () => {
+    setRefetch(true);
+  };
+
   const table = useReactTable({
     columns,
     data,
@@ -53,8 +62,6 @@ export default function UserTable({
     },
     // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
   });
-
-  console.log(table.getSelectedRowModel().rows);
 
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
@@ -96,26 +103,7 @@ export default function UserTable({
         </Thead>
         <Tbody>
           {table.getRowModel().rows.map((row) => {
-            return (
-              <Tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
-                  console.log(cell.getContext(), cell.id);
-                  return (
-                    <Td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </Td>
-                  );
-                })}
-                <Td>
-                  <Button colorScheme="orange" size={"sm"} variant={"outline"}>
-                    Modify
-                  </Button>
-                </Td>
-              </Tr>
-            );
+            return <UserRow refetch={refetch} key={row.id} row={row} />;
           })}
         </Tbody>
       </ChakraTable>
@@ -182,6 +170,46 @@ export default function UserTable({
         </Select>
       </HStack>
     </VStack>
+  );
+}
+
+function UserRow({
+  row,
+  refetch,
+}: {
+  row: Row<UserColumn>;
+  refetch: () => void;
+}): React.JSX.Element {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
+    <Tr key={row.id}>
+      <EditUser
+        refetch={refetch}
+        isOpen={isOpen}
+        onClose={onClose}
+        user={row.original}
+      />
+      {row.getVisibleCells().map((cell) => {
+        console.log(cell.getContext(), cell.id);
+        return (
+          <Td key={cell.id}>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </Td>
+        );
+      })}
+      <Td>
+        <Button
+          onClick={() => {
+            onOpen();
+          }}
+          colorScheme="orange"
+          size={"sm"}
+          variant={"outline"}
+        >
+          Modify
+        </Button>
+      </Td>
+    </Tr>
   );
 }
 

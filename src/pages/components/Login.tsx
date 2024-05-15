@@ -29,7 +29,11 @@ export default function Login() {
       });
     }
     try {
-      const { data } = await axios.post("/api/login", payload);
+      const { data } = await axios.post<{
+        status: boolean;
+        role: "ADMIN" | "AGENT" | "MASTERAGENT";
+        message: string;
+      }>("/api/login", payload);
       if (data.status) {
         toast({
           title: "Success",
@@ -38,7 +42,7 @@ export default function Login() {
           duration: 9000,
           isClosable: true,
         });
-        changeAuthentication(true);
+        changeAuthentication(true, data.role);
         return;
       } else {
         toast({

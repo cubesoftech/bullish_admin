@@ -1,3 +1,5 @@
+import { transaction_status, transaction_type } from "@prisma/client";
+
 export interface TransactionColumn {
   id?: string;
   name: string;
@@ -20,6 +22,18 @@ export interface UserColumn {
   accountnumber: string;
   bank: string;
   balance: number;
+}
+
+export interface InquryColumn {
+  id: string;
+  title: string;
+  content: string;
+  answer: string;
+  memberId: string;
+  createdAt: string;
+  updatedAt: string;
+  alreadyAnswered: boolean;
+  email: string;
 }
 
 export interface OrderHistoryColumnInterface {
@@ -106,6 +120,14 @@ export interface MasterAgentInterface {
   nickname: string;
   royalty: number;
 }
+export interface AgentInterface {
+  name: string;
+  email: string;
+  password: string;
+  nickname: string;
+  royalty: number;
+  masterAgentId: string;
+}
 
 export interface ArrayMasterAgent {
   masteragents: Masteragent[];
@@ -122,6 +144,24 @@ export interface Agent {
   referralCode: string;
   referredmembers: Members[];
   masteragentsId: string;
+  member: Member;
+}
+
+export interface ArrayInquiry {
+  inquries: Inqury[];
+  hasMore: boolean;
+}
+
+export interface Inqury {
+  id: string;
+  title: string;
+  content: string;
+  answer: string;
+  memberId: string;
+  createdAt: string;
+  updatedAt: string;
+  alreadyAnswered: boolean;
+  membersId: any;
   member: Member;
 }
 export interface Masteragent {
@@ -148,4 +188,36 @@ export interface Member {
   referrer: any;
   balance: number;
   agentsId: any;
+}
+
+export interface SiteSettting {
+  site: Site;
+}
+
+export interface Site {
+  id: string;
+  returnOnWin: number;
+  oneMinLock: number;
+  threeMinLock: number;
+  fiveMinLock: number;
+  btc: boolean;
+  wti: boolean;
+  nasdaq: boolean;
+  gold: boolean;
+  minimumAmount: number;
+}
+
+export interface TransactionPayload {
+  status: transaction_status;
+  id: string;
+  type: transaction_type;
+}
+
+export interface OrderHistoryChangerPayload {
+  tradeId: string;
+  membersId: string;
+  tradeAmount: number;
+  balance: number;
+  tradePNL: number;
+  type: string;
 }

@@ -1,4 +1,4 @@
-import { UserColumn } from "@/utils/interface";
+import { InquryColumn } from "@/utils/interface";
 import {
   Table,
   ColumnDef,
@@ -33,8 +33,8 @@ export default function InquiryTable({
   pagination,
   setPagination,
 }: {
-  data: UserColumn[];
-  columns: ColumnDef<UserColumn>[];
+  data: InquryColumn[];
+  columns: ColumnDef<InquryColumn>[];
   pagination: PaginationState;
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
 }) {

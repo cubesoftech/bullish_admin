@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from "react";
 import { VStack, Heading, Icon, HStack } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { ArrayUser, UserColumn } from "@/utils/interface";
+import { ArrayInquiry, InquryColumn } from "@/utils/interface";
 import axios from "axios";
 import { FiStar } from "react-icons/fi";
-import UserTable from "../Tables/UserTable";
+import InquiryTable from "../Tables/InquiryTable";
 
 export default function UserManagement() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -12,12 +12,12 @@ export default function UserManagement() {
     pageSize: 10,
   });
 
-  const columns = useMemo<ColumnDef<UserColumn>[]>(
+  const columns = useMemo<ColumnDef<InquryColumn>[]>(
     () => [
       {
-        accessorKey: "name",
+        accessorKey: "title",
         cell: (info) => info.getValue(),
-        footer: "Name",
+        footer: "Title",
       },
       {
         accessorKey: "email",
@@ -27,73 +27,59 @@ export default function UserManagement() {
         footer: "Email",
       },
       {
-        accessorKey: "nickname",
-        cell: (info) => info.getValue(),
+        accessorKey: "alreadyAnswered",
+        cell: (info) => (info.getValue() ? "Yes" : "No"),
         footer: "Nickname",
       },
       {
-        accessorKey: "bank",
-        cell: (info) => info.getValue(),
+        accessorKey: "createdAt",
+        cell: (info) => {
+          const date = new Date(info.getValue() as string);
+          return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+        },
         footer: "Bank",
-      },
-      {
-        accessorKey: "accountnumber",
-        accessorFn: (row) => row.accountnumber,
-        header: "Account Number",
-        cell: (info) => info.getValue(),
-        footer: "Account Number",
-      },
-      {
-        accessorKey: "accountholder",
-        header: "Account Holder",
-        cell: (info) => info.getValue(),
-        footer: "Account Holder",
-      },
-      {
-        accessorKey: "balance",
-        cell: (info) => info.getValue(),
-        header: "Balance (KRW)",
-        footer: "Balance",
       },
     ],
     []
   );
 
-  const [data, setData] = React.useState<UserColumn[]>([]);
+  const [data, setData] = React.useState<InquryColumn[]>([]);
 
-  const requestAllUsers = async () => {
+  const requestInquiries = async () => {
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllUsers?page=${page}`;
+    const url = `/api/getAllInquiries?page=${page}`;
+    setData([]);
     while (hasMoreData) {
-      const res = await axios.get<ArrayUser>(url);
-      let { hasMore, users } = res.data;
+      const res = await axios.get<ArrayInquiry>(url);
+      let { hasMore, inquries } = res.data;
       //clean first the new data by removign the duplicates from the data
       //check if the id is already in the data
-      users.map((user) => {
+      inquries.map((inqury) => {
         const {
           id,
-          name,
-          email,
-          bank,
-          accountnumber,
-          accountholder,
-          balance,
-          password,
-          nickname,
-        } = user;
+          title,
+          content,
+          answer,
+          memberId,
+          createdAt,
+          updatedAt,
+          member,
+          alreadyAnswered,
+        } = inqury;
+        const { email } = member;
         setData((data) => [
           ...data,
           {
-            accountholder,
-            accountnumber,
-            balance,
-            bank,
-            email,
             id,
-            name,
-            nickname,
-            password,
+            title,
+            content,
+            answer,
+            memberId,
+            createdAt,
+            updatedAt,
+            email,
+            alreadyAnswered,
           },
         ]);
       });
@@ -103,7 +89,7 @@ export default function UserManagement() {
   };
 
   useEffect(() => {
-    requestAllUsers();
+    requestInquiries();
   }, []);
 
   return (
@@ -129,7 +115,7 @@ export default function UserManagement() {
           <Heading>Inquiry</Heading>
         </HStack>
       </HStack>
-      <UserTable
+      <InquiryTable
         pagination={pagination}
         setPagination={setPagination}
         columns={columns}

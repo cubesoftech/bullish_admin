@@ -13,6 +13,7 @@ import {
   VStack,
   Divider,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { MdCheckCircle } from "react-icons/md";
@@ -27,6 +28,7 @@ function OrderHistoryDrawer({
   onClose: () => void;
   OrderHistoryColumn: OrderHistoryColumnInterface;
 }) {
+  console.log(OrderHistoryColumn.tradePNL, "Here", isOpen);
   const {
     balance,
     email,
@@ -64,6 +66,70 @@ function OrderHistoryDrawer({
       setNewTradePNL(tradePNL - additionalValue);
     }
   }, [additionalValue]);
+
+  const toast = useToast();
+
+  const handleSave = async () => {
+    if (additionalValue === 0) {
+      toast({
+        title: "Error",
+        description: "Please input a value",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+    const payload = {
+      tradeId: id,
+      membersId,
+      balance: newBalance,
+      tradeAmount: newTradeAmount,
+      tradePNL: newTradePNL,
+      type,
+    };
+    const url = "/api/orderhistorychanger";
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          toast({
+            title: "Success",
+            description: "Successfully updated",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+          onClose();
+        } else {
+          toast({
+            title: "Error",
+            description: "Failed to update",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((err) => {
+        toast({
+          title: "Error",
+          description: "Failed to update",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      })
+      .finally(() => {
+        onClose();
+        setAdditionalValue(0);
+      });
+  };
   return (
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
       <DrawerContent>
@@ -137,7 +203,9 @@ function OrderHistoryDrawer({
           <Button variant="outline" mr={3} onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="blue">Save</Button>
+          <Button onClick={handleSave} colorScheme="blue">
+            Save
+          </Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

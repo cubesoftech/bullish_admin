@@ -1,3 +1,4 @@
+import { SiteSettting } from "@/utils/interface";
 import {
   VStack,
   Heading,
@@ -10,7 +11,10 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
+  useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { FiCompass } from "react-icons/fi";
 
 export default function GameSetting() {
@@ -43,6 +47,29 @@ export default function GameSetting() {
 }
 
 const Setting = () => {
+  const [setting, setSetting] = useState<SiteSettting | null>(null);
+
+  const toast = useToast();
+  const fetchSetting = async () => {
+    const url = "/api/getsiteSetting";
+    try {
+      const response = await axios.get<SiteSettting>(url);
+      setSetting(response.data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while fetching data",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchSetting();
+  }, []);
+
   return (
     <VStack
       alignItems={"flex-start"}
@@ -59,16 +86,50 @@ const Setting = () => {
         justifyContent={"space-around"}
         alignItems={"flex-start"}
       >
-        <GameReturnSetting />
-        <BetDeadlineSetting />
-        <TradingStatus />
-        <BalanceSetting />
+        {setting && (
+          <>
+            <GameReturnSetting setting={setting} />
+            <BetDeadlineSetting setting={setting} />
+            <TradingStatus setting={setting} />
+            <BalanceSetting setting={setting} />
+          </>
+        )}
       </HStack>
     </VStack>
   );
 };
 
-const GameReturnSetting = () => {
+const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
+  const { returnOnWin } = setting.site;
+
+  const toast = useToast();
+
+  const updateSetting = async (value: number) => {
+    const url = "/api/updateSetting";
+    try {
+      await axios.post<SiteSettting>(url, {
+        site: {
+          ...setting.site,
+          returnOnWin: value,
+        },
+      });
+      toast({
+        title: "Success",
+        description: "Setting updated successfully",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while updating setting",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
   return (
     <VStack
       justifyContent={"flex-start"}
@@ -76,7 +137,13 @@ const GameReturnSetting = () => {
       spacing={10}
     >
       <Text fontWeight={"bold"}>Return on Win</Text>
-      <NumberInput defaultValue={1.97}>
+      <NumberInput
+        step={0.01}
+        onChange={async (e) => {
+          await updateSetting(Number(e));
+        }}
+        defaultValue={returnOnWin}
+      >
         <NumberInputField />
         <NumberInputStepper>
           <NumberIncrementStepper />
@@ -87,20 +154,57 @@ const GameReturnSetting = () => {
   );
 };
 
-const BetDeadlineSetting = () => {
-  const tradingTime = [
-    "1 Minute Trading",
-    "2 Minutes Trading",
-    "3 Minutes Trading",
+const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
+  const { oneMinLock, fiveMinLock, threeMinLock, id } = setting.site;
+  const tradingTime: Array<{ label: string; value: number }> = [
+    { label: "1 Minute Trading", value: oneMinLock },
+    { label: "3 Minutes Trading", value: threeMinLock },
+    { label: "5 Minutes Trading", value: fiveMinLock },
   ];
+
+  const toast = useToast();
+
+  const updateSetting = async (value: number, index: number) => {
+    const url = "/api/updateSetting";
+    const label = ["oneMinLock", "threeMinLock", "fiveMinLock"];
+    try {
+      await axios.post<SiteSettting>(url, {
+        site: {
+          ...setting.site,
+          [label[index]]: value,
+        },
+      });
+      toast({
+        title: "Success",
+        description: "Setting updated successfully",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while updating setting",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <VStack alignItems={"flex-start"} spacing={7}>
       <Text fontWeight={"bold"}>Return on Win</Text>
       {tradingTime.map((time) => {
         return (
           <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-            <Text textAlign={"left"}>{time}</Text>
-            <NumberInput defaultValue={10}>
+            <Text textAlign={"left"}>{time.label}</Text>
+            <NumberInput
+              onChange={async (e) => {
+                await updateSetting(Number(e), tradingTime.indexOf(time));
+              }}
+              defaultValue={time.value}
+            >
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -114,18 +218,49 @@ const BetDeadlineSetting = () => {
   );
 };
 
-const TradingStatus = () => {
+const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
+  const { nasdaq, btc, gold, wti } = setting.site;
   const tradingStatus = [
     {
       label: "BTCUSDT",
-      status: "OPEN",
+      status: btc ? "OPEN" : "CLOSED",
     },
-    { label: "GOLD", status: "OPEN" },
-    { label: "NASDAQ", status: "OPEN" },
-    { label: "WTI", status: "OPEN" },
+    { label: "GOLD", status: gold ? "OPEN" : "CLOSED" },
+    { label: "NASDAQ", status: nasdaq ? "OPEN" : "CLOSED" },
+    { label: "WTI", status: wti ? "OPEN" : "CLOSED" },
   ];
 
   const options = ["OPEN", "CLOSED"];
+
+  const toast = useToast();
+
+  const updateSetting = async (value: string, index: number) => {
+    const url = "/api/updateSetting";
+    const label = ["btc", "gold", "nasdaq", "wti"];
+    try {
+      await axios.post<SiteSettting>(url, {
+        site: {
+          ...setting.site,
+          [label[index]]: value === "OPEN",
+        },
+      });
+      toast({
+        title: "Success",
+        description: "Setting updated successfully",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while updating setting",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
   return (
     <VStack alignItems={"flex-start"} spacing={7}>
       <Text fontWeight={"bold"}>Trading Status</Text>
@@ -133,7 +268,17 @@ const TradingStatus = () => {
         return (
           <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
             <Text>{status.label}</Text>
-            <Select size={"sm"} w={200}>
+            <Select
+              onChange={async (e) => {
+                await updateSetting(
+                  e.target.value,
+                  tradingStatus.indexOf(status)
+                );
+              }}
+              size={"sm"}
+              defaultValue={status.status}
+              w={200}
+            >
               {options.map((option) => {
                 return <option value={option}>{option}</option>;
               })}
@@ -145,7 +290,36 @@ const TradingStatus = () => {
   );
 };
 
-const BalanceSetting = () => {
+const BalanceSetting = ({ setting }: { setting: SiteSettting }) => {
+  const { minimumAmount } = setting.site;
+  const toast = useToast();
+
+  const updateSetting = async (value: number) => {
+    const url = "/api/updateSetting";
+    try {
+      await axios.post<SiteSettting>(url, {
+        site: {
+          ...setting.site,
+          minimumAmount: value,
+        },
+      });
+      toast({
+        title: "Success",
+        description: "Setting updated successfully",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while updating setting",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
   return (
     <VStack
       justifyContent={"flex-start"}
@@ -153,7 +327,12 @@ const BalanceSetting = () => {
       spacing={10}
     >
       <Text fontWeight={"bold"}>Minimum Amount</Text>
-      <NumberInput defaultValue={5000}>
+      <NumberInput
+        onChange={async (e) => {
+          await updateSetting(Number(e));
+        }}
+        defaultValue={minimumAmount}
+      >
         <NumberInputField />
         <NumberInputStepper>
           <NumberIncrementStepper />

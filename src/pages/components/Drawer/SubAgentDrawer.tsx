@@ -14,17 +14,26 @@ import {
   Thead,
   Tr,
   Td,
+  useDisclosure,
 } from "@chakra-ui/react";
+import AddAgent from "./AddAgent";
 
 function SubAgentDrawer({
   isOpen,
   onClose,
   agent,
+  masterAgentId,
 }: {
   isOpen: boolean;
   onClose: () => void;
   agent: Agent[];
+  masterAgentId: string;
 }) {
+  const {
+    isOpen: agentIsOpen,
+    onClose: agentOnClose,
+    onOpen: agentOnOpen,
+  } = useDisclosure();
   return (
     <Drawer isOpen={isOpen} placement="bottom" size={"xs"} onClose={onClose}>
       <DrawerContent>
@@ -67,10 +76,23 @@ function SubAgentDrawer({
             </Table>
           </VStack>
         </DrawerBody>
+        <AddAgent
+          isOpen={agentIsOpen}
+          masterAgentId={masterAgentId}
+          onClose={agentOnClose}
+        />
 
         <DrawerFooter>
           <Button variant="outline" mr={3} onClick={onClose}>
             Cancel
+          </Button>
+          <Button
+            colorScheme="green"
+            variant="outline"
+            mr={3}
+            onClick={agentOnOpen}
+          >
+            Add Agent
           </Button>
         </DrawerFooter>
       </DrawerContent>

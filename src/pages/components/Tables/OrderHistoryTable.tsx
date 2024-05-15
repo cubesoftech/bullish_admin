@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   flexRender,
   Column,
+  Row,
 } from "@tanstack/react-table";
 import React from "react";
 import {
@@ -98,35 +99,7 @@ export default function OrderHistoryTable({
         </Thead>
         <Tbody>
           {table.getRowModel().rows.map((row) => {
-            return (
-              <Tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
-                  return (
-                    <Td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </Td>
-                  );
-                })}
-                <Td>
-                  <OrderHistoryDrawer
-                    isOpen={isOpen}
-                    onClose={onClose}
-                    OrderHistoryColumn={row.original}
-                  />
-                  <Button
-                    onClick={onOpen}
-                    colorScheme="orange"
-                    size={"sm"}
-                    variant={"outline"}
-                  >
-                    Modify
-                  </Button>
-                </Td>
-              </Tr>
-            );
+            return <OrderHistoryRow key={row.id} row={row} />;
           })}
         </Tbody>
       </ChakraTable>
@@ -193,6 +166,37 @@ export default function OrderHistoryTable({
         </Select>
       </HStack>
     </VStack>
+  );
+}
+
+function OrderHistoryRow({ row }: { row: Row<OrderHistoryColumnInterface> }) {
+  const data = row.original;
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  return (
+    <Tr key={row.id}>
+      {row.getVisibleCells().map((cell) => {
+        return (
+          <Td key={cell.id}>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </Td>
+        );
+      })}
+      <Td>
+        <OrderHistoryDrawer
+          isOpen={isOpen}
+          onClose={onClose}
+          OrderHistoryColumn={data}
+        />
+        <Button
+          onClick={onOpen}
+          colorScheme="orange"
+          size={"sm"}
+          variant={"outline"}
+        >
+          Modify
+        </Button>
+      </Td>
+    </Tr>
   );
 }
 

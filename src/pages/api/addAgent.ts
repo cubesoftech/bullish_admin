@@ -1,4 +1,4 @@
-import { MasterAgentInterface } from "../../utils/interface";
+import { AgentInterface } from "../../utils/interface";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../utils/index";
 
@@ -15,8 +15,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { email, name, nickname, password, royalty } =
-    req.body as MasterAgentInterface;
+  const { email, name, nickname, password, royalty, masterAgentId } =
+    req.body as AgentInterface;
 
   if (await emailAlreadyExists(email)) {
     return res.status(400).json({
@@ -30,22 +30,25 @@ export default async function handler(
       name,
       nickname,
       password,
-      role: "MASTER_AGENT",
+      role: "AGENT",
       confirmpassword: password,
       id: Math.floor(Math.random() * 1000000).toString(),
     },
   });
+
   const { id } = user;
 
-  await prisma.masteragents.create({
+  await prisma.agents.create({
     data: {
-      id: Math.floor(Math.random() * 1000000).toString(),
+      referralCode: Math.floor(Math.random() * 1000000).toString(),
+      masteragentsId: masterAgentId,
       memberId: id,
       royalty,
+      id: Math.floor(Math.random() * 1000000).toString(),
     },
   });
 
   res.status(200).json({
-    message: "Master Agent created successfully",
+    message: "Agent created successfully",
   });
 }
