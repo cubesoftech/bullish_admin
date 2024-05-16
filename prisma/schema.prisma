@@ -51,6 +51,7 @@ model members {
   transaction     transaction[]
   agents          agents?        @relation(fields: [agentsId], references: [id])
   agentsId        String?
+  createdAt       DateTime?       @default(now())
 }
 
 model masteragents {

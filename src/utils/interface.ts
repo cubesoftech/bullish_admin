@@ -221,3 +221,16 @@ export interface OrderHistoryChangerPayload {
   tradePNL: number;
   type: string;
 }
+
+export interface InquiryPayload {
+  id: string;
+  answer: string;
+}
+
+export interface SocketListenerPayload {
+  newmembers: number;
+  inquires: number;
+  withdrawals: number;
+  deposits: number;
+  trades: number;
+}

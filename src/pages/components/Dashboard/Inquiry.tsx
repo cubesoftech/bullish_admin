@@ -47,6 +47,8 @@ export default function UserManagement() {
     []
   );
 
+  const [refetch, setRefetch] = React.useState(true);
+
   const [data, setData] = React.useState<InquryColumn[]>([]);
 
   const requestInquiries = async () => {
@@ -124,6 +126,7 @@ export default function UserManagement() {
         setPagination={setPagination}
         columns={columns}
         data={data}
+        refetch={() => setRefetch(true)}
       />
     </VStack>
   );

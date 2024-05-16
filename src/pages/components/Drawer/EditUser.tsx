@@ -68,7 +68,7 @@ function EditUser({
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>수정하다 User</DrawerHeader>
+        <DrawerHeader>수정 User</DrawerHeader>
 
         <DrawerBody mb={10}>
           <VStack

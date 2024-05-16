@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { VStack, Heading, Icon, HStack } from "@chakra-ui/react";
+import { VStack, Heading, Icon, HStack, Text } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import {
   ArrayOrderHistory,
@@ -41,14 +41,24 @@ export default function OrderHistory() {
         accessorKey: "trade",
         accessorFn: (row) => row.trade,
         header: "거래",
-        cell: (info) => (info.getValue() === "LONG" ? "롱" : "쇼트"),
+        cell: (info) =>
+          info.getValue() === "LONG" ? (
+            <Text color={"green"}>롱</Text>
+          ) : (
+            <Text color={"red"}>쇼트</Text>
+          ),
         footer: "Trade",
       },
       {
         accessorKey: "result",
         accessorFn: (row) => row.result,
         header: "결과",
-        cell: (info) => (info.getValue() === "LONG" ? "롱" : "쇼트"),
+        cell: (info) =>
+          info.getValue() === "LONG" ? (
+            <Text color={"green"}>롱</Text>
+          ) : (
+            <Text color={"red"}>쇼트</Text>
+          ),
       },
       {
         accessorFn: (row) => row.tradeAmount,

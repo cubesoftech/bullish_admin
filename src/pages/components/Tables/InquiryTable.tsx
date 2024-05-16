@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   flexRender,
   Column,
+  Row,
 } from "@tanstack/react-table";
 import React from "react";
 import {
@@ -25,18 +26,22 @@ import {
   Button,
   Select,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
+import EditInqury from "../Drawer/EditInqury";
 
 export default function InquiryTable({
   data,
   columns,
   pagination,
   setPagination,
+  refetch,
 }: {
   data: InquryColumn[];
   columns: ColumnDef<InquryColumn>[];
   pagination: PaginationState;
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
+  refetch: () => void;
 }) {
   const table = useReactTable({
     columns,
@@ -94,26 +99,7 @@ export default function InquiryTable({
         </Thead>
         <Tbody>
           {table.getRowModel().rows.map((row) => {
-            return (
-              <Tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
-                  console.log(cell.getContext(), cell.id);
-                  return (
-                    <Td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </Td>
-                  );
-                })}
-                <Td>
-                  <Button colorScheme="orange" size={"sm"} variant={"outline"}>
-                    수정
-                  </Button>
-                </Td>
-              </Tr>
-            );
+            return <InquiryTableRow row={row} />;
           })}
         </Tbody>
       </ChakraTable>
@@ -180,6 +166,37 @@ export default function InquiryTable({
         </Select>
       </HStack>
     </VStack>
+  );
+}
+
+function InquiryTableRow({
+  row,
+}: {
+  row: Row<InquryColumn>;
+}): React.JSX.Element {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const inqury = row.original;
+  return (
+    <Tr key={row.id}>
+      <EditInqury inqury={inqury} isOpen={isOpen} onClose={onClose} />
+      {row.getVisibleCells().map((cell) => {
+        return (
+          <Td key={cell.id}>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </Td>
+        );
+      })}
+      <Td>
+        <Button
+          onClick={onOpen}
+          colorScheme="orange"
+          size={"sm"}
+          variant={"outline"}
+        >
+          수정
+        </Button>
+      </Td>
+    </Tr>
   );
 }
 
