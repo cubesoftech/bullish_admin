@@ -5,6 +5,7 @@ interface Data {
   status: boolean;
   role?: string;
   message: string;
+  id?: string;
 }
 
 export default async function handler(
@@ -39,6 +40,7 @@ export default async function handler(
       status: true,
       role: user.role,
       message: "Login successful",
+      id: user.id,
     });
   }
   return res.status(405).json({

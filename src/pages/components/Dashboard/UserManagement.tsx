@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { VStack, Heading, Icon, HStack } from "@chakra-ui/react";
+import { VStack, Heading, Icon, HStack, useToast } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUser, UserColumn } from "@/utils/interface";
 import axios from "axios";
@@ -109,10 +109,22 @@ export default function UserManagement() {
     }
   };
 
+  const toast = useToast();
+
   useEffect(() => {
     if (refetch) {
-      requestAllUsers();
-      setRefetch(false);
+      try {
+        requestAllUsers();
+        setRefetch(false);
+      } catch (error) {
+        toast({
+          title: "An error occurred.",
+          description: "Unable to fetch the data.",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
     }
   }, [refetch]);
 

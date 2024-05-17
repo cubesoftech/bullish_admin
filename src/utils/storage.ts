@@ -4,9 +4,11 @@ import { devtools, persist } from "zustand/middleware";
 interface Authentication {
   isAuthenticated: boolean;
   role: "ADMIN" | "AGENT" | "MASTERAGENT";
+  id: string;
   changeAuthentication: (
     isAuthenticated: boolean,
-    role: "ADMIN" | "AGENT" | "MASTERAGENT"
+    role: "ADMIN" | "AGENT" | "MASTERAGENT",
+    id: string
   ) => void;
 }
 
@@ -16,8 +18,9 @@ export const useAuthentication = create<Authentication>()(
       (set) => ({
         isAuthenticated: false,
         role: "ADMIN",
-        changeAuthentication: (isAuthenticated, role) =>
-          set({ isAuthenticated, role }),
+        id: "",
+        changeAuthentication: (isAuthenticated, role, id) =>
+          set({ isAuthenticated, role, id }),
       }),
       { name: "useAuthentication" }
     )

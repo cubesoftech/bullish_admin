@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import { FiRotateCcw } from "react-icons/fi";
 import OrderHistoryTable from "../Tables/OrderHistoryTable";
+import { useAuthentication } from "@/utils/storage";
 
 export default function OrderHistory() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -15,6 +16,8 @@ export default function OrderHistory() {
     pageSize: 10,
   });
 
+  const { role, id } = useAuthentication();
+  console.log(role, id);
   const columns = useMemo<ColumnDef<OrderHistoryColumnInterface>[]>(
     () => [
       {
@@ -81,7 +84,7 @@ export default function OrderHistory() {
   const requestAllOrderHistory = async () => {
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllOrderHistory?page=${page}`;
+    const url = `/api/getAllOrderHistory?page=${page}&id=${id}&role=${role}`;
     while (hasMoreData) {
       const res = await axios.get<ArrayOrderHistory>(url);
       let { hasMore, orderHistory } = res.data;

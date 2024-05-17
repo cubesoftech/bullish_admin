@@ -9,6 +9,8 @@ import Announcement from "../Dashboard/Announcement";
 import Inquiry from "../Dashboard/Inquiry";
 import { LinkItems } from "@/utils";
 import Agents from "../Dashboard/Agents";
+import Trades from "../Dashboard/Trades";
+import AUDIT from "../Dashboard/Audit";
 
 export default function Main() {
   const { selectedMenu } = useNavigation();
@@ -22,6 +24,8 @@ export default function Main() {
       {selectedMenu === 5 && <Announcement />}
       {selectedMenu === 6 && <OrderHistory />}
       {selectedMenu === 7 && <Inquiry />}
+      {selectedMenu === 8 && <Trades />}
+      {selectedMenu === 9 && <AUDIT />}
       {selectedMenu === agents && <Agents />}
     </SideNavigation>
   );

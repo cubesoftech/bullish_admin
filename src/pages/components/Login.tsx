@@ -33,6 +33,7 @@ export default function Login() {
         status: boolean;
         role: "ADMIN" | "AGENT" | "MASTERAGENT";
         message: string;
+        id: string;
       }>("/api/login", payload);
       if (data.status) {
         toast({
@@ -42,7 +43,7 @@ export default function Login() {
           duration: 9000,
           isClosable: true,
         });
-        changeAuthentication(true, data.role);
+        changeAuthentication(true, data.role, data.id);
         return;
       } else {
         toast({

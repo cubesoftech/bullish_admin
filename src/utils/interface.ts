@@ -1,4 +1,8 @@
-import { transaction_status, transaction_type } from "@prisma/client";
+import {
+  recenttrades_type,
+  transaction_status,
+  transaction_type,
+} from "@prisma/client";
 
 export interface TransactionColumn {
   id?: string;
@@ -233,4 +237,24 @@ export interface SocketListenerPayload {
   withdrawals: number;
   deposits: number;
   trades: number;
+}
+
+export interface TradeLock {
+  btc: Stock;
+  oil: Stock;
+  gold: Stock;
+  us100: Stock;
+}
+
+export interface Stock {
+  one_min: N1Min[];
+  three_min: N1Min[];
+  five_min: N1Min[];
+}
+
+export interface N1Min {
+  id: string;
+  type: recenttrades_type;
+  tradinghours: Date;
+  result: boolean;
 }
