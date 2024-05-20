@@ -27,6 +27,7 @@ import {
   Select,
   Text,
   useDisclosure,
+  Switch,
 } from "@chakra-ui/react";
 import EditUser from "../Drawer/EditUser";
 
@@ -36,12 +37,21 @@ export default function UserTable({
   pagination,
   setPagination,
   setRefetch,
+  selectedUser,
+  setSelectedUser,
 }: {
   data: UserColumn[];
   columns: ColumnDef<UserColumn>[];
   pagination: PaginationState;
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedUser: { tester: boolean; realUsers: boolean };
+  setSelectedUser: React.Dispatch<
+    React.SetStateAction<{
+      tester: boolean;
+      realUsers: boolean;
+    }>
+  >;
 }) {
   const refetch = () => {
     setRefetch(true);
@@ -65,6 +75,30 @@ export default function UserTable({
 
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+      <HStack w={"100%"}>
+        <HStack>
+          <Text>Tester</Text>
+          <Switch
+            onChange={(e) => {
+              setSelectedUser({ ...selectedUser, tester: e.target.checked });
+              setRefetch(true);
+            }}
+            isChecked={selectedUser.tester}
+          ></Switch>
+        </HStack>
+        <HStack>
+          <Text>Live User</Text>
+          <Switch
+            isChecked={selectedUser.realUsers}
+            onChange={(e) => {
+              setRefetch(true);
+
+              setSelectedUser({ ...selectedUser, realUsers: e.target.checked });
+            }}
+          ></Switch>
+        </HStack>
+      </HStack>
+
       <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (

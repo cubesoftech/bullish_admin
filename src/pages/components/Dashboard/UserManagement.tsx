@@ -12,6 +12,11 @@ export default function UserManagement() {
     pageSize: 10,
   });
 
+  const [selectedUser, setSelectedUser] = React.useState({
+    tester: true,
+    realUsers: true,
+  });
+
   const columns = useMemo<ColumnDef<UserColumn>[]>(
     () => [
       {
@@ -89,6 +94,16 @@ export default function UserManagement() {
           password,
           nickname,
         } = user;
+        if (!selectedUser.tester) {
+          if (email.includes("test")) {
+            return;
+          }
+        }
+        if (!selectedUser.realUsers) {
+          if (!email.includes("test")) {
+            return;
+          }
+        }
         setData((data) => [
           ...data,
           {
@@ -126,7 +141,7 @@ export default function UserManagement() {
         });
       }
     }
-  }, [refetch]);
+  }, [refetch, selectedUser.realUsers, selectedUser.tester]);
 
   return (
     <VStack spacing={5}>
@@ -157,6 +172,8 @@ export default function UserManagement() {
         columns={columns}
         data={data}
         setRefetch={setRefetch}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
       />
     </VStack>
   );

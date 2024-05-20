@@ -9,6 +9,14 @@ const get_all_transaction2 = async (month: number) => {
   const users = await prisma.members.findMany({
     where: {
       role: "USER",
+      email: {
+        not: {
+          contains: "test",
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
     select: {
       id: true,
