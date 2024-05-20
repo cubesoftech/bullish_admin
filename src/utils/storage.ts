@@ -3,11 +3,11 @@ import { devtools, persist } from "zustand/middleware";
 
 interface Authentication {
   isAuthenticated: boolean;
-  role: "ADMIN" | "AGENT" | "MASTERAGENT";
+  role: "ADMIN" | "AGENT" | "MASTER_AGENT";
   id: string;
   changeAuthentication: (
     isAuthenticated: boolean,
-    role: "ADMIN" | "AGENT" | "MASTERAGENT",
+    role: "ADMIN" | "AGENT" | "MASTER_AGENT",
     id: string
   ) => void;
 }

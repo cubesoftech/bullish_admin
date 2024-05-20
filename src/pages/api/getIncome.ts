@@ -1,36 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils";
 
-const get_all_transaction = async () => {
-  const transaction = await prisma.members.findMany({
-    where: {
-      role: "USER",
-    },
-    include: {
-      transaction: {
-        where: {
-          status: "completed",
-        },
-      },
-    },
-  });
-
-  const modifiedTransaction = transaction.map(async (e) => {
-    const { transaction } = e;
-    let deposit = 0;
-    let withdrawals = 0;
-    transaction.map((g) => {
-      const { type } = g;
-      if (type === "deposit") deposit += g.amount;
-      if (type === "withdrawal") withdrawals += g.amount;
-    });
-    return { ...e, deposit, withdrawals };
-  });
-  return modifiedTransaction;
-};
-
 const get_all_transaction2 = async (month: number) => {
   //if month is 1, it means January 12 means December
+  const greaterThan = new Date(new Date().getFullYear(), month - 1, 1);
+  const lessThan = new Date(new Date().getFullYear(), month, 1);
+  console.log(greaterThan.toLocaleDateString(), lessThan.toLocaleDateString());
   const users = await prisma.members.findMany({
     where: {
       role: "USER",
@@ -57,6 +32,7 @@ const get_all_transaction2 = async (month: number) => {
         select: {
           amount: true,
           type: true,
+          createdAt: true,
         },
         where: {
           status: "completed",
@@ -86,8 +62,11 @@ const get_all_transaction2 = async (month: number) => {
     return { ...user, deposit, withdrawals };
   });
   const modifiedUsers2 = modifiedUsers.map((user) => {
+    const userBalance =
+      user?.withdrawals === 0 && user?.deposit === 0 ? 0 : user?.balance || 0;
     const operator_gross_income =
-      user.deposit - user.withdrawals + (user?.balance || 0);
+      user.deposit - (user.withdrawals + (userBalance || 0));
+    console.log(operator_gross_income);
     const master_agent_gross_income =
       (operator_gross_income * (user.agents?.masteragents?.royalty || 0)) / 100;
     const agent_gross_income =
@@ -108,30 +87,14 @@ const get_all_transaction2 = async (month: number) => {
     };
   });
 
-  const totalOperatorGrossIncome = modifiedUsers2.reduce(
-    (sum, user) => sum + user.operator_gross_income,
-    0
-  );
-  const totalOperatorNetIncome = modifiedUsers2.reduce(
-    (sum, user) => sum + user.operator_net_income,
-    0
-  );
-  const totalAgentGrossIncome = modifiedUsers2.reduce(
-    (sum, user) => sum + user.agent_gross_income,
-    0
-  );
-  const totalAgentNetIncome = modifiedUsers2.reduce(
-    (sum, user) => sum + user.agent_net_income,
-    0
-  );
-  const totalMasterAgentGrossIncome = modifiedUsers2.reduce(
-    (sum, user) => sum + user.master_agent_gross_income,
-    0
-  );
-  const totalMasterAgentNetIncome = modifiedUsers2.reduce(
-    (sum, user) => sum + user.master_agent_net_income,
-    0
-  );
+  const {
+    totalOperatorGrossIncome,
+    totalOperatorNetIncome,
+    totalAgentGrossIncome,
+    totalAgentNetIncome,
+    totalMasterAgentGrossIncome,
+    totalMasterAgentNetIncome,
+  } = totality();
   return {
     totalOperatorGrossIncome,
     totalOperatorNetIncome,
@@ -141,12 +104,180 @@ const get_all_transaction2 = async (month: number) => {
     totalMasterAgentNetIncome,
     users: modifiedUsers2,
   };
+
+  function totality() {
+    const totalOperatorGrossIncome = modifiedUsers2.reduce(
+      (sum, user) => sum + user.operator_gross_income,
+      0
+    );
+    const totalOperatorNetIncome = modifiedUsers2.reduce(
+      (sum, user) => sum + user.operator_net_income,
+      0
+    );
+    const totalAgentGrossIncome = modifiedUsers2.reduce(
+      (sum, user) => sum + user.agent_gross_income,
+      0
+    );
+    const totalAgentNetIncome = modifiedUsers2.reduce(
+      (sum, user) => sum + user.agent_net_income,
+      0
+    );
+    const totalMasterAgentGrossIncome = modifiedUsers2.reduce(
+      (sum, user) => sum + user.master_agent_gross_income,
+      0
+    );
+    const totalMasterAgentNetIncome = modifiedUsers2.reduce(
+      (sum, user) => sum + user.master_agent_net_income,
+      0
+    );
+    return {
+      totalOperatorGrossIncome,
+      totalOperatorNetIncome,
+      totalAgentGrossIncome,
+      totalAgentNetIncome,
+      totalMasterAgentGrossIncome,
+      totalMasterAgentNetIncome,
+    };
+  }
+};
+
+const get_all_transaction2_master = async (month: number, id: string) => {
+  const masterAgent = await prisma.masteragents.findFirst({
+    where: {
+      memberId: id,
+    },
+  });
+
+  const withdrawal = await prisma.agents_withdrawals.aggregate({
+    _sum: {
+      amount: true,
+    },
+    where: {
+      membersId: id,
+      status: "completed",
+    },
+  });
+
+  if (!masterAgent) {
+    return {
+      totalOperatorGrossIncome: 0,
+      totalOperatorNetIncome: 0,
+      totalAgentGrossIncome: 0,
+      totalAgentNetIncome: 0,
+      totalMasterAgentGrossIncome: 0,
+      totalMasterAgentNetIncome: 0,
+      users: [],
+    };
+  }
+  const { id: MasteragentId } = masterAgent;
+  let allUsers = await get_all_transaction2(month);
+  const masterAgents = allUsers.users.filter((user) => {
+    const { agents } = user;
+    return agents?.masteragents?.id === MasteragentId;
+  });
+
+  const withdrawalAmount = withdrawal._sum.amount || 0;
+
+  allUsers.totalMasterAgentGrossIncome = masterAgents.reduce(
+    (sum, user) => sum + user.master_agent_gross_income,
+    0
+  );
+  allUsers.totalMasterAgentNetIncome = masterAgents.reduce(
+    (sum, user) => sum + user.master_agent_net_income,
+    0
+  );
+  allUsers.totalOperatorGrossIncome = masterAgents.reduce(
+    (sum, user) => sum + user.operator_gross_income,
+    0
+  );
+  allUsers.totalOperatorNetIncome = masterAgents.reduce(
+    (sum, user) => sum + user.operator_net_income,
+    0
+  );
+  allUsers.totalAgentGrossIncome = masterAgents.reduce(
+    (sum, user) => sum + user.agent_gross_income,
+    0
+  );
+  allUsers.totalAgentNetIncome = masterAgents.reduce(
+    (sum, user) => sum + user.agent_net_income,
+    0
+  );
+  allUsers.users = masterAgents;
+
+  allUsers.totalMasterAgentNetIncome -= withdrawalAmount;
+  return { ...allUsers, withdrawal: withdrawal._sum.amount || 0 };
+};
+
+const get_all_transaction2_agent = async (month: number, id: string) => {
+  const withdrawal = await prisma.agents_withdrawals.aggregate({
+    _sum: {
+      amount: true,
+    },
+    where: {
+      membersId: id,
+      status: "completed",
+    },
+  });
+
+  let allUsers = await get_all_transaction2(month);
+  const masterAgents = allUsers.users.filter((user) => {
+    const { agents } = user;
+    return agents?.memberId === id;
+  });
+
+  const withdrawalAmount = withdrawal._sum.amount || 0;
+
+  allUsers.totalMasterAgentGrossIncome = masterAgents.reduce(
+    (sum, user) => sum + user.master_agent_gross_income,
+    0
+  );
+  allUsers.totalMasterAgentNetIncome = masterAgents.reduce(
+    (sum, user) => sum + user.master_agent_net_income,
+    0
+  );
+  allUsers.totalOperatorGrossIncome = masterAgents.reduce(
+    (sum, user) => sum + user.operator_gross_income,
+    0
+  );
+  allUsers.totalOperatorNetIncome = masterAgents.reduce(
+    (sum, user) => sum + user.operator_net_income,
+    0
+  );
+  allUsers.totalAgentGrossIncome = masterAgents.reduce(
+    (sum, user) => sum + user.agent_gross_income,
+    0
+  );
+  allUsers.totalAgentNetIncome = masterAgents.reduce(
+    (sum, user) => sum + user.agent_net_income,
+    0
+  );
+  allUsers.users = masterAgents;
+
+  allUsers.totalAgentNetIncome -= withdrawalAmount;
+  return { ...allUsers, withdrawal: withdrawal._sum.amount || 0 };
 };
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const all = await get_all_transaction2(5);
+  const { month, role, id } = req.query as any as {
+    month: number;
+    role: "ADMIN" | "AGENT" | "MASTER_AGENT";
+    id: string;
+  };
+  if (role && id) {
+    if (role === "MASTER_AGENT") {
+      const user = await get_all_transaction2_master(Number(month), id);
+      console.log(user);
+      return res.status(200).json(user);
+    }
+    if (role === "AGENT") {
+      const user = await get_all_transaction2_agent(Number(month), id);
+      return res.status(200).json(user);
+    }
+  }
+  const monthtoday = new Date().getMonth() + 1;
+  const all = await get_all_transaction2(Number(month) || monthtoday);
   return res.status(200).json(all);
 }

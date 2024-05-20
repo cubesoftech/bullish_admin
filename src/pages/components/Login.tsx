@@ -31,7 +31,7 @@ export default function Login() {
     try {
       const { data } = await axios.post<{
         status: boolean;
-        role: "ADMIN" | "AGENT" | "MASTERAGENT";
+        role: "ADMIN" | "AGENT" | "MASTER_AGENT";
         message: string;
         id: string;
       }>("/api/login", payload);
