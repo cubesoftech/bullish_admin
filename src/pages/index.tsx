@@ -6,11 +6,16 @@ import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SocketListenerPayload } from "@/utils/interface";
+import SoundPlayer from "./components/utils/SoundPlayer";
 // import useSound from "use-sound";
 
 export default function Home() {
   const { isAuthenticated } = useAuthentication();
-  const [playbackRate, setPlaybackRate] = useState(0.75);
+  const [playSound, setPlaySound] = useState<boolean>(false);
+  const handlePlaySound = () => {
+    setPlaySound(true);
+    setTimeout(() => setPlaySound(false), 1000); // Reset playSound after 1 second
+  };
 
   // const [play] = useSound("/assets/sound.mp3", {
   //   playbackRate,
@@ -28,23 +33,23 @@ export default function Home() {
       const { withdrawals, deposits, inquires, newmembers, trades } = data;
       console.log({ withdrawals, deposits, inquires, newmembers, trades });
       if (withdrawals) {
-        // play();
+        handlePlaySound();
         toast.info(`New Withdrawal Request: ${withdrawals} withdrawals`);
       }
       if (deposits) {
-        // play();
+        handlePlaySound();
         toast.info(`New Deposit Request: ${deposits} deposits`);
       }
       if (inquires) {
-        // play();
+        handlePlaySound();
         toast.info(`New Inquiry: ${inquires} inquries`);
       }
       if (newmembers) {
-        // play();
+        handlePlaySound();
         toast.info(`New Member: ${newmembers} new members`);
       }
       if (trades) {
-        // play();
+        handlePlaySound();
         toast.info(`New Trade: ${trades} trades`);
       }
     });
@@ -73,6 +78,7 @@ export default function Home() {
           theme="light"
           transition={Bounce}
         />
+        <SoundPlayer playSound={playSound} />
         <Main />
       </>
     );
