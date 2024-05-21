@@ -61,9 +61,9 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
           <TableCaption>Imperial to metric conversion factors</TableCaption>
           <Thead>
             <Tr>
-              <Th>Trading Hour</Th>
-              <Th>Result</Th>
-              <Th>Action</Th>
+              <Th>거래시간</Th>
+              <Th>결과</Th>
+              <Th>수정</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -99,8 +99,10 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
                       colorScheme={trade.result ? "red" : "green"}
                     >
                       {key === 0
-                        ? "This is Currently on trade"
-                        : `Change to ${switcher}`}
+                        ? "진행중인거래입니다"
+                        : `다음으로 변경 ${
+                            switcher === "LONG" ? "LONG" : "SHORT"
+                          }`}
                     </Button>
                   </Th>
                 </Tr>

@@ -109,13 +109,13 @@ export default function AUDIT() {
             }}
             as={GiFamilyTree}
           />
-          <Heading>AUDIT</Heading>
+          <Heading>정산</Heading>
           <HStack m={5}>
-            <Text>Gross Income :</Text>
+            <Text>매출 I :</Text>
             <Text>{income.grossIncome.toLocaleString()} KRW</Text>
           </HStack>
           <HStack m={5} alignItems={"flex-end"}>
-            <Text>Net Income :</Text>
+            <Text>수익 :</Text>
             <Text>{income.netIncome.toLocaleString()} KRW</Text>
           </HStack>
 

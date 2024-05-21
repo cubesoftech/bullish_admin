@@ -23,7 +23,7 @@ export default function Trades() {
             }}
             as={GiFamilyTree}
           />
-          <Heading>TRADES</Heading>
+          <Heading>답안지</Heading>
         </HStack>
       </HStack>
       <TradesTab />

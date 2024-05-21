@@ -11,6 +11,7 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -85,22 +86,37 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
           <Thead>
             <Tr>
               <Th>#</Th>
-              <Th>Operator</Th>
-              <Th>Master Agent</Th>
-              <Th>Agent</Th>
+              {role === "ADMIN" && <Th>본사</Th>}
+              {(role === "ADMIN" || role === "MASTER_AGENT") && <Th>총판</Th>}
+              <Th>에이전트</Th>
             </Tr>
           </Thead>
           <Tbody>
             <Tr>
-              <Td>Gross Income</Td>
-              <Td>{income.totalOperatorGrossIncome.toLocaleString()} KRW</Td>
-              <Td>{income.totalMasterAgentGrossIncome.toLocaleString()} KRW</Td>
+              <Td>매출</Td>
+              {role === "ADMIN" && (
+                <Td>{income.totalOperatorGrossIncome.toLocaleString()} KRW</Td>
+              )}
+              {role === "ADMIN" ||
+                (role === "MASTER_AGENT" && (
+                  <Td>
+                    {income.totalMasterAgentGrossIncome.toLocaleString()} KRW
+                  </Td>
+                ))}
+
               <Td>{income.totalAgentGrossIncome.toLocaleString()} KRW</Td>
             </Tr>
             <Tr>
-              <Td>Net Income</Td>
-              <Td>{income.totalOperatorNetIncome.toLocaleString()} KRW</Td>
-              <Td>{income.totalMasterAgentNetIncome.toLocaleString()} KRW</Td>
+              <Td>수익</Td>
+              {role === "ADMIN" && (
+                <Td>{income.totalOperatorNetIncome.toLocaleString()} KRW</Td>
+              )}
+              {role === "ADMIN" ||
+                (role === "MASTER_AGENT" && (
+                  <Td>
+                    {income.totalMasterAgentNetIncome.toLocaleString()} KRW
+                  </Td>
+                ))}
               <Td>{income.totalAgentNetIncome.toLocaleString()} KRW</Td>
             </Tr>
           </Tbody>
@@ -112,16 +128,21 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
             <Thead>
               <Tr>
                 <Th>#</Th>
-                <Th>User Name</Th>
-                <Th>Balance</Th>
-                <Th>Total Withdraw</Th>
-                <Th>Total Deposit</Th>
-                <Th>Operator Gross Income</Th>
-                <Th>Operator Net Income</Th>
-                <Th>Master Agent Gross Income</Th>
-                <Th>Master Agent Net Income</Th>
-                <Th>Agent Gross Income</Th>
-                <Th>Agent Net Income</Th>
+                <Th>사용자명</Th>
+                <Th>잔액</Th>
+                <Th>총 출금액</Th>
+                <Th>총 입금액</Th>
+                {role === "ADMIN" && <Th>본사매출</Th>}
+                {role === "ADMIN" && <Th>본사수익</Th>}
+
+                {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                  <Th>총판매출</Th>
+                )}
+                {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                  <Th>총판수익</Th>
+                )}
+                <Th>에이전트매출</Th>
+                <Th>에이전트수익</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -133,12 +154,22 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
                     <Td>{user.balance.toLocaleString()} KRW</Td>
                     <Td>{user.withdrawals.toLocaleString()} KRW</Td>
                     <Td>{user.deposit.toLocaleString()} KRW</Td>
-                    <Td>{user.operator_gross_income.toLocaleString()} KRW</Td>
-                    <Td>{user.operator_net_income.toLocaleString()} KRW</Td>
-                    <Td>
-                      {user.master_agent_gross_income.toLocaleString()} KRW
-                    </Td>
-                    <Td>{user.master_agent_net_income.toLocaleString()} KRW</Td>
+                    {role === "ADMIN" && (
+                      <Td>{user.operator_gross_income.toLocaleString()} KRW</Td>
+                    )}
+                    {role === "ADMIN" && (
+                      <Td>{user.operator_net_income.toLocaleString()} KRW</Td>
+                    )}
+                    {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                      <Td>
+                        {user.master_agent_gross_income.toLocaleString()} KRW
+                      </Td>
+                    )}
+                    {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                      <Td>
+                        {user.master_agent_net_income.toLocaleString()} KRW
+                      </Td>
+                    )}
                     <Td>{user.agent_gross_income.toLocaleString()} KRW</Td>
                     <Td>{user.agent_net_income.toLocaleString()} KRW</Td>
                   </Tr>
@@ -169,18 +200,28 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
                       <Tr key={index}>
                         <Td>{index + 1}</Td>
                         <Td>{withdrawal.amount.toLocaleString()} KRW</Td>
-                        <Td>{withdrawal.status}</Td>
+                        <Td>
+                          <Text
+                            color={
+                              withdrawal.status == "completed" ? "green" : "red"
+                            }
+                          >
+                            {withdrawal.status}
+                          </Text>
+                        </Td>
                         <Td>{new Date(withdrawal.createdAt).toDateString()}</Td>
                         <Td>
-                          <Button
-                            size={"sm"}
-                            onClick={() => {
-                              handleClick(withdrawal.id);
-                            }}
-                            colorScheme="blue"
-                          >
-                            Approve
-                          </Button>
+                          {withdrawal.status === "PENDING" && (
+                            <Button
+                              size={"sm"}
+                              onClick={() => {
+                                handleClick(withdrawal.id);
+                              }}
+                              colorScheme="blue"
+                            >
+                              Approve
+                            </Button>
+                          )}
                         </Td>
                       </Tr>
                     );
