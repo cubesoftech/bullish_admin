@@ -44,7 +44,7 @@ export default async function handler(
       password,
       role: "MASTER_AGENT",
       confirmpassword: password,
-      id: referralCode(),
+      id: Math.floor(Math.random() * 1000000).toString(),
     },
   });
   const { id } = user;
@@ -54,7 +54,7 @@ export default async function handler(
       id: Math.floor(Math.random() * 1000000).toString(),
       memberId: id,
       royalty,
-      referralCode: Math.floor(Math.random() * 1000000).toString(),
+      referralCode: referralCode(),
     },
   });
 
