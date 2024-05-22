@@ -32,6 +32,7 @@ function AgentsTable() {
     "/api/getAllMasterAgents",
     async (url) => {
       const res = await axios.get<ArrayMasterAgent>(url);
+      console.log(res.data);
       return res.data;
     },
     {
@@ -50,6 +51,7 @@ function AgentsTable() {
             <Th>이름</Th>
             <Th>닉네임</Th>
             <Th>이메일</Th>
+            <Th>Referral Code</Th>
             <Th>비밀번호</Th>
             <Th>왕족</Th>
             <Th>총 상담원</Th>
@@ -116,6 +118,7 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
       <Td>{agent.member.name}</Td>
       <Td>{agent.member.nickname}</Td>
       <Td>{agent.member.email}</Td>
+      <Td>{agent.referralCode}</Td>
       <Td>{agent.member.password}</Td>
       <Td>{agent.royalty} %</Td>
       <Td>{agent.agents.length}</Td>

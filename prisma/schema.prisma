@@ -58,6 +58,7 @@ model members {
 model masteragents {
   id       String   @id @unique(map: "MasterAgents_id_key")
   memberId String
+  referralCode String? @default(cuid())
   agents   agents[]
   royalty  Int
 }

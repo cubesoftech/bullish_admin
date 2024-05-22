@@ -42,6 +42,7 @@ export default async function handler(
       id: Math.floor(Math.random() * 1000000).toString(),
       memberId: id,
       royalty,
+      referralCode: Math.floor(Math.random() * 1000000).toString(),
     },
   });
 

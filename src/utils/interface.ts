@@ -172,6 +172,7 @@ export interface Masteragent {
   id: string;
   memberId: string;
   royalty: number;
+  referralCode: string | null;
   agents: Agent[];
   member: Member;
 }
