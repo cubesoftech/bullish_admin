@@ -106,7 +106,7 @@ function AddMasterAgent({
                 onChange={(e) =>
                   setPayload({ ...payload, email: e.target.value })
                 }
-                placeholder="Email"
+                placeholder="UserId"
               />
             </VStack>
             <VStack spacing={1} w={"100%"} alignItems={"flex-start"}>
