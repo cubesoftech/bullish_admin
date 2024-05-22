@@ -95,8 +95,12 @@ export default function UserManagement() {
   };
 
   useEffect(() => {
+    if (refetch) {
+      requestInquiries();
+      setRefetch(false);
+    }
     requestInquiries();
-  }, []);
+  }, [refetch]);
 
   return (
     <VStack spacing={5}>

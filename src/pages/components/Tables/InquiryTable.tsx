@@ -29,6 +29,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import EditInqury from "../Drawer/EditInqury";
+import axios from "axios";
 
 export default function InquiryTable({
   data,
@@ -99,7 +100,7 @@ export default function InquiryTable({
         </Thead>
         <Tbody>
           {table.getRowModel().rows.map((row) => {
-            return <InquiryTableRow row={row} />;
+            return <InquiryTableRow row={row} refetch={refetch} />;
           })}
         </Tbody>
       </ChakraTable>
@@ -171,11 +172,30 @@ export default function InquiryTable({
 
 function InquiryTableRow({
   row,
+  refetch,
 }: {
   row: Row<InquryColumn>;
+  refetch: () => void;
 }): React.JSX.Element {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const inqury = row.original;
+
+  const handleClicked = () => {
+    const id = inqury.id;
+    const url = `/api/deleteInquiry/`;
+    axios
+      .delete(url, {
+        data: { id },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          refetch();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <Tr key={row.id}>
       <EditInqury inqury={inqury} isOpen={isOpen} onClose={onClose} />
@@ -187,14 +207,19 @@ function InquiryTableRow({
         );
       })}
       <Td>
-        <Button
-          onClick={onOpen}
-          colorScheme="orange"
-          size={"sm"}
-          variant={"outline"}
-        >
-          수정
-        </Button>
+        <HStack>
+          <Button
+            onClick={onOpen}
+            colorScheme="orange"
+            size={"sm"}
+            variant={"outline"}
+          >
+            수정
+          </Button>
+          <Button onClick={handleClicked} colorScheme="red" size={"sm"}>
+            Delete
+          </Button>
+        </HStack>
       </Td>
     </Tr>
   );
