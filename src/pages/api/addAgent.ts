@@ -11,6 +11,18 @@ const emailAlreadyExists = async (email: string) => {
   return user !== null;
 };
 
+const referralCode = () => {
+  //5 length number and letter
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  const charactersLength = characters.length;
+  for (let i = 0; i < 5; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -40,7 +52,7 @@ export default async function handler(
 
   await prisma.agents.create({
     data: {
-      referralCode: Math.floor(Math.random() * 1000000).toString(),
+      referralCode: referralCode(),
       masteragentsId: masterAgentId,
       memberId: id,
       royalty,
