@@ -10,9 +10,9 @@ import {
   VStack,
   Text,
   useToast,
+  Textarea,
 } from "@chakra-ui/react";
 import React from "react";
-import { Editor } from "@tinymce/tinymce-react";
 import { AnnouncementInterface } from "@/utils/interface";
 import { useSWRConfig } from "swr";
 
@@ -108,7 +108,13 @@ function AddAnnouncement({
             spacing={1}
           >
             <Text>Content</Text>
-            <Editor
+            <Textarea
+              onChange={(e) => {
+                setPayload({ ...payload, content: e.target.value });
+              }}
+              height={600}
+            />
+            {/* <Editor
               apiKey="kqfwcl6lfz745rmfuf2022x9kwpwwyll2a3wc1pjjfqrfc8w"
               onInit={(_evt, editor) => (editorRef.current = editor)}
               onChange={(_evt, editor) => {
@@ -145,7 +151,7 @@ function AddAnnouncement({
                 content_style:
                   "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
               }}
-            />
+            /> */}
           </VStack>
         </DrawerBody>
 

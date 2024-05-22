@@ -37,5 +37,6 @@ export const LinkItemsMasterAgent: Array<LinkItemProps> = [
   { name: "공지사항", icon: FiSettings, index: 5 },
   { name: "문의", icon: FiMessageSquare, index: 7 },
   { name: "주문 내역", icon: FiRotateCcw, index: 6 },
+  { name: "답안지", icon: FiRotateCcw, index: 8 },
   { name: "정산", icon: FiStar, index: 9 },
 ];

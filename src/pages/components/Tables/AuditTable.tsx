@@ -97,12 +97,11 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
               {role === "ADMIN" && (
                 <Td>{income.totalOperatorGrossIncome.toLocaleString()} KRW</Td>
               )}
-              {role === "ADMIN" ||
-                (role === "MASTER_AGENT" && (
-                  <Td>
-                    {income.totalMasterAgentGrossIncome.toLocaleString()} KRW
-                  </Td>
-                ))}
+              {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                <Td>
+                  {income.totalMasterAgentGrossIncome.toLocaleString()} KRW
+                </Td>
+              )}
 
               <Td>{income.totalAgentGrossIncome.toLocaleString()} KRW</Td>
             </Tr>
@@ -111,12 +110,9 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
               {role === "ADMIN" && (
                 <Td>{income.totalOperatorNetIncome.toLocaleString()} KRW</Td>
               )}
-              {role === "ADMIN" ||
-                (role === "MASTER_AGENT" && (
-                  <Td>
-                    {income.totalMasterAgentNetIncome.toLocaleString()} KRW
-                  </Td>
-                ))}
+              {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                <Td>{income.totalMasterAgentNetIncome.toLocaleString()} KRW</Td>
+              )}
               <Td>{income.totalAgentNetIncome.toLocaleString()} KRW</Td>
             </Tr>
           </Tbody>
