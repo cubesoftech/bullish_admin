@@ -91,7 +91,7 @@ export default function Login() {
         >
           <Stack spacing={4}>
             <FormControl id="email">
-              <FormLabel>Email address</FormLabel>
+              <FormLabel>USER ID</FormLabel>
               <Input
                 onChange={(e) =>
                   setPayload({
