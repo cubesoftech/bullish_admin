@@ -99,7 +99,6 @@ export default function UserManagement() {
       requestInquiries();
       setRefetch(false);
     }
-    requestInquiries();
   }, [refetch]);
 
   return (
