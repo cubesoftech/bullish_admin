@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils";
-import { UserColumn } from "@/utils/interface";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const user = req.body as UserColumn;
+  const user = req.body as any;
   await prisma.members.update({
     data: {
       ...user,
