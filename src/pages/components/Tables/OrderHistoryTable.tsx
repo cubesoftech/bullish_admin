@@ -11,6 +11,7 @@ import {
   flexRender,
   Column,
   Row,
+  RowSelectionState,
 } from "@tanstack/react-table";
 import React from "react";
 import {
@@ -35,12 +36,21 @@ export default function OrderHistoryTable({
   columns,
   pagination,
   setPagination,
+  rowSelection,
+  setRowSelection,
+  setRefetch,
 }: {
   data: OrderHistoryColumnInterface[];
   columns: ColumnDef<OrderHistoryColumnInterface>[];
   pagination: PaginationState;
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
+  rowSelection: RowSelectionState;
+  setRowSelection: React.Dispatch<React.SetStateAction<{}>>;
+  setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const refetch = () => {
+    setRefetch(true);
+  };
   const table = useReactTable({
     columns,
     data,
@@ -53,7 +63,10 @@ export default function OrderHistoryTable({
     //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
     state: {
       pagination,
+      rowSelection,
     },
+    enableMultiRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
   });
 
@@ -61,6 +74,50 @@ export default function OrderHistoryTable({
 
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+      <HStack w={"100%"}>
+        <Button
+          isDisabled={
+            Object.keys(rowSelection ? rowSelection : {}).length === 0
+          }
+          onClick={() => {
+            //log thw rowSelection object or data to console
+            const selectedRows = Object.keys(rowSelection)
+              .filter((id) => rowSelection[id])
+              .map((id) => data.find((row, key) => key === Number(id)));
+            const selectedIds = selectedRows?.map((row) => row?.id);
+            //removed the undefined values from the array
+            const filteredIds = selectedIds.filter((id) => id);
+            console.log(filteredIds);
+
+            const url = "/api/deletebulktransacation";
+            const payload = {
+              bulkId: filteredIds,
+            };
+            console.log(payload);
+            fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            })
+              .then((res) => {
+                refetch();
+                setRowSelection({});
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+                refetch();
+                setRowSelection({});
+              });
+          }}
+          colorScheme="red"
+          size={"sm"}
+        >
+          선택삭제 {Object.keys(rowSelection ? rowSelection : {}).length === 0}
+        </Button>
+      </HStack>
+
       <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (

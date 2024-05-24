@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo } from "react";
+import React, { HTMLProps, useEffect, useMemo } from "react";
 import { VStack, Heading, Icon, HStack, useToast } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUser, UserColumn } from "@/utils/interface";
 import axios from "axios";
 import { FiStar } from "react-icons/fi";
 import UserTable from "../Tables/UserTable";
+import { useAuthentication } from "@/utils/storage";
 
 export default function UserManagement() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -12,13 +13,40 @@ export default function UserManagement() {
     pageSize: 10,
   });
 
+  const { role, id } = useAuthentication();
   const [selectedUser, setSelectedUser] = React.useState({
     tester: true,
     realUsers: true,
   });
 
-  const columns = useMemo<ColumnDef<UserColumn>[]>(
+  const [rowSelection, setRowSelection] = React.useState({});
+
+  let columns = useMemo<ColumnDef<UserColumn>[]>(
     () => [
+      // {
+      //   id: "select",
+      //   header: ({ table }) => (
+      //     <IndeterminateCheckbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler(),
+      //       }}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <div className="px-1">
+      //       <IndeterminateCheckbox
+      //         {...{
+      //           checked: row.getIsSelected(),
+      //           disabled: !row.getCanSelect(),
+      //           indeterminate: row.getIsSomeSelected(),
+      //           onChange: row.getToggleSelectedHandler(),
+      //         }}
+      //       />
+      //     </div>
+      //   ),
+      // },
       {
         accessorKey: "name",
         cell: (info) => info.getValue(),
@@ -29,7 +57,7 @@ export default function UserManagement() {
         accessorKey: "email",
         accessorFn: (row) => row.email,
         id: "email",
-        header: "이메일",
+        header: "아이디",
         cell: (info) => info.getValue(),
         footer: "Email",
       },
@@ -68,6 +96,33 @@ export default function UserManagement() {
     []
   );
 
+  if (role === "ADMIN") {
+    columns.unshift({
+      id: "select",
+      header: ({ table }) => (
+        <IndeterminateCheckbox
+          {...{
+            checked: table.getIsAllRowsSelected(),
+            indeterminate: table.getIsSomeRowsSelected(),
+            onChange: table.getToggleAllRowsSelectedHandler(),
+          }}
+        />
+      ),
+      cell: ({ row }) => (
+        <div className="px-1">
+          <IndeterminateCheckbox
+            {...{
+              checked: row.getIsSelected(),
+              disabled: !row.getCanSelect(),
+              indeterminate: row.getIsSomeSelected(),
+              onChange: row.getToggleSelectedHandler(),
+            }}
+          />
+        </div>
+      ),
+    });
+  }
+
   const [data, setData] = React.useState<UserColumn[]>([]);
 
   const [refetch, setRefetch] = React.useState(true);
@@ -76,7 +131,7 @@ export default function UserManagement() {
     setData([]);
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllUsers?page=${page}`;
+    const url = `/api/getAllUsers?page=${page}&role=${role}&id=${id}`;
     while (hasMoreData) {
       const res = await axios.get<ArrayUser>(url);
       let { hasMore, users } = res.data;
@@ -174,7 +229,32 @@ export default function UserManagement() {
         setRefetch={setRefetch}
         selectedUser={selectedUser}
         setSelectedUser={setSelectedUser}
+        rowSelection={rowSelection}
+        setRowSelection={setRowSelection}
       />
     </VStack>
+  );
+}
+
+function IndeterminateCheckbox({
+  indeterminate,
+  className = "",
+  ...rest
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+  const ref = React.useRef<HTMLInputElement>(null!);
+
+  React.useEffect(() => {
+    if (typeof indeterminate === "boolean") {
+      ref.current.indeterminate = !rest.checked && indeterminate;
+    }
+  }, [ref, indeterminate]);
+
+  return (
+    <input
+      type="checkbox"
+      ref={ref}
+      className={className + " cursor-pointer"}
+      {...rest}
+    />
   );
 }

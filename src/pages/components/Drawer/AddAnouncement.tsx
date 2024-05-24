@@ -85,7 +85,7 @@ function AddAnnouncement({
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Add Announcement</DrawerHeader>
+        <DrawerHeader>공지사항추가</DrawerHeader>
 
         <DrawerBody mb={10}>
           <VStack
@@ -93,7 +93,7 @@ function AddAnnouncement({
             alignItems={"flex-start"}
             spacing={1}
           >
-            <Text>Title</Text>
+            <Text>제목</Text>
             <Input
               value={payload.title}
               placeholder="Title"
@@ -107,7 +107,7 @@ function AddAnnouncement({
             alignItems={"flex-start"}
             spacing={1}
           >
-            <Text>Content</Text>
+            <Text>내용</Text>
             <Textarea
               onChange={(e) => {
                 setPayload({ ...payload, content: e.target.value });
@@ -157,10 +157,10 @@ function AddAnnouncement({
 
         <DrawerFooter>
           <Button variant="outline" mr={3} onClick={onClose}>
-            Cancel
+            취소
           </Button>
           <Button onClick={handleSave} colorScheme="blue">
-            Save
+            저장
           </Button>
         </DrawerFooter>
       </DrawerContent>

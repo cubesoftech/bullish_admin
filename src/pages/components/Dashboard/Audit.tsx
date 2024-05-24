@@ -121,13 +121,13 @@ export default function AUDIT() {
 
           {showWithdraw && (
             <Button onClick={onOpen} colorScheme="red">
-              Withdraw
+              출금
             </Button>
           )}
         </HStack>
         <VStack flex={1} justifyContent={"flex-end"} alignItems={"flex-end"}>
           <HStack m={5} alignItems={"center"}>
-            <Text>Month</Text>
+            <Text>month</Text>
             <Select
               value={selectedMonth}
               onChange={(e) => {

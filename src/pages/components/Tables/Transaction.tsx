@@ -11,6 +11,7 @@ import {
   flexRender,
   Column,
   Row,
+  RowSelectionState,
 } from "@tanstack/react-table";
 import React from "react";
 import {
@@ -38,6 +39,8 @@ export default function TransactionTable({
   setPagination,
   isWithdrawal,
   refetch,
+  rowSelection,
+  setRowSelection,
 }: {
   data: TransactionColumn[];
   columns: ColumnDef<TransactionColumn>[];
@@ -45,6 +48,8 @@ export default function TransactionTable({
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
   isWithdrawal: boolean;
   refetch: () => void;
+  rowSelection: RowSelectionState;
+  setRowSelection: React.Dispatch<React.SetStateAction<{}>>;
 }) {
   const table = useReactTable({
     columns,
@@ -58,15 +63,60 @@ export default function TransactionTable({
     //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
     state: {
       pagination,
+      rowSelection,
     },
+    enableMultiRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
   });
 
   const { role } = useAuthentication();
   const isAdmin = role === "ADMIN";
-
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+      <HStack w={"100%"} justifyContent={"space-between"}>
+        <Button
+          isDisabled={
+            Object.keys(rowSelection ? rowSelection : {}).length === 0
+          }
+          onClick={() => {
+            //log thw rowSelection object or data to console
+            const selectedRows = Object.keys(rowSelection)
+              .filter((id) => rowSelection[id])
+              .map((id) => data.find((row, key) => key === Number(id)));
+            const selectedIds = selectedRows?.map((row) => row?.id);
+            //removed the undefined values from the array
+            const filteredIds = selectedIds.filter((id) => id);
+            console.log(filteredIds);
+
+            const url = "/api/deletebulktransacation";
+            const payload = {
+              bulkId: filteredIds,
+            };
+            fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            })
+              .then((res) => {
+                refetch();
+                setRowSelection({});
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+
+                refetch();
+                setRowSelection({});
+              });
+          }}
+          colorScheme="red"
+          size={"sm"}
+        >
+          선택삭제 {Object.keys(rowSelection ? rowSelection : {}).length === 0}
+        </Button>
+      </HStack>
       <ChakraTable
         overflowY={"scroll"}
         size={"sm"}
@@ -206,9 +256,12 @@ function TransactionRow({
         refetch={refetch}
       />
       {row.getVisibleCells().map((cell) => {
-        console.log(cell.getContext(), cell.id);
         return (
-          <Td key={cell.id}>
+          <Td
+            className={row.getIsSelected() ? "selected" : undefined}
+            onClick={row.getToggleSelectedHandler()}
+            key={cell.id}
+          >
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </Td>
         );

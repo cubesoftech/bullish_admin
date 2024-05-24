@@ -148,7 +148,7 @@ function OrderHistoryDrawer({
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              이메일: {email}
+              아이디: {email}
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />

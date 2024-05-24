@@ -109,11 +109,13 @@ function AnnouncementTable() {
         </Tbody>
       </Table>
       <AddAnnouncement isOpen={isOpen} onClose={onClose} />
-      <HStack justifyContent={"flex-end"} w={"100%"}>
-        <Button onClick={onOpen} colorScheme="purple">
-          공지사항 추가
-        </Button>
-      </HStack>
+      {role === "ADMIN" && (
+        <HStack justifyContent={"flex-end"} w={"100%"}>
+          <Button onClick={onOpen} colorScheme="purple">
+            공지사항 추가
+          </Button>
+        </HStack>
+      )}
     </VStack>
   );
 }

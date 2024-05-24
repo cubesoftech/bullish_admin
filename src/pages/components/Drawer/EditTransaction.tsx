@@ -84,7 +84,7 @@ function EditTransaction({
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
             >
-              <Text>이메일</Text>
+              <Text>아이디</Text>
               <Input width={"100%"} readOnly defaultValue={email} />
             </VStack>
             <VStack

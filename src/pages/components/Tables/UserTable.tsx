@@ -11,6 +11,7 @@ import {
   flexRender,
   Column,
   Row,
+  RowSelectionState,
 } from "@tanstack/react-table";
 import React from "react";
 import {
@@ -30,6 +31,7 @@ import {
   Switch,
 } from "@chakra-ui/react";
 import EditUser from "../Drawer/EditUser";
+import { useAuthentication } from "@/utils/storage";
 
 export default function UserTable({
   data,
@@ -39,6 +41,8 @@ export default function UserTable({
   setRefetch,
   selectedUser,
   setSelectedUser,
+  rowSelection,
+  setRowSelection,
 }: {
   data: UserColumn[];
   columns: ColumnDef<UserColumn>[];
@@ -52,6 +56,8 @@ export default function UserTable({
       realUsers: boolean;
     }>
   >;
+  rowSelection: RowSelectionState;
+  setRowSelection: React.Dispatch<React.SetStateAction<{}>>;
 }) {
   const refetch = () => {
     setRefetch(true);
@@ -69,15 +75,63 @@ export default function UserTable({
     //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
     state: {
       pagination,
+      rowSelection,
     },
+    enableMultiRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
   });
+
+  const { role } = useAuthentication();
 
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
       <HStack w={"100%"}>
         <HStack>
-          <Text>Tester</Text>
+          <Button
+            isDisabled={
+              Object.keys(rowSelection ? rowSelection : {}).length === 0
+            }
+            onClick={() => {
+              //log thw rowSelection object or data to console
+              const selectedRows = Object.keys(rowSelection)
+                .filter((id) => rowSelection[id])
+                .map((id) => data.find((row, key) => key === Number(id)));
+              const selectedIds = selectedRows?.map((row) => row?.id);
+              //removed the undefined values from the array
+              const filteredIds = selectedIds.filter((id) => id);
+              console.log(filteredIds);
+
+              const url = "/api/deletebulktransacation";
+              const payload = {
+                bulkId: filteredIds,
+              };
+              console.log(payload);
+              fetch(url, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              })
+                .then((res) => {
+                  refetch();
+                  setRowSelection({});
+                })
+                .catch((error) => {
+                  console.log("Error:", error);
+
+                  refetch();
+                  setRowSelection({});
+                });
+            }}
+            colorScheme="red"
+            size={"sm"}
+          >
+            선택삭제{" "}
+            {Object.keys(rowSelection ? rowSelection : {}).length === 0}
+          </Button>
+          <Text>가라유저</Text>
           <Switch
             onChange={(e) => {
               setSelectedUser({ ...selectedUser, tester: e.target.checked });
@@ -87,7 +141,7 @@ export default function UserTable({
           ></Switch>
         </HStack>
         <HStack>
-          <Text>Live User</Text>
+          <Text>실유저</Text>
           <Switch
             isChecked={selectedUser.realUsers}
             onChange={(e) => {
@@ -131,7 +185,7 @@ export default function UserTable({
                   </Th>
                 );
               })}
-              <Th>Action</Th>
+              {role === "ADMIN" && <Th>Action</Th>}
             </Tr>
           ))}
         </Thead>
@@ -215,6 +269,7 @@ function UserRow({
   refetch: () => void;
 }): React.JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { role } = useAuthentication();
   return (
     <Tr key={row.id}>
       <EditUser
@@ -231,18 +286,37 @@ function UserRow({
           </Td>
         );
       })}
-      <Td>
-        <Button
-          onClick={() => {
-            onOpen();
-          }}
-          colorScheme="orange"
-          size={"sm"}
-          variant={"outline"}
-        >
-          수정
-        </Button>
-      </Td>
+      {role === "ADMIN" && (
+        <Td>
+          <Button
+            onClick={() => {
+              const url = "/api/deleteuser";
+              const payload = {
+                id: row.original.id,
+              };
+              fetch(url, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              })
+                .then((res) => {
+                  refetch();
+                })
+                .catch((error) => {
+                  console.log("Error:", error);
+                  refetch();
+                });
+            }}
+            colorScheme="red"
+            size={"sm"}
+            variant={"outline"}
+          >
+            삭제
+          </Button>
+        </Td>
+      )}
     </Tr>
   );
 }

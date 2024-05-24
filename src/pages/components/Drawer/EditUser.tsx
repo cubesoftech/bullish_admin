@@ -68,7 +68,7 @@ function EditUser({
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>수정 User</DrawerHeader>
+        <DrawerHeader>수정</DrawerHeader>
 
         <DrawerBody mb={10}>
           <VStack
@@ -77,7 +77,7 @@ function EditUser({
             spacing={1}
           >
             <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-              <Text>Name</Text>
+              <Text>이름</Text>
               <Input
                 onChange={(e) => {
                   setUserState({ ...userState, name: e.target.value });
@@ -86,7 +86,7 @@ function EditUser({
               />
             </VStack>
             <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-              <Text>Email</Text>
+              <Text>아이디</Text>
               <Input
                 defaultValue={email}
                 onChange={(e) => {
@@ -95,7 +95,7 @@ function EditUser({
               />
             </VStack>
             <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-              <Text>Bank</Text>
+              <Text>은행</Text>
               <Input
                 defaultValue={bank}
                 onChange={(e) => {
@@ -104,7 +104,7 @@ function EditUser({
               />
             </VStack>
             <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-              <Text>Account Number</Text>
+              <Text>계좌번호</Text>
               <Input
                 onChange={(e) => {
                   setUserState({ ...userState, accountnumber: e.target.value });
@@ -113,7 +113,7 @@ function EditUser({
               />
             </VStack>
             <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-              <Text>Account Holder</Text>
+              <Text>예금주</Text>
               <Input
                 defaultValue={accountholder}
                 onChange={(e) => {
@@ -122,7 +122,7 @@ function EditUser({
               />
             </VStack>
             <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-              <Text>Balance</Text>
+              <Text>보유자산</Text>
               <Input
                 defaultValue={balance}
                 type="number"
@@ -135,7 +135,7 @@ function EditUser({
               />
             </VStack>
             <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-              <Text>Nickname</Text>
+              <Text>닉네임</Text>
               <Input
                 defaultValue={nickname}
                 onChange={(e) => {
@@ -144,7 +144,7 @@ function EditUser({
               />
             </VStack>
             <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-              <Text>Password</Text>
+              <Text>비밀번호</Text>
               <Input
                 defaultValue={password}
                 onChange={(e) => {
@@ -157,10 +157,10 @@ function EditUser({
 
         <DrawerFooter>
           <Button variant="outline" mr={3} onClick={onClose}>
-            Cancel
+            취소
           </Button>
           <Button colorScheme="blue" onClick={updateUser}>
-            Update
+            적용
           </Button>
         </DrawerFooter>
       </DrawerContent>

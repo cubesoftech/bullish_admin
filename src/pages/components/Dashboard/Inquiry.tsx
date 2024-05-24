@@ -24,7 +24,7 @@ export default function UserManagement() {
         accessorKey: "email",
         accessorFn: (row) => row.email,
         id: "email",
-        header: "이메일",
+        header: "아이디",
         cell: (info) => info.getValue(),
         footer: "Email",
       },

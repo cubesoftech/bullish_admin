@@ -50,12 +50,12 @@ function SubAgentDrawer({
               <Thead>
                 <Tr>
                   <Th>#</Th>
-                  <Th>Name</Th>
-                  <Th>Referral Code</Th>
-                  <Th>Email</Th>
-                  <Th>Password</Th>
-                  <Th>Royalty</Th>
-                  <Th>Total User Invited</Th>
+                  <Th>이름</Th>
+                  <Th>추천인코드</Th>
+                  <Th>아이디</Th>
+                  <Th>비밀번호</Th>
+                  <Th>요율</Th>
+                  <Th>보유회원수</Th>
                 </Tr>
               </Thead>
               <Tbody>

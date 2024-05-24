@@ -91,7 +91,7 @@ export default function Login() {
         >
           <Stack spacing={4}>
             <FormControl id="email">
-              <FormLabel>USER ID</FormLabel>
+              <FormLabel>아이디</FormLabel>
               <Input
                 onChange={(e) =>
                   setPayload({
@@ -103,7 +103,7 @@ export default function Login() {
               />
             </FormControl>
             <FormControl id="password">
-              <FormLabel>Password</FormLabel>
+              <FormLabel>비밀번호</FormLabel>
               <Input
                 onChange={(e) => {
                   setPayload({
@@ -123,7 +123,7 @@ export default function Login() {
                   bg: "blue.500",
                 }}
               >
-                Sign in
+                로그인
               </Button>
             </Stack>
           </Stack>

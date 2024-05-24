@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { HTMLProps, useEffect, useMemo } from "react";
 import { VStack, Heading, Icon, HStack, useToast } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUserTransaction, TransactionColumn } from "@/utils/interface";
@@ -12,8 +12,34 @@ export default function Deposits() {
     pageSize: 10,
   });
 
+  const [rowSelection, setRowSelection] = React.useState({});
+
   const columns = useMemo<ColumnDef<TransactionColumn>[]>(
     () => [
+      {
+        id: "select",
+        header: ({ table }) => (
+          <IndeterminateCheckbox
+            {...{
+              checked: table.getIsAllRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler(),
+            }}
+          />
+        ),
+        cell: ({ row }) => (
+          <div className="px-1">
+            <IndeterminateCheckbox
+              {...{
+                checked: row.getIsSelected(),
+                disabled: !row.getCanSelect(),
+                indeterminate: row.getIsSomeSelected(),
+                onChange: row.getToggleSelectedHandler(),
+              }}
+            />
+          </div>
+        ),
+      },
       {
         accessorKey: "name",
         cell: (info) => info.getValue(),
@@ -24,7 +50,7 @@ export default function Deposits() {
         accessorKey: "email",
         accessorFn: (row) => row.email,
         id: "email",
-        header: "이메일",
+        header: "아이디",
         cell: (info) => info.getValue(),
         footer: "Email",
       },
@@ -168,7 +194,32 @@ export default function Deposits() {
         refetch={() => {
           setRefetch(true);
         }}
+        rowSelection={rowSelection}
+        setRowSelection={setRowSelection}
       />
     </VStack>
+  );
+}
+
+function IndeterminateCheckbox({
+  indeterminate,
+  className = "",
+  ...rest
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+  const ref = React.useRef<HTMLInputElement>(null!);
+
+  React.useEffect(() => {
+    if (typeof indeterminate === "boolean") {
+      ref.current.indeterminate = !rest.checked && indeterminate;
+    }
+  }, [ref, indeterminate]);
+
+  return (
+    <input
+      type="checkbox"
+      ref={ref}
+      className={className + " cursor-pointer"}
+      {...rest}
+    />
   );
 }

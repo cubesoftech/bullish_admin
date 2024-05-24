@@ -50,12 +50,12 @@ function AgentsTable() {
             <Th>#</Th>
             <Th>이름</Th>
             <Th>닉네임</Th>
-            <Th>이메일</Th>
-            <Th>Referral Code</Th>
+            <Th>아이디</Th>
+            <Th>추천인코드</Th>
             <Th>비밀번호</Th>
-            <Th>왕족</Th>
-            <Th>총 상담원</Th>
-            <Th>행위</Th>
+            <Th>요율</Th>
+            <Th>하부</Th>
+            <Th>수정</Th>
           </Tr>
         </Thead>
         <Tbody>

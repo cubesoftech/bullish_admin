@@ -179,14 +179,14 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
         <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
           <TableContainer w={"100%"} overflowY={"scroll"} h={"40vh"}>
             <Table size={"sm"} variant={"striped"} colorScheme="cyan">
-              <TableCaption placement="top">Withdrawals History</TableCaption>
+              <TableCaption placement="top">정산내역</TableCaption>
               <Thead>
                 <Tr>
                   <Th>#</Th>
-                  <Th>Amount</Th>
-                  <Th>Status</Th>
-                  <Th>Date Submitted</Th>
-                  <Th>Action</Th>
+                  <Th>금액</Th>
+                  <Th>상태</Th>
+                  <Th>신청일</Th>
+                  <Th>수정</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -215,7 +215,7 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
                               }}
                               colorScheme="blue"
                             >
-                              Approve
+                              승인
                             </Button>
                           )}
                         </Td>
@@ -232,15 +232,15 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
         <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
           <TableContainer w={"100%"} overflowY={"scroll"} h={"40vh"}>
             <Table size={"sm"} variant={"striped"} colorScheme="cyan">
-              <TableCaption placement="top">{`Total Withdrawal - ${
+              <TableCaption placement="top">{`누적 출금액 - ${
                 income?.withdrawal?.toLocaleString() || 0
               } KRW`}</TableCaption>
               <Thead>
                 <Tr>
                   <Th>#</Th>
-                  <Th>Amount</Th>
-                  <Th>Status</Th>
-                  <Th>Date Submitted</Th>
+                  <Th>금액</Th>
+                  <Th>상태</Th>
+                  <Th>신청일</Th>
                 </Tr>
               </Thead>
               <Tbody>

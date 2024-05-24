@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { HTMLProps, useEffect, useMemo } from "react";
 import { VStack, Heading, Icon, HStack, Text } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import {
@@ -17,13 +17,37 @@ export default function OrderHistory() {
   });
 
   const { role, id } = useAuthentication();
-  console.log(role, id);
+  const [rowSelection, setRowSelection] = React.useState({});
   const columns = useMemo<ColumnDef<OrderHistoryColumnInterface>[]>(
     () => [
       {
+        id: "select",
+        header: ({ table }) => (
+          <IndeterminateCheckbox
+            {...{
+              checked: table.getIsAllRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler(),
+            }}
+          />
+        ),
+        cell: ({ row }) => (
+          <div className="px-1">
+            <IndeterminateCheckbox
+              {...{
+                checked: row.getIsSelected(),
+                disabled: !row.getCanSelect(),
+                indeterminate: row.getIsSomeSelected(),
+                onChange: row.getToggleSelectedHandler(),
+              }}
+            />
+          </div>
+        ),
+      },
+      {
         accessorKey: "email",
         cell: (info) => info.getValue(),
-        header: "이메일",
+        header: "아이디",
         footer: "Email",
       },
       {
@@ -81,7 +105,10 @@ export default function OrderHistory() {
 
   const [data, setData] = React.useState<OrderHistoryColumnInterface[]>([]);
 
+  const [refetch, setRefetch] = React.useState(true);
+
   const requestAllOrderHistory = async () => {
+    setData([]);
     let hasMoreData = true;
     let page = 1;
     const url = `/api/getAllOrderHistory?page=${page}&id=${id}&role=${role}`;
@@ -134,8 +161,15 @@ export default function OrderHistory() {
   };
 
   useEffect(() => {
-    requestAllOrderHistory();
-  }, []);
+    if (refetch) {
+      try {
+        requestAllOrderHistory();
+        setRefetch(false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [refetch]);
 
   return (
     <VStack spacing={5}>
@@ -165,7 +199,33 @@ export default function OrderHistory() {
         setPagination={setPagination}
         columns={columns}
         data={data}
+        rowSelection={rowSelection}
+        setRefetch={setRefetch}
+        setRowSelection={setRowSelection}
       />
     </VStack>
+  );
+}
+
+function IndeterminateCheckbox({
+  indeterminate,
+  className = "",
+  ...rest
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+  const ref = React.useRef<HTMLInputElement>(null!);
+
+  React.useEffect(() => {
+    if (typeof indeterminate === "boolean") {
+      ref.current.indeterminate = !rest.checked && indeterminate;
+    }
+  }, [ref, indeterminate]);
+
+  return (
+    <input
+      type="checkbox"
+      ref={ref}
+      className={className + " cursor-pointer"}
+      {...rest}
+    />
   );
 }

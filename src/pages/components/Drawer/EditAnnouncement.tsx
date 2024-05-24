@@ -10,9 +10,9 @@ import {
   VStack,
   Text,
   useToast,
+  Textarea,
 } from "@chakra-ui/react";
 import React from "react";
-import { Editor } from "@tinymce/tinymce-react";
 import { Announcement } from "@prisma/client";
 
 function EditAnnouncement({
@@ -26,13 +26,14 @@ function EditAnnouncement({
 }) {
   const { content, createdAt, id, title } = announcement;
   const editorRef = React.useRef<any>(null);
+  const [content_, setContent] = React.useState<string>(content);
   const toast = useToast();
 
   const handleEdit = async () => {
     const url = "/api/editAnnouncement";
     const data = {
       title: title,
-      content: editorRef.current.getContent(),
+      content: content_,
       id: id,
     };
     const res = await fetch(url, {
@@ -75,7 +76,14 @@ function EditAnnouncement({
             spacing={1}
           >
             <Text>내용</Text>
-            <Editor
+            <Textarea
+              onChange={(e) => {
+                setContent(e.target.value);
+              }}
+              height={600}
+              value={content_}
+            />
+            {/* <Editor
               apiKey="kqfwcl6lfz745rmfuf2022x9kwpwwyll2a3wc1pjjfqrfc8w"
               onInit={(_evt, editor) => (editorRef.current = editor)}
               initialValue={content}
@@ -113,7 +121,7 @@ function EditAnnouncement({
                 content_style:
                   "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
               }}
-            />
+            /> */}
           </VStack>
         </DrawerBody>
 

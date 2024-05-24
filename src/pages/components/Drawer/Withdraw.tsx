@@ -70,11 +70,11 @@ function Withdraw({
     <Drawer isOpen={isOpen} placement="top" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Withdraw</DrawerHeader>
+        <DrawerHeader>출금</DrawerHeader>
 
         <DrawerBody mb={10}>
           <HStack spacing={2}>
-            <Text>Amount</Text>
+            <Text>금액</Text>
             <NumberInput
               onChange={(e) => setValue(parseInt(e))}
               max={limit}

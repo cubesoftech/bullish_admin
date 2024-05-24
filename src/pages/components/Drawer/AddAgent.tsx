@@ -103,7 +103,7 @@ function AddAgent({
               />
             </VStack>
             <VStack spacing={1} w={"100%"} alignItems={"flex-start"}>
-              <Text>이메일</Text>
+              <Text>아이디</Text>
               <Input
                 value={payload.email}
                 onChange={(e) =>
@@ -113,7 +113,7 @@ function AddAgent({
               />
             </VStack>
             <VStack spacing={1} w={"100%"} alignItems={"flex-start"}>
-              <Text>건강 상태</Text>
+              <Text>닉네임</Text>
               <Input
                 value={payload.nickname}
                 onChange={(e) =>
@@ -133,7 +133,7 @@ function AddAgent({
               />
             </VStack>
             <VStack spacing={1} w={"100%"} alignItems={"flex-start"}>
-              <Text>왕족</Text>
+              <Text>요율</Text>
               <Input
                 type="number"
                 value={payload.royalty}
@@ -151,7 +151,7 @@ function AddAgent({
             취소
           </Button>
           <Button onClick={handleSave} colorScheme="blue">
-            구하다
+            승인
           </Button>
         </DrawerFooter>
       </DrawerContent>
