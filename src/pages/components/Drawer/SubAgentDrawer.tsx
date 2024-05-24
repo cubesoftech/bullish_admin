@@ -51,7 +51,7 @@ function SubAgentDrawer({
                 <Tr>
                   <Th>#</Th>
                   <Th>이름</Th>
-                  <Th>추천인코드</Th>
+                  {/* <Th>추천인코드</Th> */}
                   <Th>아이디</Th>
                   <Th>비밀번호</Th>
                   <Th>요율</Th>
@@ -64,7 +64,7 @@ function SubAgentDrawer({
                     <Tr key={agent.id}>
                       <Td>{index + 1}</Td>
                       <Td>{agent.member.name}</Td>
-                      <Td>{agent.referralCode}</Td>
+                      {/* <Td>{agent.referralCode}</Td> */}
                       <Td>{agent.member.email}</Td>
                       <Td>{agent.member.password}</Td>
                       <Td>{agent.royalty} %</Td>

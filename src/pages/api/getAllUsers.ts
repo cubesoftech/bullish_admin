@@ -29,15 +29,54 @@ export default async function handler(
         role: "USER",
         agentsId: AgentId,
       },
+      include: {
+        agents: {
+          // query the member by using the memberId
+          select: {
+            masteragents: {
+              select: {
+                memberId: true,
+              },
+            },
+            memberId: true,
+          },
+        },
+      },
       take: pageSize + 1, // Fetch one extra record
       skip: (page - 1) * pageSize,
     });
+    const userModifiedPromises = users.map(async (user) => {
+      const { agents } = user;
+      let agentID: undefined | string = undefined;
+      let masteragentID: undefined | string = undefined;
+      if (agents) {
+        const { masteragents, memberId } = agents;
+        const agent = await prisma.members.findFirst({
+          where: {
+            id: memberId,
+          },
+        });
+        agentID = agent?.email;
+        if (masteragents) {
+          const { memberId } = masteragents;
+          const memberagent = await prisma.members.findFirst({
+            where: {
+              id: memberId,
+            },
+          });
+          masteragentID = memberagent?.email;
+        }
+      }
+      return { ...user, agentID, masteragentID };
+    });
+
+    const userModified = await Promise.all(userModifiedPromises);
     let hasMore = false;
     if (users.length > pageSize) {
       hasMore = true;
     }
     return res.status(200).json({
-      users: users.slice(0, pageSize),
+      users: userModified.slice(0, pageSize),
       hasMore,
     });
   }
@@ -63,15 +102,54 @@ export default async function handler(
           masteragentsId: masterAgent,
         },
       },
+      include: {
+        agents: {
+          // query the member by using the memberId
+          select: {
+            masteragents: {
+              select: {
+                memberId: true,
+              },
+            },
+            memberId: true,
+          },
+        },
+      },
       take: pageSize + 1, // Fetch one extra record
       skip: (page - 1) * pageSize,
     });
+    const userModifiedPromises = users.map(async (user) => {
+      const { agents } = user;
+      let agentID: undefined | string = undefined;
+      let masteragentID: undefined | string = undefined;
+      if (agents) {
+        const { masteragents, memberId } = agents;
+        const agent = await prisma.members.findFirst({
+          where: {
+            id: memberId,
+          },
+        });
+        agentID = agent?.email;
+        if (masteragents) {
+          const { memberId } = masteragents;
+          const memberagent = await prisma.members.findFirst({
+            where: {
+              id: memberId,
+            },
+          });
+          masteragentID = memberagent?.email;
+        }
+      }
+      return { ...user, agentID, masteragentID };
+    });
+
+    const userModified = await Promise.all(userModifiedPromises);
     let hasMore = false;
     if (users.length > pageSize) {
       hasMore = true;
     }
     return res.status(200).json({
-      users: users.slice(0, pageSize),
+      users: userModified.slice(0, pageSize),
       hasMore,
     });
   }
@@ -79,15 +157,54 @@ export default async function handler(
     where: {
       role: "USER",
     },
+    include: {
+      agents: {
+        // query the member by using the memberId
+        select: {
+          masteragents: {
+            select: {
+              memberId: true,
+            },
+          },
+          memberId: true,
+        },
+      },
+    },
     take: pageSize + 1, // Fetch one extra record
     skip: (page - 1) * pageSize,
   });
+  const userModifiedPromises = users.map(async (user) => {
+    const { agents } = user;
+    let agentID: undefined | string = undefined;
+    let masteragentID: undefined | string = undefined;
+    if (agents) {
+      const { masteragents, memberId } = agents;
+      const agent = await prisma.members.findFirst({
+        where: {
+          id: memberId,
+        },
+      });
+      agentID = agent?.email;
+      if (masteragents) {
+        const { memberId } = masteragents;
+        const memberagent = await prisma.members.findFirst({
+          where: {
+            id: memberId,
+          },
+        });
+        masteragentID = memberagent?.email;
+      }
+    }
+    return { ...user, agentID, masteragentID };
+  });
+
+  const userModified = await Promise.all(userModifiedPromises);
   let hasMore = false;
   if (users.length > pageSize) {
     hasMore = true;
   }
   res.status(200).json({
-    users: users.slice(0, pageSize),
+    users: userModified.slice(0, pageSize),
     hasMore,
   });
 }

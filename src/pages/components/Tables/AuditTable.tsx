@@ -119,7 +119,7 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
         </Table>
       </VStack>
       <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
-        <TableContainer overflowY={"scroll"} h={"40vh"}>
+        <TableContainer w={"100%"} overflowY={"scroll"} h={"40vh"}>
           <Table size={"sm"} variant={"striped"} colorScheme="cyan">
             <Thead>
               <Tr>

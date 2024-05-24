@@ -83,7 +83,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </NavItem>
       ))}
       <Divider my="4" />
-      {role === "ADMIN" && (
+      {(role === "ADMIN" || role === "MASTER_AGENT") && (
         <>
           <NavItem index={LinkItems.length + 2} icon={GiFamilyTree}>
             에이전트 트리

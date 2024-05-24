@@ -61,12 +61,12 @@ export default function UserManagement() {
         cell: (info) => info.getValue(),
         footer: "Email",
       },
-      {
-        accessorKey: "nickname",
-        header: "닉네임",
-        cell: (info) => info.getValue(),
-        footer: "Nickname",
-      },
+      // {
+      //   accessorKey: "nickname",
+      //   header: "닉네임",
+      //   cell: (info) => info.getValue(),
+      //   footer: "Nickname",
+      // },
       {
         accessorKey: "bank",
         header: "은행",
@@ -96,6 +96,8 @@ export default function UserManagement() {
     []
   );
 
+  useEffect(() => {}, [selectedUser.realUsers, selectedUser.tester]);
+
   if (role === "ADMIN") {
     columns.unshift({
       id: "select",
@@ -120,6 +122,27 @@ export default function UserManagement() {
           />
         </div>
       ),
+    });
+    columns.push({
+      accessorKey: "masteragentID",
+      header: "Master Agent",
+      cell: (info) => info.getValue(),
+      footer: "Master Agent",
+    });
+    columns.push({
+      accessorKey: "agentID",
+      header: "Agent",
+      cell: (info) => info.getValue(),
+      footer: "Agent",
+    });
+  }
+
+  if (role === "MASTER_AGENT") {
+    columns.push({
+      accessorKey: "agentID",
+      header: "Agent",
+      cell: (info) => info.getValue(),
+      footer: "Agent",
     });
   }
 
@@ -171,6 +194,9 @@ export default function UserManagement() {
             name,
             nickname,
             password,
+            agentID: user.agentID,
+            agents: user.agents,
+            masteragentID: user.masteragentID,
           },
         ]);
       });

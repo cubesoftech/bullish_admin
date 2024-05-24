@@ -26,6 +26,14 @@ export interface UserColumn {
   accountnumber: string;
   bank: string;
   balance: number;
+  agents?: {
+    masteragent: {
+      memberId: string;
+    };
+    memberId: string;
+  };
+  agentID?: string;
+  masteragentID?: string;
 }
 
 export interface InquryColumn {
@@ -109,6 +117,14 @@ export interface Members {
   bank: string;
   referrer: string;
   balance: number;
+  agents: {
+    masteragent: {
+      memberId: string;
+    };
+    memberId: string;
+  };
+  agentID: string;
+  masteragentID: string;
 }
 
 export interface AnnouncementInterface {

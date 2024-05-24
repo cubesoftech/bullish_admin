@@ -70,7 +70,7 @@ const oilTrades = async () => {
     },
     take: 100,
     orderBy: {
-      tradinghours: "desc",
+      tradinghours: "asc",
     },
   });
 
@@ -84,7 +84,7 @@ const oilTrades = async () => {
     },
     take: 100,
     orderBy: {
-      tradinghours: "desc",
+      tradinghours: "asc",
     },
   });
 
@@ -102,7 +102,7 @@ const goldTrades = async () => {
     },
     take: 100,
     orderBy: {
-      tradinghours: "desc",
+      tradinghours: "asc",
     },
   });
 
@@ -116,7 +116,7 @@ const goldTrades = async () => {
     },
     take: 100,
     orderBy: {
-      tradinghours: "desc",
+      tradinghours: "asc",
     },
   });
 
@@ -130,7 +130,7 @@ const goldTrades = async () => {
     },
     take: 100,
     orderBy: {
-      tradinghours: "desc",
+      tradinghours: "asc",
     },
   });
 
@@ -148,7 +148,7 @@ const us100Trades = async () => {
     },
     take: 100,
     orderBy: {
-      tradinghours: "desc",
+      tradinghours: "asc",
     },
   });
 
@@ -162,7 +162,7 @@ const us100Trades = async () => {
     },
     take: 100,
     orderBy: {
-      tradinghours: "desc",
+      tradinghours: "asc",
     },
   });
 
@@ -176,7 +176,7 @@ const us100Trades = async () => {
     },
     take: 100,
     orderBy: {
-      tradinghours: "desc",
+      tradinghours: "asc",
     },
   });
 

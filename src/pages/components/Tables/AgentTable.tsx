@@ -18,10 +18,12 @@ import { useSWRConfig } from "swr";
 import AddMasterAgent from "../Drawer/AddMasterAgent";
 import { ArrayMasterAgent, Masteragent } from "@/utils/interface";
 import SubAgentDrawer from "../Drawer/SubAgentDrawer";
+import { useAuthentication } from "@/utils/storage";
 
 function AgentsTable() {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
+  const { role, id } = useAuthentication();
   const { mutate } = useSWRConfig();
 
   const [masterAgent, setMasterAgent] = React.useState<ArrayMasterAgent>({
@@ -51,7 +53,7 @@ function AgentsTable() {
             <Th>이름</Th>
             <Th>닉네임</Th>
             <Th>아이디</Th>
-            <Th>추천인코드</Th>
+            {/* <Th>추천인코드</Th> */}
             <Th>비밀번호</Th>
             <Th>요율</Th>
             <Th>하부</Th>
@@ -60,17 +62,24 @@ function AgentsTable() {
         </Thead>
         <Tbody>
           {masterAgent.masteragents.map((agent, index) => {
-            const { id } = agent;
-            return <MasterAgent agent={agent} index={index} />;
+            console.log(agent, role, id);
+            if (role === "MASTER_AGENT" && agent.memberId === id) {
+              return <MasterAgent agent={agent} index={index} />;
+            }
+            if (role === "ADMIN") {
+              return <MasterAgent agent={agent} index={index} />;
+            }
           })}
         </Tbody>
       </Table>
       <AddMasterAgent isOpen={isOpen} onClose={onClose} />
-      <HStack justifyContent={"flex-end"} w={"100%"}>
-        <Button onClick={onOpen} colorScheme="purple">
-          마스터 에이전트 추가
-        </Button>
-      </HStack>
+      {role === "ADMIN" && (
+        <HStack justifyContent={"flex-end"} w={"100%"}>
+          <Button onClick={onOpen} colorScheme="purple">
+            마스터 에이전트 추가
+          </Button>
+        </HStack>
+      )}
     </VStack>
   );
 }
@@ -82,6 +91,7 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
 
   const { isOpen, onClose, onOpen } = useDisclosure();
   const toast = useToast();
+  const { role } = useAuthentication();
 
   const deleteAgent = async () => {
     const url = "/api/deleteMasterAgent";
@@ -118,7 +128,7 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
       <Td>{agent.member.name}</Td>
       <Td>{agent.member.nickname}</Td>
       <Td>{agent.member.email}</Td>
-      <Td>{agent.referralCode}</Td>
+      {/* <Td>{agent.referralCode}</Td> */}
       <Td>{agent.member.password}</Td>
       <Td>{agent.royalty} %</Td>
       <Td>{agent.agents.length}</Td>
@@ -127,13 +137,15 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
           <Button onClick={onOpen} colorScheme="purple" variant={"outline"}>
             하위 에이전트 보기
           </Button>
-          <Button
-            onClick={deleteAgent}
-            colorScheme="orange"
-            variant={"outline"}
-          >
-            삭제
-          </Button>
+          {role === "ADMIN" && (
+            <Button
+              onClick={deleteAgent}
+              colorScheme="orange"
+              variant={"outline"}
+            >
+              삭제
+            </Button>
+          )}
         </HStack>
       </Td>
     </Tr>
