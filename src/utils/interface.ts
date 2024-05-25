@@ -14,6 +14,8 @@ export interface TransactionColumn {
   amount: number;
   "Date Requested": string;
   status: string;
+  agentID?: string;
+  masteragentID?: string;
 }
 
 export interface UserColumn {
@@ -88,6 +90,8 @@ export interface UserTransaction {
   createdAt: string;
   updatedAt: string;
   members: Members;
+  agentID?: string;
+  masteragentID?: string;
 }
 
 export interface OrderHistory {

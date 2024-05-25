@@ -129,7 +129,7 @@ export default function TransactionTable({
               {headerGroup.headers.map((header) => {
                 return (
                   <Th key={header.id} colSpan={header.colSpan}>
-                    <HStack
+                    <div
                       {...{
                         className: header.column.getCanSort()
                           ? "cursor-pointer select-none"
@@ -146,13 +146,14 @@ export default function TransactionTable({
                         desc: " 🔽",
                       }[header.column.getIsSorted() as string] ?? null}
                       {header.column.getCanFilter() ? (
-                        <Filter column={header.column} table={table} />
+                        <div>
+                          <Filter column={header.column} table={table} />
+                        </div>
                       ) : null}
-                    </HStack>
+                    </div>
                   </Th>
                 );
               })}
-              {isAdmin && <Th>수정</Th>}
             </Tr>
           ))}
         </Thead>
@@ -289,48 +290,20 @@ function Filter({
   column: Column<any, any>;
   table: Table<any>;
 }) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id);
-
   const columnFilterValue = column.getFilterValue();
-
-  return typeof firstValue === "number" ? (
-    <HStack spacing={1} onClick={(e) => e.stopPropagation()}>
-      <Input
-        w={100}
-        border={"1px"}
-        borderColor={"gray.300"}
-        size={"sm"}
-        type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ""}
-        onChange={(e) =>
-          column.setFilterValue((old: [number, number]) => [
-            e.target.value,
-            old?.[1],
-          ])
-        }
-        placeholder={`Min`}
-        className="w-24 border shadow rounded"
-      />
-      <Input
-        w={100}
-        border={"1px"}
-        borderColor={"gray.300"}
-        size={"sm"}
-        type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ""}
-        onChange={(e) =>
-          column.setFilterValue((old: [number, number]) => [
-            old?.[0],
-            e.target.value,
-          ])
-        }
-        placeholder={`Max`}
-        className="w-24 border shadow rounded"
-      />
-    </HStack>
-  ) : (
+  //return null depending on the column header
+  const disbledHeader = [
+    "은행",
+    "계좌 번호",
+    "계좌 주",
+    "금액",
+    "요청 날짜",
+    "상태",
+  ];
+  if (disbledHeader.includes(column?.columnDef?.header as string)) {
+    return null;
+  }
+  return (
     <Input
       w={150}
       size={"sm"}

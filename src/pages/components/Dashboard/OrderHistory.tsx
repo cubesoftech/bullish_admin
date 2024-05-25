@@ -83,8 +83,10 @@ export default function OrderHistory() {
         cell: (info) =>
           info.getValue() === "LONG" ? (
             <Text color={"green"}>롱</Text>
-          ) : (
+          ) : info.getValue() === "SHORT" ? (
             <Text color={"red"}>쇼트</Text>
+          ) : (
+            ""
           ),
       },
       {
@@ -148,7 +150,7 @@ export default function OrderHistory() {
             name,
             nickname,
             trade: tradeResult,
-            result,
+            result: tradePNL === 0 ? "" : result,
             tradeAmount,
             tradePNL,
             type,

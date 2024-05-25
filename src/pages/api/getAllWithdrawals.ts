@@ -2,31 +2,64 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse
 ) {
-    const page = parseInt(req.query.page as string) || 1;
-    const pageSize = 1000; // Set your page size here
+  const page = parseInt(req.query.page as string) || 1;
+  const pageSize = 1000; // Set your page size here
 
-    const withdrawals = await prisma.transaction.findMany({
+  const withdrawals = await prisma.transaction.findMany({
+    where: {
+      type: "withdrawal",
+    },
+    include: {
+      members: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: pageSize + 1, // Fetch one extra record
+    skip: (page - 1) * pageSize,
+  });
+  const withdrawalsModifiedPromises = withdrawals.map(async (withdrawal) => {
+    const { members } = withdrawal;
+    const { agentsId } = members;
+    let agentID: undefined | string = undefined;
+    let masteragentID: undefined | string = undefined;
+    if (agentsId) {
+      const agent = await prisma.agents.findFirst({
         where: {
-            type: "withdrawal",
+          id: agentsId,
         },
-        include: {
-            members: true,
+      });
+      const agentMember = await prisma.members.findFirst({
+        where: {
+          id: agent?.memberId,
         },
-        orderBy: {
-            createdAt: "desc",
-        },
-        take: pageSize + 1, // Fetch one extra record
-        skip: (page - 1) * pageSize,
-    });
-    let hasMore = false;
-    if (withdrawals.length > pageSize) {
-        hasMore = true;
+      });
+      agentID = agentMember?.email;
+      if (agent?.masteragentsId) {
+        const masteragentMember = await prisma.members.findFirst({
+          where: {
+            id: agent.masteragentsId,
+          },
+        });
+        masteragentID = masteragentMember?.email;
+      }
     }
-    res.status(200).json({
-        withdrawals: withdrawals.slice(0, pageSize),
-        hasMore,
-    });
+    return {
+      ...withdrawal,
+      agentID,
+      masteragentID,
+    };
+  });
+  const withdrawalsModified = await Promise.all(withdrawalsModifiedPromises);
+  let hasMore = false;
+  if (withdrawals.length > pageSize) {
+    hasMore = true;
+  }
+  res.status(200).json({
+    withdrawals: withdrawalsModified.slice(0, pageSize),
+    hasMore,
+  });
 }

@@ -125,15 +125,15 @@ export default function UserManagement() {
     });
     columns.push({
       accessorKey: "masteragentID",
-      header: "Master Agent",
+      header: "총판",
       cell: (info) => info.getValue(),
-      footer: "Master Agent",
+      footer: "총판",
     });
     columns.push({
       accessorKey: "agentID",
-      header: "Agent",
+      header: "에이전트",
       cell: (info) => info.getValue(),
-      footer: "Agent",
+      footer: "에이전트",
     });
   }
 

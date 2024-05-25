@@ -30,7 +30,7 @@ export default function UserManagement() {
       },
       {
         accessorKey: "alreadyAnswered",
-        cell: (info) => (info.getValue() ? "Yes" : "No"),
+        cell: (info) => (info.getValue() ? "완료" : "대기"),
         footer: "Nickname",
         header: "답변 여부",
       },

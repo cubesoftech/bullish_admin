@@ -289,6 +289,15 @@ function UserRow({
       {role === "ADMIN" && (
         <Td>
           <Button
+            onClick={onOpen}
+            colorScheme="blue"
+            size={"sm"}
+            variant={"outline"}
+            mr={1}
+          >
+            수정
+          </Button>
+          <Button
             onClick={() => {
               const url = "/api/deleteuser";
               const payload = {

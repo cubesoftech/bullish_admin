@@ -94,7 +94,7 @@ export default function InquiryTable({
                   </Th>
                 );
               })}
-              <Th>Action</Th>
+              <Th>수정</Th>
             </Tr>
           ))}
         </Thead>
@@ -214,10 +214,10 @@ function InquiryTableRow({
             size={"sm"}
             variant={"outline"}
           >
-            수정
+            답변
           </Button>
           <Button onClick={handleClicked} colorScheme="red" size={"sm"}>
-            Delete
+            삭제
           </Button>
         </HStack>
       </Td>

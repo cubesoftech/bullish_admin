@@ -5,13 +5,11 @@ import {
 } from "@/utils/interface_v2";
 import { useAuthentication } from "@/utils/storage";
 import {
-  Button,
   Table,
   TableCaption,
   TableContainer,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
@@ -19,6 +17,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import useSWR, { useSWRConfig } from "swr";
+import WithdrawalAdmin from "./AuditTables/WithdrawalAdmin";
+import WithdrawalNonAdmin from "./AuditTables/WithdrawalNonAdmin";
 
 function AuditTable({ income }: { income: GetIncomeInterface }) {
   const { role, id } = useAuthentication();
@@ -118,115 +118,9 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
           </Tbody>
         </Table>
       </VStack>
-      <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
-        <TableContainer w={"100%"} overflowY={"scroll"} h={"40vh"}>
-          <Table size={"sm"} variant={"striped"} colorScheme="cyan">
-            <Thead>
-              <Tr>
-                <Th>#</Th>
-                <Th>사용자명</Th>
-                <Th>잔액</Th>
-                <Th>총 출금액</Th>
-                <Th>총 입금액</Th>
-                {role === "ADMIN" && <Th>본사매출</Th>}
-                {role === "ADMIN" && <Th>본사수익</Th>}
-
-                {(role === "ADMIN" || role === "MASTER_AGENT") && (
-                  <Th>총판매출</Th>
-                )}
-                {(role === "ADMIN" || role === "MASTER_AGENT") && (
-                  <Th>총판수익</Th>
-                )}
-                <Th>에이전트매출</Th>
-                <Th>에이전트수익</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {income?.users.map((user, index) => {
-                return (
-                  <Tr key={index}>
-                    <Td>{index + 1}</Td>
-                    <Td>{user.name}</Td>
-                    <Td>{user.balance.toLocaleString()} KRW</Td>
-                    <Td>{user.withdrawals.toLocaleString()} KRW</Td>
-                    <Td>{user.deposit.toLocaleString()} KRW</Td>
-                    {role === "ADMIN" && (
-                      <Td>{user.operator_gross_income.toLocaleString()} KRW</Td>
-                    )}
-                    {role === "ADMIN" && (
-                      <Td>{user.operator_net_income.toLocaleString()} KRW</Td>
-                    )}
-                    {(role === "ADMIN" || role === "MASTER_AGENT") && (
-                      <Td>
-                        {user.master_agent_gross_income.toLocaleString()} KRW
-                      </Td>
-                    )}
-                    {(role === "ADMIN" || role === "MASTER_AGENT") && (
-                      <Td>
-                        {user.master_agent_net_income.toLocaleString()} KRW
-                      </Td>
-                    )}
-                    <Td>{user.agent_gross_income.toLocaleString()} KRW</Td>
-                    <Td>{user.agent_net_income.toLocaleString()} KRW</Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      </VStack>
+      <WithdrawalNonAdmin data={income} />
       {role === "ADMIN" && data && (
-        <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
-          <TableContainer w={"100%"} overflowY={"scroll"} h={"40vh"}>
-            <Table size={"sm"} variant={"striped"} colorScheme="cyan">
-              <TableCaption placement="top">정산내역</TableCaption>
-              <Thead>
-                <Tr>
-                  <Th>#</Th>
-                  <Th>금액</Th>
-                  <Th>상태</Th>
-                  <Th>신청일</Th>
-                  <Th>수정</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {data.withdrawal.map(
-                  (withdrawal: WithdrawalAgent, index: number) => {
-                    return (
-                      <Tr key={index}>
-                        <Td>{index + 1}</Td>
-                        <Td>{withdrawal.amount.toLocaleString()} KRW</Td>
-                        <Td>
-                          <Text
-                            color={
-                              withdrawal.status == "completed" ? "green" : "red"
-                            }
-                          >
-                            {withdrawal.status}
-                          </Text>
-                        </Td>
-                        <Td>{new Date(withdrawal.createdAt).toDateString()}</Td>
-                        <Td>
-                          {withdrawal.status === "PENDING" && (
-                            <Button
-                              size={"sm"}
-                              onClick={() => {
-                                handleClick(withdrawal.id);
-                              }}
-                              colorScheme="blue"
-                            >
-                              승인
-                            </Button>
-                          )}
-                        </Td>
-                      </Tr>
-                    );
-                  }
-                )}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </VStack>
+        <WithdrawalAdmin data={data} handleClick={handleClick} />
       )}
       {role !== "ADMIN" && data && (
         <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
@@ -266,3 +160,63 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
 }
 
 export default AuditTable;
+function newFunction(role: string, income: GetIncomeInterface) {
+  return (
+    <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+      <TableContainer w={"100%"} overflowY={"scroll"} h={"40vh"}>
+        <Table size={"sm"} variant={"striped"} colorScheme="cyan">
+          <Thead>
+            <Tr>
+              <Th>#</Th>
+              <Th>사용자명</Th>
+              <Th>잔액</Th>
+              <Th>총 출금액</Th>
+              <Th>총 입금액</Th>
+              {role === "ADMIN" && <Th>본사매출</Th>}
+              {role === "ADMIN" && <Th>본사수익</Th>}
+
+              {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                <Th>총판매출</Th>
+              )}
+              {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                <Th>총판수익</Th>
+              )}
+              <Th>에이전트매출</Th>
+              <Th>에이전트수익</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {income?.users.map((user, index) => {
+              return (
+                <Tr key={index}>
+                  <Td>{index + 1}</Td>
+                  <Td>{user.name}</Td>
+                  <Td>{user.balance.toLocaleString()} KRW</Td>
+                  <Td>{user.withdrawals.toLocaleString()} KRW</Td>
+                  <Td>{user.deposit.toLocaleString()} KRW</Td>
+                  {role === "ADMIN" && (
+                    <Td>{user.operator_gross_income.toLocaleString()} KRW</Td>
+                  )}
+                  {role === "ADMIN" && (
+                    <Td>{user.operator_net_income.toLocaleString()} KRW</Td>
+                  )}
+                  {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                    <Td>
+                      {user.master_agent_gross_income.toLocaleString()} KRW
+                    </Td>
+                  )}
+                  {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                    <Td>{user.master_agent_net_income.toLocaleString()} KRW</Td>
+                  )}
+
+                  <Td>{user.agent_gross_income.toLocaleString()} KRW</Td>
+                  <Td>{user.agent_net_income.toLocaleString()} KRW</Td>
+                </Tr>
+              );
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </VStack>
+  );
+}

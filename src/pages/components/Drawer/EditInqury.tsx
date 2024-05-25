@@ -70,7 +70,7 @@ function EditInqury({
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>수정</DrawerHeader>
+        <DrawerHeader>답변</DrawerHeader>
 
         <DrawerBody mb={10}>
           <VStack
@@ -94,7 +94,7 @@ function EditInqury({
             alignItems={"flex-start"}
             spacing={1}
           >
-            <Text>Answer</Text>
+            <Text>답변</Text>
             <Textarea
               onChange={(e) =>
                 setPayload({ ...payload, answer: e.target.value })

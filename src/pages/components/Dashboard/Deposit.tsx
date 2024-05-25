@@ -5,6 +5,7 @@ import { ArrayUserTransaction, TransactionColumn } from "@/utils/interface";
 import axios from "axios";
 import MyTable from "../Tables/Transaction";
 import { FiTrendingUp } from "react-icons/fi";
+import { useAuthentication } from "@/utils/storage";
 
 export default function Deposits() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -13,6 +14,8 @@ export default function Deposits() {
   });
 
   const [rowSelection, setRowSelection] = React.useState({});
+
+  const { role } = useAuthentication();
 
   const columns = useMemo<ColumnDef<TransactionColumn>[]>(
     () => [
@@ -100,6 +103,30 @@ export default function Deposits() {
     []
   );
 
+  if (role === "ADMIN") {
+    columns.push({
+      accessorKey: "masteragentID",
+      header: "총판",
+      cell: (info) => info.getValue(),
+      footer: "총판",
+    });
+    columns.push({
+      accessorKey: "agentID",
+      header: "에이전트",
+      cell: (info) => info.getValue(),
+      footer: "에이전트",
+    });
+  }
+
+  if (role === "MASTER_AGENT") {
+    columns.push({
+      accessorKey: "agentID",
+      header: "Agent",
+      cell: (info) => info.getValue(),
+      footer: "Agent",
+    });
+  }
+
   const [data, setData] = React.useState<TransactionColumn[]>([]);
 
   const [refetch, setRefetch] = React.useState(true);
@@ -136,6 +163,8 @@ export default function Deposits() {
             amount,
             "Date Requested": created_,
             status,
+            agentID: withdrawal.agentID,
+            masteragentID: withdrawal.masteragentID,
           },
         ]);
       });

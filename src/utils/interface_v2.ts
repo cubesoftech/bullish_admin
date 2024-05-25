@@ -14,6 +14,7 @@ export interface User {
   name: string;
   balance: number;
   referrer: string;
+  masterAgentID?: string;
   agents: Agents;
   transaction: Transaction[];
   deposit: number;
@@ -54,4 +55,8 @@ export interface WithdrawalAgent {
   createdAt: Date;
   updatedAt: Date;
   membersId: string;
+  members?: {
+    email?: string;
+  };
+  email?: string;
 }

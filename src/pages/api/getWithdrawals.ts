@@ -14,7 +14,15 @@ export default async function handler(
 ) {
   const { membersId, role } = req.body as DepositInterface;
   if (role === "ADMIN") {
-    const withdrawal = await prisma.agents_withdrawals.findMany();
+    const withdrawal = await prisma.agents_withdrawals.findMany({
+      include: {
+        members: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
     return res.status(200).json({
       withdrawal,
     });
@@ -23,6 +31,13 @@ export default async function handler(
     where: {
       membersId: membersId,
       role: role,
+    },
+    include: {
+      members: {
+        select: {
+          email: true,
+        },
+      },
     },
   });
   res.status(200).json({

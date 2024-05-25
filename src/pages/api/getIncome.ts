@@ -3,10 +3,7 @@ import { prisma } from "@/utils";
 
 const get_all_transaction2 = async (month: number) => {
   //if month is 1, it means January 12 means December
-  const greaterThan = new Date(new Date().getFullYear(), month - 1, 1);
-  const lessThan = new Date(new Date().getFullYear(), month, 1);
-  console.log(greaterThan.toLocaleDateString(), lessThan.toLocaleDateString());
-  const users = await prisma.members.findMany({
+  const users_ = await prisma.members.findMany({
     where: {
       role: "USER",
       email: {
@@ -29,6 +26,7 @@ const get_all_transaction2 = async (month: number) => {
             select: {
               id: true,
               royalty: true,
+              memberId: true,
             },
           },
           royalty: true,
@@ -53,6 +51,23 @@ const get_all_transaction2 = async (month: number) => {
       },
     },
   });
+
+  //retrive email of master agent
+  const usersModified = users_.map(async (user) => {
+    let masterAgentID: string | null = null;
+    const masteragentid = user.agents?.masteragents?.memberId || "";
+    const memberMAsterAgent = await prisma.members.findFirst({
+      where: {
+        id: masteragentid,
+      },
+    });
+    if (memberMAsterAgent) {
+      masterAgentID = memberMAsterAgent.email;
+    }
+    return { ...user, masterAgentID };
+  });
+
+  const users = await Promise.all(usersModified);
 
   const modifiedUsers = users.map((user) => {
     const deposit = user.transaction.reduce((sum, transaction) => {
