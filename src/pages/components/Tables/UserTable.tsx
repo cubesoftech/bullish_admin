@@ -341,6 +341,11 @@ function Filter({
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
+  const disableHeader = ["은행", "계좌 번호", "계좌 주", "잔액"];
+  if (disableHeader.includes(column?.columnDef?.header as string)) {
+    return null;
+  }
+
   const columnFilterValue = column.getFilterValue();
 
   return typeof firstValue === "number" ? (
