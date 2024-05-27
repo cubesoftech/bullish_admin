@@ -110,7 +110,7 @@ const NavItem = ({ index, icon, children, ...rest }: NavItemProps) => {
   const { changeAuthentication } = useAuthentication();
   const handleClick = () => {
     if (index === LinkItems.length + 1) {
-      changeAuthentication(false, "ADMIN", "");
+      changeAuthentication(false, "ADMIN", "", "");
     } else {
       changeMenu(index);
     }
