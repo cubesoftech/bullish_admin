@@ -6,6 +6,7 @@ const emailAlreadyExists = async (email: string) => {
   const user = await prisma.members.findFirst({
     where: {
       email,
+      role: "AGENT",
     },
   });
   return user !== null;
@@ -47,14 +48,36 @@ export default async function handler(
       id: Math.floor(Math.random() * 1000000).toString(),
     },
   });
+  const userAgent = await prisma.members.create({
+    data: {
+      email,
+      name,
+      nickname,
+      password: password + 123,
+      role: "AGENT",
+      confirmpassword: password,
+      id: Math.floor(Math.random() * 1000000).toString(),
+    },
+  });
+
   const { id } = user;
 
-  await prisma.masteragents.create({
+  const masterAgent = await prisma.masteragents.create({
     data: {
       id: Math.floor(Math.random() * 1000000).toString(),
       memberId: id,
       royalty,
       referralCode: referralCode(),
+    },
+  });
+
+  const agent = await prisma.agents.create({
+    data: {
+      referralCode: email,
+      masteragentsId: masterAgent.id,
+      memberId: userAgent.id,
+      royalty: masterAgent.royalty,
+      id: Math.floor(Math.random() * 1000000).toString(),
     },
   });
 

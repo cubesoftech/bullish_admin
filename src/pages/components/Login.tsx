@@ -34,6 +34,7 @@ export default function Login() {
         role: "ADMIN" | "AGENT" | "MASTER_AGENT";
         message: string;
         id: string;
+        userId: string;
       }>("/api/login", payload);
       if (data.status) {
         toast({
@@ -43,7 +44,7 @@ export default function Login() {
           duration: 9000,
           isClosable: true,
         });
-        changeAuthentication(true, data.role, data.id);
+        changeAuthentication(true, data.role, data.id, data.userId);
         return;
       } else {
         toast({

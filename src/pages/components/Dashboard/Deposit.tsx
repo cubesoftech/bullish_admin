@@ -15,7 +15,7 @@ export default function Deposits() {
 
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const { role } = useAuthentication();
+  const { role, userId } = useAuthentication();
 
   const columns = useMemo<ColumnDef<TransactionColumn>[]>(
     () => [
@@ -151,22 +151,44 @@ export default function Deposits() {
         } = withdrawal;
         let created = new Date(createdAt);
         let created_ = `${created.toDateString()} ${created.toLocaleTimeString()}`;
-        setData((data) => [
-          ...data,
-          {
-            id,
-            name,
-            email,
-            bank,
-            accountNumber: accountnumber,
-            accountHolder: accountholder,
-            amount,
-            "Date Requested": created_,
-            status,
-            agentID: withdrawal.agentID,
-            masteragentID: withdrawal.masteragentID,
-          },
-        ]);
+        if (role === "AGENT" || role === "MASTER_AGENT") {
+          console.log(userId, withdrawal);
+          if (userId === withdrawal.agentID) {
+            setData((data) => [
+              ...data,
+              {
+                id,
+                name,
+                email,
+                bank,
+                accountNumber: accountnumber,
+                accountHolder: accountholder,
+                amount,
+                "Date Requested": created_,
+                status,
+                agentID: withdrawal.agentID,
+                masteragentID: withdrawal.masteragentID,
+              },
+            ]);
+          }
+        } else {
+          setData((data) => [
+            ...data,
+            {
+              id,
+              name,
+              email,
+              bank,
+              accountNumber: accountnumber,
+              accountHolder: accountholder,
+              amount,
+              "Date Requested": created_,
+              status,
+              agentID: withdrawal.agentID,
+              masteragentID: withdrawal.masteragentID,
+            },
+          ]);
+        }
       });
       hasMoreData = hasMore;
       page++;

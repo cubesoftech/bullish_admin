@@ -33,7 +33,7 @@ model bank {
 
 model members {
   id                 String               @id @unique(map: "Members_id_key")
-  email              String               @unique(map: "Members_email_key")
+  email              String               
   role               Role                 @default(USER)
   name               String?
   password           String?
@@ -46,31 +46,35 @@ model members {
   bank               String?
   referrer           String?
   balance            Int?                 @default(0)
-  inquiries          Inquiries[]
-  membertrades       membertrades[]
-  transaction        transaction[]
-  agents             agents?              @relation(fields: [agentsId], references: [id])
   agentsId           String?
   createdAt          DateTime?            @default(now())
+  inquiries          Inquiries[]
   agents_withdrawals agents_withdrawals[]
+  agents             agents?              @relation(fields: [agentsId], references: [id])
+  membertrades       membertrades[]
+  transaction        transaction[]
+
+  @@index([agentsId], map: "members_agentsId_fkey")
 }
 
 model masteragents {
-  id       String   @id @unique(map: "MasterAgents_id_key")
-  memberId String
-  referralCode String? @default(cuid())
-  agents   agents[]
-  royalty  Int
+  id           String   @id @unique(map: "MasterAgents_id_key")
+  memberId     String
+  referralCode String?  @default(cuid())
+  royalty      Int
+  agents       agents[]
 }
 
 model agents {
   id              String        @id @unique(map: "Agents_id_key")
   memberId        String
-  referredmembers members[]
   royalty         Int
   referralCode    String
-  masteragents    masteragents? @relation(fields: [masteragentsId], references: [id])
   masteragentsId  String?
+  masteragents    masteragents? @relation(fields: [masteragentsId], references: [id])
+  referredmembers members[]
+
+  @@index([masteragentsId], map: "agents_masteragentsId_fkey")
 }
 
 model membertrades {
@@ -118,14 +122,16 @@ model transaction {
 }
 
 model agents_withdrawals {
-  id        String   @id @unique(map: "AgentsWithdrawals_id_key")
+  id        String             @id @unique(map: "AgentsWithdrawals_id_key")
   amount    Int
   status    transaction_status
   role      Role
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  members   members? @relation(fields: [membersId], references: [id])
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
   membersId String?
+  members   members?           @relation(fields: [membersId], references: [id])
+
+  @@index([membersId], map: "agents_withdrawals_membersId_fkey")
 }
 
 model users {
@@ -163,9 +169,11 @@ model Inquiries {
   memberId        String
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  members         members? @relation(fields: [membersId], references: [id])
   alreadyAnswered Boolean  @default(false)
   membersId       String?
+  members         members? @relation(fields: [membersId], references: [id])
+
+  @@index([membersId], map: "Inquiries_membersId_fkey")
 }
 
 model sitesettings {
@@ -181,11 +189,12 @@ model sitesettings {
   minimumAmount Int
 }
 
-enum tradingstocks {
-  btc
-  wti
-  nasdaq
-  gold
+model announcement {
+  id        String   @id
+  title     String
+  content   String   @db.VarChar(5000)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
 }
 
 enum recenttrades_type {

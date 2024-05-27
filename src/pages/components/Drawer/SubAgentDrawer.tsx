@@ -17,18 +17,28 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import AddAgent from "./AddAgent";
+import { useEffect, useState } from "react";
 
 function SubAgentDrawer({
   isOpen,
   onClose,
   agent,
   masterAgentId,
+  masterMemberName,
 }: {
   isOpen: boolean;
   onClose: () => void;
   agent: Agent[];
   masterAgentId: string;
+  masterMemberName: string;
 }) {
+  const [agentDetails, setAgentDetails] = useState(agent);
+
+  useEffect(() => {
+    setAgentDetails(() => {
+      return agent.filter((e) => e.member.email !== masterMemberName);
+    });
+  }, [masterMemberName]);
   const {
     isOpen: agentIsOpen,
     onClose: agentOnClose,
@@ -59,7 +69,7 @@ function SubAgentDrawer({
                 </Tr>
               </Thead>
               <Tbody>
-                {agent.map((agent, index) => {
+                {agentDetails.map((agent, index) => {
                   return (
                     <Tr key={agent.id}>
                       <Td>{index + 1}</Td>

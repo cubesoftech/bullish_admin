@@ -15,7 +15,7 @@ export default function Withdrawals() {
 
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const { role } = useAuthentication();
+  const { role, userId } = useAuthentication();
 
   const columns = useMemo<ColumnDef<TransactionColumn>[]>(
     () => [
@@ -143,22 +143,44 @@ export default function Withdrawals() {
           status,
           id,
         } = withdrawal;
-        setData((data) => [
-          ...data,
-          {
-            id,
-            name,
-            email,
-            bank,
-            accountNumber: accountnumber,
-            accountHolder: accountholder,
-            amount,
-            "Date Requested": createdAt,
-            status,
-            agentID: withdrawal.agentID,
-            masteragentID: withdrawal.masteragentID,
-          },
-        ]);
+        if (role === "AGENT" || role === "MASTER_AGENT") {
+          console.log(userId, withdrawal);
+          if (userId === withdrawal.agentID) {
+            setData((data) => [
+              ...data,
+              {
+                id,
+                name,
+                email,
+                bank,
+                accountNumber: accountnumber,
+                accountHolder: accountholder,
+                amount,
+                "Date Requested": createdAt,
+                status,
+                agentID: withdrawal.agentID,
+                masteragentID: withdrawal.masteragentID,
+              },
+            ]);
+          }
+        } else {
+          setData((data) => [
+            ...data,
+            {
+              id,
+              name,
+              email,
+              bank,
+              accountNumber: accountnumber,
+              accountHolder: accountholder,
+              amount,
+              "Date Requested": createdAt,
+              status,
+              agentID: withdrawal.agentID,
+              masteragentID: withdrawal.masteragentID,
+            },
+          ]);
+        }
       });
       hasMoreData = hasMore;
       page++;

@@ -6,6 +6,7 @@ interface Data {
   role?: string;
   message: string;
   id?: string;
+  userId?: string;
 }
 
 export default async function handler(
@@ -41,6 +42,7 @@ export default async function handler(
       role: user.role,
       message: "Login successful",
       id: user.id,
+      userId: user.email,
     });
   }
   return res.status(405).json({

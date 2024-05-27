@@ -120,6 +120,7 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
     <Tr key={agent.id}>
       <SubAgentDrawer
         masterAgentId={id}
+        masterMemberName={agent.member.email}
         agent={agents}
         isOpen={isOpen}
         onClose={onClose}
@@ -131,7 +132,7 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
       {/* <Td>{agent.referralCode}</Td> */}
       <Td>{agent.member.password}</Td>
       <Td>{agent.royalty} %</Td>
-      <Td>{agent.agents.length}</Td>
+      <Td>{agent.agents.length - 1}</Td>
       <Td>
         <HStack>
           <Button onClick={onOpen} colorScheme="purple" variant={"outline"}>

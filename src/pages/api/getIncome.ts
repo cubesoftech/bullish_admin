@@ -289,10 +289,29 @@ export default async function handler(
     role: "ADMIN" | "AGENT" | "MASTER_AGENT";
     id: string;
   };
+
   if (role && id) {
     if (role === "MASTER_AGENT") {
+      const memberUser = await prisma.members.findFirst({
+        where: {
+          id: id,
+        },
+      });
+      if (!memberUser) {
+        return res.status(500).json({ status: "Error" });
+      }
       const user = await get_all_transaction2_master(Number(month), id);
-      console.log(user);
+      const correctedUser = user.users.map((e, index) => {
+        const { masterAgentID } = e;
+        if (masterAgentID === memberUser.email) {
+          user.totalMasterAgentNetIncome += e.agent_net_income;
+          user.totalAgentGrossIncome -= e.agent_net_income;
+          user.totalAgentNetIncome -= e.agent_gross_income;
+
+          user.users[index].agent_gross_income = 0;
+          user.users[index].agent_net_income = 0;
+        }
+      });
       return res.status(200).json(user);
     }
     if (role === "AGENT") {
