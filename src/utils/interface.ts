@@ -36,6 +36,7 @@ export interface UserColumn {
   };
   agentID?: string;
   masteragentID?: string;
+  status?: boolean;
 }
 
 export interface InquryColumn {
@@ -129,6 +130,7 @@ export interface Members {
   };
   agentID: string;
   masteragentID: string;
+  status?: boolean;
 }
 
 export interface AnnouncementInterface {

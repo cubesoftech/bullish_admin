@@ -197,6 +197,7 @@ export default function UserManagement() {
             agentID: user.agentID,
             agents: user.agents,
             masteragentID: user.masteragentID,
+            status: user.status,
           },
         ]);
       });

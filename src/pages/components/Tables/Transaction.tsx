@@ -247,6 +247,7 @@ function TransactionRow({
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { role } = useAuthentication();
   const isAdmin = role === "ADMIN";
+  const status = row.original.status;
   return (
     <Tr key={row.id}>
       <EditTransaction
@@ -262,6 +263,7 @@ function TransactionRow({
             className={row.getIsSelected() ? "selected" : undefined}
             onClick={row.getToggleSelectedHandler()}
             key={cell.id}
+            color={status === "completed" ? "black" : "red"}
           >
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </Td>

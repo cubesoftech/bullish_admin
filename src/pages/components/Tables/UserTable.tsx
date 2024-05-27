@@ -191,6 +191,7 @@ export default function UserTable({
         </Thead>
         <Tbody>
           {table.getRowModel().rows.map((row) => {
+            console.log(row.original, "row");
             return <UserRow refetch={refetch} key={row.id} row={row} />;
           })}
         </Tbody>
@@ -270,6 +271,7 @@ function UserRow({
 }): React.JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { role } = useAuthentication();
+  console.log(row.original);
   return (
     <Tr key={row.id}>
       <EditUser
@@ -279,9 +281,9 @@ function UserRow({
         user={row.original}
       />
       {row.getVisibleCells().map((cell) => {
-        console.log(cell.getContext(), cell.id);
+        const { status } = row.original;
         return (
-          <Td key={cell.id}>
+          <Td key={cell.id} color={status ? "black" : "red"}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </Td>
         );

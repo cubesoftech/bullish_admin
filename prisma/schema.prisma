@@ -48,6 +48,7 @@ model members {
   balance            Int?                 @default(0)
   agentsId           String?
   createdAt          DateTime?            @default(now())
+  status             Boolean              @default(false)
   inquiries          Inquiries[]
   agents_withdrawals agents_withdrawals[]
   agents             agents?              @relation(fields: [agentsId], references: [id])

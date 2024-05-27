@@ -10,6 +10,7 @@ import {
   Text,
   Input,
   useToast,
+  Select,
 } from "@chakra-ui/react";
 import { UserColumn } from "@/utils/interface";
 import { useState } from "react";
@@ -36,6 +37,7 @@ function EditUser({
     name,
     nickname,
     password,
+    status,
   } = user;
 
   const [userState, setUserState] = useState<UserColumn>(user);
@@ -44,8 +46,13 @@ function EditUser({
 
   const updateUser = async () => {
     const url = "/api/editUser";
+    console.log(userState);
     try {
+      delete userState.agents;
+      delete userState.agentID;
+      delete userState.masteragentID;
       await axios.post(url, userState);
+
       toast({
         title: "User Updated",
         description: "User has been updated",
@@ -151,6 +158,21 @@ function EditUser({
                   setUserState({ ...userState, password: e.target.value });
                 }}
               />
+            </VStack>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+              <Text>Status</Text>
+              <Select
+                value={userState.status ? 1 : 0}
+                onChange={(e) => {
+                  setUserState({
+                    ...userState,
+                    status: e.target.value === "1" ? true : false,
+                  });
+                }}
+              >
+                <option value={1}>Active</option>
+                <option value={0}>Inactive</option>
+              </Select>
             </VStack>
           </VStack>
         </DrawerBody>

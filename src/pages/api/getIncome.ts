@@ -321,5 +321,16 @@ export default async function handler(
   }
   const monthtoday = new Date().getMonth() + 1;
   const all = await get_all_transaction2(Number(month) || monthtoday);
+  all.users.map((e, index) => {
+    const { referrer, masterAgentID } = e;
+    if (referrer === masterAgentID) {
+      all.totalMasterAgentNetIncome += e.agent_net_income;
+      all.totalAgentGrossIncome -= e.agent_net_income;
+      all.totalAgentNetIncome -= e.agent_gross_income;
+      all.users[index].agent_gross_income = 0;
+      all.users[index].agent_net_income = 0;
+      all.users[index].master_agent_net_income += e.agent_net_income;
+    }
+  });
   return res.status(200).json(all);
 }
