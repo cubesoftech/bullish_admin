@@ -5,6 +5,7 @@ import { ArrayInquiry, InquryColumn } from "@/utils/interface";
 import axios from "axios";
 import { FiStar } from "react-icons/fi";
 import InquiryTable from "../Tables/InquiryTable";
+import { useAuthentication } from "@/utils/storage";
 
 export default function UserManagement() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -51,6 +52,8 @@ export default function UserManagement() {
 
   const [data, setData] = React.useState<InquryColumn[]>([]);
 
+  const { role, userId } = useAuthentication();
+
   const requestInquiries = async () => {
     let hasMoreData = true;
     let page = 1;
@@ -72,22 +75,47 @@ export default function UserManagement() {
           updatedAt,
           member,
           alreadyAnswered,
+          agentID,
+          masterAgentID,
         } = inqury;
         const { email } = member;
-        setData((data) => [
-          ...data,
-          {
-            id,
-            title,
-            content,
-            answer,
-            memberId,
-            createdAt,
-            updatedAt,
-            email,
-            alreadyAnswered,
-          },
-        ]);
+        if (role === "AGENT" || role === "MASTER_AGENT") {
+          if (userId === agentID || userId === masterAgentID) {
+            setData((data) => [
+              ...data,
+              {
+                id,
+                title,
+                content,
+                answer,
+                memberId,
+                createdAt,
+                updatedAt,
+                email,
+                alreadyAnswered,
+                agentID,
+                masterAgentID,
+              },
+            ]);
+          }
+        } else {
+          setData((data) => [
+            ...data,
+            {
+              id,
+              title,
+              content,
+              answer,
+              memberId,
+              createdAt,
+              updatedAt,
+              email,
+              alreadyAnswered,
+              agentID,
+              masterAgentID,
+            },
+          ]);
+        }
       });
       hasMoreData = hasMore;
       page++;

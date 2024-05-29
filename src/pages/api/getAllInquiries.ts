@@ -20,17 +20,55 @@ export default async function handler(
   for (let i = 0; i < withdrawals.length; i++) {
     const inquiry = withdrawals[i];
     const { memberId } = inquiry;
+    let masterAgentID = null;
+    let agentID = null;
     const member = await prisma.members.findFirst({
       where: {
         id: memberId,
+      },
+      include: {
+        agents: {
+          select: {
+            masteragents: {
+              select: {
+                memberId: true,
+              },
+            },
+            memberId: true,
+          },
+        },
       },
     });
     if (!member) {
       continue;
     }
+    if (member) {
+      const { agents } = member;
+      if (agents) {
+        const { masteragents, memberId } = agents;
+        const agent = await prisma.members.findFirst({
+          where: {
+            id: memberId,
+          },
+        });
+        agentID = agent?.email;
+        if (masteragents) {
+          const { memberId } = masteragents;
+          const memberagent = await prisma.members.findFirst({
+            where: {
+              id: memberId,
+            },
+          });
+          masterAgentID = memberagent?.email;
+        }
+      }
+    }
+
     inquiriesWithDetails.push({
       ...inquiry,
       member,
+      agentID,
+      masterAgentID,
     });
   }
   let hasMore = false;

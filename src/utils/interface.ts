@@ -189,6 +189,8 @@ export interface Inqury {
   alreadyAnswered: boolean;
   membersId: any;
   member: Member;
+  agentID?: string;
+  masterAgentID?: string;
 }
 export interface Masteragent {
   id: string;
