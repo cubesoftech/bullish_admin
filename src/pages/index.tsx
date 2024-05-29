@@ -25,7 +25,7 @@ export default function Home() {
   // });
 
   useEffect(() => {
-    const socket_server = "https://scheduler.brave-exchange.com/";
+    const socket_server = "https://mslot10.com/";
     const socket = io(socket_server);
 
     //listen to event observerChanges
