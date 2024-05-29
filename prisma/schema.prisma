@@ -33,7 +33,7 @@ model bank {
 
 model members {
   id                 String               @id @unique(map: "Members_id_key")
-  email              String               
+  email              String
   role               Role                 @default(USER)
   name               String?
   password           String?
