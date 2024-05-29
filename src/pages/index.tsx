@@ -62,7 +62,7 @@ export default function Home() {
   );
 
   useEffect(() => {
-    const socket_server = "http://localhost:9000";
+    const socket_server = "https://mslot04.com/";
     const socket = io(socket_server);
 
     //listen to event observerChanges
