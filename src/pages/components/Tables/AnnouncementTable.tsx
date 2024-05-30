@@ -75,35 +75,13 @@ function AnnouncementTable() {
         </Thead>
         <Tbody>
           {announcements.map((announcement, index) => {
-            const date = new Date(announcement.createdAt);
             return (
-              <Tr key={index}>
-                <Td>{index + 1}</Td>
-                <Td>{announcement.title}</Td>
-                <Td>
-                  {date.toLocaleDateString()} {date.toLocaleTimeString()}
-                </Td>
-                {isAdmin && (
-                  <Td>
-                    <EditAnnouncement
-                      isOpen={editIsOpen}
-                      onClose={editOnClose}
-                      announcement={announcement}
-                    />
-                    <HStack>
-                      <Button colorScheme="blue" onClick={editOnOpen}>
-                        편집
-                      </Button>
-                      <Button
-                        onClick={() => deleteAnnouncement(announcement.id)}
-                        colorScheme="red"
-                      >
-                        삭제
-                      </Button>
-                    </HStack>
-                  </Td>
-                )}
-              </Tr>
+              <AnnouncementRow
+                announcement={announcement}
+                deleteAnnouncement={deleteAnnouncement}
+                isAdmin={isAdmin}
+                index={index}
+              />
             );
           })}
         </Tbody>
@@ -121,3 +99,53 @@ function AnnouncementTable() {
 }
 
 export default AnnouncementTable;
+
+function AnnouncementRow({
+  announcement,
+  index,
+  deleteAnnouncement,
+  isAdmin,
+}: {
+  announcement: {
+    id: string;
+    title: string;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  index: number;
+  isAdmin: boolean;
+  deleteAnnouncement: (id: string) => Promise<void>;
+}) {
+  const date = new Date(announcement.createdAt);
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  return (
+    <Tr key={index}>
+      <Td>{index + 1}</Td>
+      <Td>{announcement.title}</Td>
+      <Td>
+        {date.toLocaleDateString()} {date.toLocaleTimeString()}
+      </Td>
+      {isAdmin && (
+        <Td>
+          <EditAnnouncement
+            isOpen={isOpen}
+            onClose={onClose}
+            announcement={announcement}
+          />
+          <HStack>
+            <Button colorScheme="blue" onClick={onOpen}>
+              편집
+            </Button>
+            <Button
+              onClick={() => deleteAnnouncement(announcement.id)}
+              colorScheme="red"
+            >
+              삭제
+            </Button>
+          </HStack>
+        </Td>
+      )}
+    </Tr>
+  );
+}

@@ -62,23 +62,23 @@ function AddAgent({
     })
       .then((res) => res.json())
       .then((data) => {
-        toast({
-          title: "MasterAgent created.",
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-        });
+        // toast({
+        //   title: "MasterAgent created.",
+        //   status: "success",
+        //   duration: 9000,
+        //   isClosable: true,
+        // });
         onClose();
         mutate("/api/getAllMasterAgents");
       })
       .catch((error) => {
-        toast({
-          title: "An error occurred.",
-          description: error,
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
+        // toast({
+        //   title: "An error occurred.",
+        //   description: error,
+        //   status: "error",
+        //   duration: 9000,
+        //   isClosable: true,
+        // });
         onClose();
         mutate("/api/getAllAnnouncement");
       });

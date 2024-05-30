@@ -217,6 +217,7 @@ export interface Member {
   referrer: any;
   balance: number;
   agentsId: any;
+  status?: boolean;
 }
 
 export interface SiteSettting {

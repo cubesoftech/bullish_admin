@@ -19,6 +19,7 @@ import AddMasterAgent from "../Drawer/AddMasterAgent";
 import { ArrayMasterAgent, Masteragent } from "@/utils/interface";
 import SubAgentDrawer from "../Drawer/SubAgentDrawer";
 import { useAuthentication } from "@/utils/storage";
+import EditMasterAgent from "../Drawer/EditMasterAgent";
 
 function AgentsTable() {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -87,9 +88,11 @@ function AgentsTable() {
 export default AgentsTable;
 
 function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
-  const { agents, id } = agent;
+  const { agents, id, member } = agent;
 
+  const { status, id: membersId } = member;
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const masterAgentEdit = useDisclosure();
   const toast = useToast();
   const { role } = useAuthentication();
 
@@ -116,8 +119,32 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
     }
   };
   //agents is an array of agent under the master agent
+
+  const activateMasterAgent = async () => {
+    const url = "/api/activateMasterAgent";
+    try {
+      const res = await axios.post(url, { id: membersId, status: !status });
+      mutate("/api/getAllMasterAgents");
+      toast({
+        title: "Success",
+        description: "Agent has been activated",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error has occured",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
-    <Tr key={agent.id}>
+    <Tr color={status ? "black" : "red"} key={agent.id}>
       <SubAgentDrawer
         masterAgentId={id}
         masterMemberName={agent.member.email}
@@ -125,6 +152,7 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
         isOpen={isOpen}
         onClose={onClose}
       />
+      <EditMasterAgent {...masterAgentEdit} masterAgent={agent} />
       <Td>{index + 1}</Td>
       <Td>{agent.member.name}</Td>
       <Td>{agent.member.nickname}</Td>
@@ -135,17 +163,35 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
       <Td>{agent.agents.length - 1}</Td>
       <Td>
         <HStack>
-          <Button onClick={onOpen} colorScheme="purple" variant={"outline"}>
+          <Button
+            onClick={onOpen}
+            size={"sm"}
+            colorScheme="purple"
+            variant={"outline"}
+            isDisabled={status ? false : true}
+          >
             하위 에이전트 보기
           </Button>
           {role === "ADMIN" && (
-            <Button
-              onClick={deleteAgent}
-              colorScheme="orange"
-              variant={"outline"}
-            >
-              삭제
-            </Button>
+            <HStack>
+              <Button
+                size={"sm"}
+                onClick={activateMasterAgent}
+                colorScheme={status ? "red" : "green"}
+                variant={"outline"}
+              >
+                {status ? "비활성" : "활성"}
+              </Button>
+              <Button
+                size={"sm"}
+                onClick={masterAgentEdit.onOpen}
+                colorScheme={status ? "red" : "green"}
+                variant={"outline"}
+                isDisabled={status ? false : true}
+              >
+                수정
+              </Button>
+            </HStack>
           )}
         </HStack>
       </Td>
