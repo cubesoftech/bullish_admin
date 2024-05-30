@@ -69,13 +69,13 @@ function AddMasterAgent({
         mutate("/api/getAllMasterAgents");
       })
       .catch((error) => {
-        // toast({
-        //   title: "An error occurred.",
-        //   description: error,
-        //   status: "error",
-        //   duration: 9000,
-        //   isClosable: true,
-        // });
+        toast({
+          title: "An error occurred.",
+          description: "Same userId already exists.",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
         onClose();
         mutate("/api/getAllAnnouncement");
       });
