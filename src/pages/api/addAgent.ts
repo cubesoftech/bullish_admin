@@ -44,6 +44,7 @@ export default async function handler(
       password,
       role: "AGENT",
       confirmpassword: password,
+      status: true,
       id: Math.floor(Math.random() * 1000000).toString(),
     },
   });
