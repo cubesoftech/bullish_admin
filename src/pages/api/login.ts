@@ -28,6 +28,7 @@ export default async function handler(
         role: {
           in: ["ADMIN", "MASTER_AGENT", "AGENT"],
         },
+        status: true,
       },
     });
 
