@@ -15,6 +15,7 @@ import {
 import React from "react";
 import { AnnouncementInterface } from "@/utils/interface";
 import { useSWRConfig } from "swr";
+import { Editor } from "@tinymce/tinymce-react";
 
 function AddAnnouncement({
   isOpen,
@@ -108,13 +109,14 @@ function AddAnnouncement({
             spacing={1}
           >
             <Text>내용</Text>
-            <Textarea
+            {/* <Textarea
               onChange={(e) => {
                 setPayload({ ...payload, content: e.target.value });
               }}
               height={600}
-            />
-            {/* <Editor
+            /> */}
+            <Editor
+              tinymceScriptSrc={'./tinymce/tinymce.min.js'}
               apiKey="kqfwcl6lfz745rmfuf2022x9kwpwwyll2a3wc1pjjfqrfc8w"
               onInit={(_evt, editor) => (editorRef.current = editor)}
               onChange={(_evt, editor) => {
@@ -122,6 +124,7 @@ function AddAnnouncement({
               }}
               init={{
                 height: 500,
+                width: "100%",
                 menubar: false,
                 plugins: [
                   "advlist",
@@ -151,7 +154,7 @@ function AddAnnouncement({
                 content_style:
                   "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
               }}
-            /> */}
+            />
           </VStack>
         </DrawerBody>
 

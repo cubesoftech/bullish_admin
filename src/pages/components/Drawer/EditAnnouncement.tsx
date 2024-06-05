@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { Announcement } from "@prisma/client";
+import { Editor } from "@tinymce/tinymce-react";
 
 function EditAnnouncement({
   isOpen,
@@ -76,19 +77,20 @@ function EditAnnouncement({
             spacing={1}
           >
             <Text>내용</Text>
-            <Textarea
+            {/* <Textarea
               onChange={(e) => {
                 setContent(e.target.value);
               }}
               height={600}
               value={content_}
-            />
-            {/* <Editor
+            /> */}
+            <Editor
+              tinymceScriptSrc={'./tinymce/tinymce.min.js'}
               apiKey="kqfwcl6lfz745rmfuf2022x9kwpwwyll2a3wc1pjjfqrfc8w"
               onInit={(_evt, editor) => (editorRef.current = editor)}
               initialValue={content}
               onChange={(_evt, editor) => {
-                // setPayload({ ...payload, content: editor.getContent() });
+                setContent(editor.getContent());
               }}
               init={{
                 height: 500,
@@ -121,7 +123,7 @@ function EditAnnouncement({
                 content_style:
                   "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
               }}
-            /> */}
+            />
           </VStack>
         </DrawerBody>
 
