@@ -40,7 +40,9 @@ function EditTransaction({
     useState<transaction_status>(status as transaction_status);
   const toast = useToast();
 
+  const [isLoading, setIsLoading] = useState(false);
   const updateUser = async () => {
+    setIsLoading(true);
     const url = "/api/editTransaction";
     const payload: TransactionPayload = {
       status: transactionStatus,
@@ -66,6 +68,7 @@ function EditTransaction({
         isClosable: true,
       });
     }
+    setIsLoading(false);
   };
   return (
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
@@ -124,7 +127,7 @@ function EditTransaction({
           <Button variant="outline" mr={3} onClick={onClose}>
             취소
           </Button>
-          <Button colorScheme="blue" onClick={updateUser}>
+          <Button colorScheme="blue" isLoading={isLoading} onClick={updateUser}>
             업데이트
           </Button>
         </DrawerFooter>
