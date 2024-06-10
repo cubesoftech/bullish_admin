@@ -39,6 +39,20 @@ export default async function handler(
     });
   }
 
+  if (type === "withdrawal" && status === "failed") {
+    console.log("withdrawal", amount, membersId);
+    await prisma.members.update({
+      data: {
+        balance: {
+          increment: amount,
+        },
+      },
+      where: {
+        id: membersId,
+      },
+    });
+  }
+
   await prisma.transaction.update({
     where: {
       id: id,
