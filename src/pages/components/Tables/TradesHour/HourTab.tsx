@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { N1Min } from "@/utils/interface";
 import { useSWRConfig } from "swr";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 
 export default function HourTab({ trades }: { trades: N1Min[] }) {
   const toast = useToast();
@@ -73,6 +73,17 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
               const result = trade.result ? "LONG" : "SHORT";
               const switcher = trade.result ? "SHORT" : "LONG";
               const [isLoading, setIsLoading] = useState(false);
+              //get the time left before the trading hour ends
+              const timeLeft = new Date(time).getTime() - Date.now();
+              const isTenSecondsLeft = timeLeft < 10000;
+              const [timeCounter, setTimeCounter] = useState(timeLeft / 1000);
+
+              useEffect(() => {
+                const interval = setInterval(() => {
+                  setTimeCounter((prev) => prev - 1);
+                }, 1000);
+                return () => clearInterval(interval);
+              }, [timeLeft]);
               return (
                 <Tr key={trade.id}>
                   <Td>{convertedTime}</Td>
@@ -93,16 +104,16 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
                         await handleClick(trade.id, !trade.result);
                         setIsLoading(false);
                       }}
-                      isDisabled={key === 0}
+                      isDisabled={key === 0 && isTenSecondsLeft}
                       margin={1}
                       size={"xs"}
                       colorScheme={trade.result ? "red" : "green"}
                     >
-                      {key === 0
-                        ? "진행중인거래입니다"
-                        : `다음으로 변경 ${
-                            switcher === "LONG" ? "LONG" : "SHORT"
-                          }`}
+                      {
+                        `다음으로 변경 ${switcher === "LONG" ? "LONG" : "SHORT"
+                        }`
+                      }
+
                     </Button>
                   </Th>
                 </Tr>
