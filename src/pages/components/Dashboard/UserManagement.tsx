@@ -1,5 +1,5 @@
 import React, { HTMLProps, useEffect, useMemo } from "react";
-import { VStack, Heading, Icon, HStack, useToast, Text } from "@chakra-ui/react";
+import { VStack, Heading, Icon, HStack, useToast, Text, useDisclosure } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUser, UserColumn } from "@/utils/interface";
 import axios from "axios";
@@ -7,6 +7,7 @@ import { FiStar } from "react-icons/fi";
 import UserTable from "../Tables/UserTable";
 import { useAuthentication } from "@/utils/storage";
 import { useRouter } from "next/router";
+import User from "./User";
 
 export default function UserManagement() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -61,10 +62,18 @@ export default function UserManagement() {
         accessorFn: (row) => row.email,
         id: "email",
         header: "아이디",
-        cell: (info) => <Text as={'u'} variant={'link'} cursor={'grab'} onClick={() => {
-          //open new tab
-          window.open(`/user?id=${info.getValue()}`, '_blank');
-        }}>{info.getValue() as any as string}</Text>,
+        cell: (info) => {
+          const { isOpen, onClose, onOpen } = useDisclosure();
+          return (
+            <HStack>
+              <User id={info.getValue() as any} onClose={onClose} isOpen={isOpen} />
+              <Text as={'u'} variant={'link'} cursor={'grab'} onClick={() => {
+                onOpen();
+              }}
+              >{info.getValue() as any as string}</Text>
+            </HStack>
+          )
+        },
         footer: "Email",
       },
       // {

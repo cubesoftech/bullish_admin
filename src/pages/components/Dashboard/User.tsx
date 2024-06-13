@@ -3,7 +3,7 @@ import React from 'react'
 import { prisma } from '@/utils';
 import { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import useSWR from 'swr';
-import { Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from '@chakra-ui/react';
+import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Modal, ModalBody, ModalContent, ModalOverlay, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from '@chakra-ui/react';
 
 export interface Root {
     member: Member
@@ -39,37 +39,73 @@ export interface Tansaction {
 }
 
 
-function user() {
+function User({ isOpen, onClose, id }: { isOpen: boolean, onClose: () => void, id: string }) {
     //access the query
-    const router = useRouter();
-    const { id } = router.query;
     const { data, error, isLoading } = useSWR<Root>(`/api/getUserDetails?id=${id}`, async (url: string) => {
         const res = await fetch(url);
         return res.json();
     })
     if (isLoading) {
         return (
-            <VStack p={5} h={'100vh'} w={'100%'}>
-                <Skeleton height={'10vh'} width={'100%'} />
-                <Skeleton height={'10vh'} width={'100%'} />
-                <Skeleton height={'10vh'} width={'100%'} />
-                <Skeleton height={'10vh'} width={'100%'} />
-                <Skeleton height={'10vh'} width={'100%'} />
-                <Skeleton height={'10vh'} width={'100%'} />
-                <Skeleton height={'10vh'} width={'100%'} />
-                <Skeleton height={'10vh'} width={'100%'} />
-                <Skeleton height={'10vh'} width={'100%'} />
-                <Skeleton height={'10vh'} width={'100%'} />
-            </VStack>
+            <Drawer
+                isOpen={isOpen}
+                placement='right'
+                onClose={onClose}
+            >
+                <DrawerOverlay />
+                <DrawerContent>
+                    <DrawerCloseButton />
+
+                    <DrawerBody>
+                        <VStack p={5} h={'100vh'} w={'100%'}>
+                            <Skeleton height={'10vh'} width={'100%'} />
+                            <Skeleton height={'10vh'} width={'100%'} />
+                            <Skeleton height={'10vh'} width={'100%'} />
+                            <Skeleton height={'10vh'} width={'100%'} />
+                            <Skeleton height={'10vh'} width={'100%'} />
+                            <Skeleton height={'10vh'} width={'100%'} />
+                            <Skeleton height={'10vh'} width={'100%'} />
+                            <Skeleton height={'10vh'} width={'100%'} />
+                            <Skeleton height={'10vh'} width={'100%'} />
+                            <Skeleton height={'10vh'} width={'100%'} />
+                        </VStack>
+                    </DrawerBody>
+
+                    <DrawerFooter>
+                        <Button variant='outline' mr={3} onClick={onClose}>
+                            Cancel
+                        </Button>
+                    </DrawerFooter>
+                </DrawerContent>
+            </Drawer>
         )
     }
     return (
-        <VStack p={5} spacing={2} alignItems={"flex-start"} >
-            <Text fontSize={'large'}>유저아이디: {data?.member.email}</Text>
-            <Text fontSize={'large'}>잔액: {Number(data?.member.balance).toLocaleString()} KRW</Text>
-            <Transaction transaction={data?.tansactions} />
-            <Trades trades={data?.recentrades} />
-        </VStack>
+        <Drawer
+            isOpen={isOpen}
+            placement='top'
+            onClose={onClose}
+        >
+            <DrawerOverlay />
+            <DrawerContent>
+                <DrawerCloseButton />
+
+                <DrawerBody>
+                    <VStack p={5} spacing={2} alignItems={"flex-start"} >
+                        <Text fontSize={'large'}>유저아이디: {data?.member?.email}</Text>
+                        <Text fontSize={'large'}>잔액: {Number(data?.member?.balance).toLocaleString()} KRW</Text>
+                        <Transaction transaction={data?.tansactions} />
+                        <Trades trades={data?.recentrades} />
+                    </VStack>
+                </DrawerBody>
+
+                <DrawerFooter>
+                    <Button variant='outline' mr={3} onClick={onClose}>
+                        Cancel
+                    </Button>
+                </DrawerFooter>
+            </DrawerContent>
+        </Drawer>
     )
 }
 
@@ -155,4 +191,4 @@ const Trades = ({ trades }: { trades: Recentrade[] | undefined }) => {
 }
 
 
-export default user
+export default User
