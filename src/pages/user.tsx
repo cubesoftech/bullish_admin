@@ -65,8 +65,8 @@ function user() {
     }
     return (
         <VStack p={5} spacing={2} alignItems={"flex-start"} >
-            <Text fontSize={'large'}>User Id: {data?.member.email}</Text>
-            <Text fontSize={'large'}>Balance: {Number(data?.member.balance).toLocaleString()} KRW</Text>
+            <Text fontSize={'large'}>유저아이디: {data?.member.email}</Text>
+            <Text fontSize={'large'}>잔액: {Number(data?.member.balance).toLocaleString()} KRW</Text>
             <Transaction transaction={data?.tansactions} />
             <Trades trades={data?.recentrades} />
         </VStack>
@@ -85,10 +85,10 @@ const Transaction = ({ transaction }: { transaction: Tansaction[] | undefined })
                     <Thead>
                         <Tr>
                             <Th>#</Th>
-                            <Th>Amount</Th>
-                            <Th>Status</Th>
-                            <Th>Type</Th>
-                            <Th>Date</Th>
+                            <Th>금액</Th>
+                            <Th>상태</Th>
+                            <Th>종류</Th>
+                            <Th>거래일자</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -125,11 +125,11 @@ const Trades = ({ trades }: { trades: Recentrade[] | undefined }) => {
                     <Thead>
                         <Tr>
                             <Th>#</Th>
-                            <Th>Amount</Th>
+                            <Th>금액</Th>
                             <Th>PNL</Th>
-                            <Th>Type</Th>
-                            <Th>Result</Th>
-                            <Th>Date</Th>
+                            <Th>종류</Th>
+                            <Th>결과</Th>
+                            <Th>거래일자</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -140,7 +140,7 @@ const Trades = ({ trades }: { trades: Recentrade[] | undefined }) => {
                                     <Td>{Number(data.tradeAmount).toLocaleString()} KRW</Td>
                                     <Td>{Number(data.tradePNL).toLocaleString()} KRW</Td>
                                     <Td>{data.type}</Td>
-                                    <Td>{data.trade ? 'Win' : 'Lose'}</Td>
+                                    <Td>{data.trade ? '승' : '패'}</Td>
                                     <Td>{localTime(data.timeExecuted)}</Td>
                                 </Tr>
                             )
