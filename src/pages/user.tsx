@@ -74,6 +74,9 @@ function user() {
 }
 
 const Transaction = ({ transaction }: { transaction: Tansaction[] | undefined }) => {
+    const localTime = (time: string) => {
+        return new Date(time).toLocaleString()
+    }
     return (
         <VStack p={5} maxH={'40vh'} borderColor={'black'} borderWidth={1} w={'100%'} >
             <Text fontSize={'large'}>Transactions</Text>
@@ -96,7 +99,7 @@ const Transaction = ({ transaction }: { transaction: Tansaction[] | undefined })
                                     <Td>{Number(data.amount).toLocaleString()} KRW</Td>
                                     <Td>{data.status}</Td>
                                     <Td>{data.type}</Td>
-                                    <Td>{data.createdAt}</Td>
+                                    <Td>{localTime(data.createdAt)}</Td>
                                 </Tr>
                             )
                         })
@@ -110,6 +113,10 @@ const Transaction = ({ transaction }: { transaction: Tansaction[] | undefined })
 }
 
 const Trades = ({ trades }: { trades: Recentrade[] | undefined }) => {
+    const localTime = (time: string) => {
+        const date = new Date(time)
+        return date.toLocaleDateString() + ' ' + date.toLocaleString([], { hour: '2-digit', minute: '2-digit' })
+    }
     return (
         <VStack p={5} maxH={'40vh'} borderColor={'black'} borderWidth={1} w={'100%'} >
             <Text fontSize={'large'}>Trades</Text>
@@ -134,7 +141,7 @@ const Trades = ({ trades }: { trades: Recentrade[] | undefined }) => {
                                     <Td>{Number(data.tradePNL).toLocaleString()} KRW</Td>
                                     <Td>{data.type}</Td>
                                     <Td>{data.trade ? 'Win' : 'Lose'}</Td>
-                                    <Td>{data.timeExecuted}</Td>
+                                    <Td>{localTime(data.timeExecuted)}</Td>
                                 </Tr>
                             )
                         })
