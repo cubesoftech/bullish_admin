@@ -1,17 +1,20 @@
 import React, { HTMLProps, useEffect, useMemo } from "react";
-import { VStack, Heading, Icon, HStack, useToast } from "@chakra-ui/react";
+import { VStack, Heading, Icon, HStack, useToast, Text } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUser, UserColumn } from "@/utils/interface";
 import axios from "axios";
 import { FiStar } from "react-icons/fi";
 import UserTable from "../Tables/UserTable";
 import { useAuthentication } from "@/utils/storage";
+import { useRouter } from "next/router";
 
 export default function UserManagement() {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const router = useRouter();
 
   const { role, id } = useAuthentication();
   const [selectedUser, setSelectedUser] = React.useState({
@@ -58,7 +61,10 @@ export default function UserManagement() {
         accessorFn: (row) => row.email,
         id: "email",
         header: "아이디",
-        cell: (info) => info.getValue(),
+        cell: (info) => <Text as={'u'} variant={'link'} cursor={'grab'} onClick={() => {
+          //open new tab
+          window.open(`/user?id=${info.getValue()}`, '_blank');
+        }}>{info.getValue() as any as string}</Text>,
         footer: "Email",
       },
       // {
@@ -96,7 +102,7 @@ export default function UserManagement() {
     []
   );
 
-  useEffect(() => {}, [selectedUser.realUsers, selectedUser.tester]);
+  useEffect(() => { }, [selectedUser.realUsers, selectedUser.tester]);
 
   if (role === "ADMIN") {
     columns.unshift({
