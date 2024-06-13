@@ -176,7 +176,7 @@ const Trades = ({ trades }: { trades: Recentrade[] | undefined }) => {
                                     <Td>{Number(data.tradeAmount).toLocaleString()} KRW</Td>
                                     <Td>{Number(data.tradePNL).toLocaleString()} KRW</Td>
                                     <Td>{data.type}</Td>
-                                    <Td>{data.trade ? '승' : '패'}</Td>
+                                    <Td color={data.tradePNL > 0 ? "blue" : "red"}>{data.tradePNL > 0 ? '승' : '패'}</Td>
                                     <Td>{localTime(data.timeExecuted)}</Td>
                                 </Tr>
                             )
