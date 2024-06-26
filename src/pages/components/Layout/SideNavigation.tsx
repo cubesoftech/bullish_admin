@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   IconButton,
   Box,
@@ -13,14 +13,18 @@ import {
   BoxProps,
   FlexProps,
   Divider,
+  Badge,
+  HStack,
 } from "@chakra-ui/react";
 import { FiMenu, FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import Image from "next/image";
 import logo from "../../../assets/logo_white.png";
-import { useAuthentication, useNavigation } from "@/utils/storage";
+import { useAuthentication, useChanges, useNavigation } from "@/utils/storage";
 import { LinkItems, LinkItemsMasterAgent } from "@/utils";
 import { GiFamilyTree } from "react-icons/gi";
+import useSWR from "swr";
+import axios from "axios";
 
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -106,6 +110,7 @@ interface NavItemProps extends FlexProps {
   index: number;
 }
 const NavItem = ({ index, icon, children, ...rest }: NavItemProps) => {
+  const { depositCount, inquiryCount, withdrawalCount, changeCounts } = useChanges();
   const { changeMenu, selectedMenu } = useNavigation();
   const { changeAuthentication } = useAuthentication();
   const handleClick = () => {
@@ -115,9 +120,33 @@ const NavItem = ({ index, icon, children, ...rest }: NavItemProps) => {
       changeMenu(index);
     }
   };
+  const [count, setCount] = useState<number | null>(null);
+
+  useSWR<{ depositCount: number, withdrawalCount: number, inquiryCount: number }>("/api/lookoutchanges", () => {
+    return axios.get("/api/lookoutchanges").then((res) => res.data);
+  }, {
+    onSuccess: (data) => {
+      const { depositCount, withdrawalCount, inquiryCount } = data;
+      changeCounts(depositCount, withdrawalCount, inquiryCount);
+    },
+    refreshInterval: 1000,
+  });
+
+  useEffect(() => {
+    if (children === "인출") {
+      setCount(depositCount);
+    } else if (children === "입금") {
+      setCount(withdrawalCount);
+    } else if (children === "문의") {
+      setCount(inquiryCount);
+    } else {
+      setCount(null);
+    }
+  }, [depositCount, inquiryCount, withdrawalCount]);
   return (
     <Flex
       align="center"
+      justifyContent={'space-between'}
       p="4"
       mx="4"
       borderRadius="lg"
@@ -132,17 +161,24 @@ const NavItem = ({ index, icon, children, ...rest }: NavItemProps) => {
       onClick={() => handleClick()}
       {...rest}
     >
-      {icon && (
-        <Icon
-          mr="4"
-          fontSize="16"
-          _groupHover={{
-            color: "white",
-          }}
-          as={icon}
-        />
-      )}
-      <Text fontWeight="medium">{children}</Text>
+      <HStack>
+        {icon && (
+          <Icon
+            mr="4"
+            fontSize="16"
+            _groupHover={{
+              color: "white",
+            }}
+            as={icon}
+          />
+        )}
+        <Text fontWeight="medium">{children}</Text>
+
+      </HStack>
+      {
+        (Number(count) > 0) && <Badge colorScheme='red'>{count}</Badge>
+      }
+
     </Flex>
   );
 };

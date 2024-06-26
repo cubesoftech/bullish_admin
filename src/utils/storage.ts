@@ -46,3 +46,29 @@ export const useNavigation = create<Navigation>()(
     )
   )
 );
+
+interface CHANGESINTERFACE {
+  depositCount: number;
+  withdrawalCount: number;
+  inquiryCount: number;
+  changeCounts: (
+    depositCount: number,
+    withdrawalCount: number,
+    inquiryCount: number
+  ) => void;
+}
+
+export const useChanges = create<CHANGESINTERFACE>()(
+  devtools(
+    persist(
+      (set) => ({
+        depositCount: 0,
+        withdrawalCount: 0,
+        inquiryCount: 0,
+        changeCounts: (depositCount, withdrawalCount, inquiryCount) =>
+          set({ depositCount, withdrawalCount, inquiryCount }),
+      }),
+      { name: "useChanges" }
+    )
+  )
+);
