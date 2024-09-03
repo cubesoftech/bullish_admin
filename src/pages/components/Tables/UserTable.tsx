@@ -32,6 +32,7 @@ import {
 } from "@chakra-ui/react";
 import EditUser from "../Drawer/EditUser";
 import { useAuthentication } from "@/utils/storage";
+import InjectSetting from "../Drawer/InjectSetting";
 
 export default function UserTable({
   data,
@@ -271,13 +272,20 @@ function UserRow({
 }): React.JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { role } = useAuthentication();
-  console.log(row.original);
+  const injectSetting = useDisclosure();
+
   return (
     <Tr key={row.id}>
       <EditUser
         refetch={refetch}
         isOpen={isOpen}
         onClose={onClose}
+        user={row.original}
+      />
+      <InjectSetting
+        {
+        ...injectSetting
+        }
         user={row.original}
       />
       {row.getVisibleCells().map((cell) => {
@@ -290,6 +298,15 @@ function UserRow({
       })}
       {role === "ADMIN" && (
         <Td>
+          <Button
+            onClick={injectSetting.onOpen}
+            colorScheme="blue"
+            size={"sm"}
+            variant={"outline"}
+            mr={1}
+          >
+            Inject Setting
+          </Button>
           <Button
             onClick={onOpen}
             colorScheme="blue"

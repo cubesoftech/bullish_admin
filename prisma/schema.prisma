@@ -54,6 +54,7 @@ model members {
   agents             agents?              @relation(fields: [agentsId], references: [id])
   membertrades       membertrades[]
   transaction        transaction[]
+  multiplier         Int?                 @default(0)
 
   @@index([agentsId], map: "members_agentsId_fkey")
 }
@@ -196,6 +197,14 @@ model announcement {
   content   String   @db.VarChar(5000)
   createdAt DateTime @default(now())
   updatedAt DateTime
+}
+
+model inject_setting {
+  id         String   @id
+  status     Boolean
+  createdAt  DateTime @default(now())
+  userId     String
+  multiplier Int
 }
 
 enum recenttrades_type {
