@@ -39,6 +39,7 @@ function SubAgentDrawer({
       return agent.filter((e) => e.member.email !== masterMemberName);
     });
   }, [masterMemberName]);
+
   const {
     isOpen: agentIsOpen,
     onClose: agentOnClose,
