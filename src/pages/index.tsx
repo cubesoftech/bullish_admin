@@ -60,7 +60,7 @@ export default function Home() {
   // );
 
   useEffect(() => {
-    const socket_server = "https://mslot04.com/";
+    const socket_server = "https://xt-korea.com/";
     const socket = io(socket_server);
 
     //listen to event observerChanges
