@@ -296,6 +296,21 @@ function UserRow({
           </Td>
         );
       })}
+      {
+        role !== "ADMIN" && (
+          <Td>
+            <Button
+              onClick={injectSetting.onOpen}
+              colorScheme="blue"
+              size={"sm"}
+              variant={"outline"}
+              mr={1}
+            >
+              Inject Setting
+            </Button>
+          </Td>
+        )
+      }
       {role === "ADMIN" && (
         <Td>
           <Button

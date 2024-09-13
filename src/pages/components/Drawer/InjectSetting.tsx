@@ -112,7 +112,7 @@ function InjectSetting({
                             .finally(() => onClose());
 
                     }}>
-                        취소
+                        적용
                     </Button>
                 </ModalFooter>
             </ModalContent>
