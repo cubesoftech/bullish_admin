@@ -308,6 +308,15 @@ function UserRow({
             >
               Inject Setting
             </Button>
+            <Button
+              onClick={onOpen}
+              colorScheme="blue"
+              size={"sm"}
+              variant={"outline"}
+              mr={1}
+            >
+              수정
+            </Button>
           </Td>
         )
       }
