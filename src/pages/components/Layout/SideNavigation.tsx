@@ -19,7 +19,7 @@ import {
 import { FiMenu, FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import Image from "next/image";
-import logo from "../../../assets/logo_white.png";
+import logo from "../../../assets/image.png";
 import { useAuthentication, useChanges, useNavigation } from "@/utils/storage";
 import { LinkItems, LinkItemsMasterAgent } from "@/utils";
 import { GiFamilyTree } from "react-icons/gi";
