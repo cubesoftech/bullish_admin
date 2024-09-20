@@ -16,15 +16,15 @@ export default function StockTab({ stock }: { stock: Stock }) {
     <VStack boxShadow={"lg"} bgColor={"whiteAlpha.800"} w={"100%"}>
       <Tabs isFitted w={"100%"}>
         <TabList>
-          {/* <Tab>1 MINUTE</Tab> */}
+          <Tab>1 MINUTE</Tab>
           <Tab>3 MINUTES</Tab>
           <Tab>5 MINUTES</Tab>
         </TabList>
 
         <TabPanels>
-          {/* <TabPanel>
+          <TabPanel>
             <HourTab trades={one_min} />
-          </TabPanel> */}
+          </TabPanel>
           <TabPanel>
             <HourTab trades={three_min} />
           </TabPanel>
