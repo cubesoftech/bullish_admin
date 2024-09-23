@@ -11,6 +11,7 @@ import { LinkItems } from "@/utils";
 import Agents from "../Dashboard/Agents";
 import Trades from "../Dashboard/Trades";
 import AUDIT from "../Dashboard/Audit";
+import LiveBettingStatus from "../Dashboard/LiveBettingStatus";
 
 export default function Main() {
   const { selectedMenu } = useNavigation();
@@ -26,6 +27,7 @@ export default function Main() {
       {selectedMenu === 7 && <Inquiry />}
       {selectedMenu === 8 && <Trades />}
       {selectedMenu === 9 && <AUDIT />}
+      {selectedMenu === 10 && <LiveBettingStatus />}
       {selectedMenu === agents && <Agents />}
     </SideNavigation>
   );

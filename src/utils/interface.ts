@@ -284,3 +284,14 @@ export interface N1Min {
   tradinghours: Date;
   result: boolean;
 }
+
+export interface OngoingTradeResult {
+  [key: string]: Btc1__Min;
+}
+
+export interface Btc1__Min {
+  totalLong: number;
+  totalShort: number;
+  totalAmountLong: number;
+  totalAmountShort: number;
+}

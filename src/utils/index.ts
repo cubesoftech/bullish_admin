@@ -9,6 +9,7 @@ import {
   FiRotateCcw,
   FiMessageSquare,
 } from "react-icons/fi";
+import { FaChartPie } from "react-icons/fa";
 
 export const prisma = new PrismaClient();
 
@@ -28,6 +29,7 @@ export const LinkItems: Array<LinkItemProps> = [
   { name: "주문 내역", icon: FiRotateCcw, index: 6 },
   { name: "답안지", icon: FiRotateCcw, index: 8 },
   { name: "정산", icon: FiStar, index: 9 },
+  { name: "Live Betting Status", icon: FaChartPie, index: 10 },
 ];
 
 export const LinkItemsMasterAgent: Array<LinkItemProps> = [
