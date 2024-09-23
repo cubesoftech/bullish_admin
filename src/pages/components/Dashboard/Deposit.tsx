@@ -95,8 +95,8 @@ export default function Deposits() {
           info.getValue() === "pending"
             ? "대기중"
             : info.getValue() === "completed"
-            ? "완료"
-            : "취소",
+              ? "완료"
+              : "취소",
         footer: "Status",
       },
     ],
@@ -152,7 +152,6 @@ export default function Deposits() {
         let created = new Date(createdAt);
         let created_ = `${created.toDateString()} ${created.toLocaleTimeString()}`;
         if (role === "AGENT" || role === "MASTER_AGENT") {
-          console.log(userId, withdrawal);
           if (userId === withdrawal.agentID) {
             setData((data) => [
               ...data,
