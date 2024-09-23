@@ -16,9 +16,8 @@ export default async function handler(
     skip: (page - 1) * pageSize,
   });
 
-  let inquiriesWithDetails = [];
-  for (let i = 0; i < withdrawals.length; i++) {
-    const inquiry = withdrawals[i];
+  let inquiriesWithDetails: any = [];
+  await Promise.all(withdrawals.map(async (inquiry) => {
     const { memberId } = inquiry;
     let masterAgentID = null;
     let agentID = null;
@@ -40,7 +39,7 @@ export default async function handler(
       },
     });
     if (!member) {
-      continue;
+      return;
     }
     if (member) {
       const { agents } = member;
@@ -70,7 +69,7 @@ export default async function handler(
       agentID,
       masterAgentID,
     });
-  }
+  }));
   let hasMore = false;
   if (withdrawals.length > pageSize) {
     hasMore = true;
