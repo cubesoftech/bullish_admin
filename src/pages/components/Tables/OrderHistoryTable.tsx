@@ -270,46 +270,7 @@ function Filter({
 
   const columnFilterValue = column.getFilterValue();
 
-  return typeof firstValue === "number" ? (
-    <HStack
-      spacing={1}
-      className="flex space-x-2"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <Input
-        w={100}
-        border={"1px"}
-        borderColor={"gray.300"}
-        size={"sm"}
-        type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ""}
-        onChange={(e) =>
-          column.setFilterValue((old: [number, number]) => [
-            e.target.value,
-            old?.[1],
-          ])
-        }
-        placeholder={`Min`}
-        className="w-24 border shadow rounded"
-      />
-      <Input
-        w={100}
-        border={"1px"}
-        borderColor={"gray.300"}
-        size={"sm"}
-        type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ""}
-        onChange={(e) =>
-          column.setFilterValue((old: [number, number]) => [
-            old?.[0],
-            e.target.value,
-          ])
-        }
-        placeholder={`Max`}
-        className="w-24 border shadow rounded"
-      />
-    </HStack>
-  ) : (
+  return typeof firstValue === "number" ? null : (
     <Input
       w={150}
       size={"sm"}

@@ -51,6 +51,12 @@ export default function OrderHistory() {
         footer: "Email",
       },
       {
+        accessorKey: "type",
+        header: "타입",
+        cell: (info) => info.getValue(),
+        footer: "Type",
+      },
+      {
         accessorKey: "balance",
         accessorFn: (row) => row.balance,
         id: "balance",
@@ -136,8 +142,8 @@ export default function OrderHistory() {
           tradePNL > 0
             ? tradeResult
             : tradeResult === "LONG"
-            ? "SHORT"
-            : "LONG";
+              ? "SHORT"
+              : "LONG";
         const executed = new Date(timeExecuted);
         setData((data) => [
           ...data,
