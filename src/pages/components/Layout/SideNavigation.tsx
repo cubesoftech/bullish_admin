@@ -133,9 +133,9 @@ const NavItem = ({ index, icon, children, ...rest }: NavItemProps) => {
   });
 
   useEffect(() => {
-    if (children === "인출") {
+    if (children === "입금") {
       setCount(depositCount);
-    } else if (children === "입금") {
+    } else if (children === "인출") {
       setCount(withdrawalCount);
     } else if (children === "문의") {
       setCount(inquiryCount);
