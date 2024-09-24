@@ -49,12 +49,13 @@ model members {
   agentsId           String?
   createdAt          DateTime?            @default(now())
   status             Boolean              @default(false)
+  multiplier         Int?                 @default(0)
+  lastOnline         DateTime?            @default(now())
   inquiries          Inquiries[]
   agents_withdrawals agents_withdrawals[]
   agents             agents?              @relation(fields: [agentsId], references: [id])
   membertrades       membertrades[]
   transaction        transaction[]
-  multiplier         Int?                 @default(0)
 
   @@index([agentsId], map: "members_agentsId_fkey")
 }

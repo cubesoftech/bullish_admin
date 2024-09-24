@@ -50,11 +50,12 @@ export default function UserTable({
   pagination: PaginationState;
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedUser: { tester: boolean; realUsers: boolean };
+  selectedUser: { tester: boolean; realUsers: boolean, lastOnline: boolean };
   setSelectedUser: React.Dispatch<
     React.SetStateAction<{
       tester: boolean;
       realUsers: boolean;
+      lastOnline: boolean;
     }>
   >;
   rowSelection: RowSelectionState;
@@ -63,6 +64,7 @@ export default function UserTable({
   const refetch = () => {
     setRefetch(true);
   };
+
 
   const table = useReactTable({
     columns,
@@ -152,6 +154,16 @@ export default function UserTable({
             }}
           ></Switch>
         </HStack>
+        <HStack>
+          <Text>Online Users</Text>
+          <Switch
+            isChecked={selectedUser.lastOnline}
+            onChange={(e) => {
+              setRefetch(true);
+              setSelectedUser({ ...selectedUser, lastOnline: e.target.checked });
+            }}
+          ></Switch>
+        </HStack>
       </HStack>
 
       <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
@@ -192,7 +204,6 @@ export default function UserTable({
         </Thead>
         <Tbody>
           {table.getRowModel().rows.map((row) => {
-            console.log(row.original, "row");
             return <UserRow refetch={refetch} key={row.id} row={row} />;
           })}
         </Tbody>

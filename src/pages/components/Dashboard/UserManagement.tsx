@@ -21,6 +21,7 @@ export default function UserManagement() {
   const [selectedUser, setSelectedUser] = React.useState({
     tester: true,
     realUsers: true,
+    lastOnline: false,
   });
 
   const [rowSelection, setRowSelection] = React.useState({});
@@ -192,6 +193,16 @@ export default function UserManagement() {
             return;
           }
         }
+        if (selectedUser.lastOnline) {
+          // if the last online is already 5 seconds ago then skip
+          const lastOnline = new Date(user.lastOnline);
+          const now = new Date();
+          console.log({ lastOnline, now });
+          const diff = now.getTime() - lastOnline.getTime();
+          if (diff > 5000) {
+            return;
+          }
+        }
         if (!selectedUser.realUsers) {
           if (!email.includes("test")) {
             return;
@@ -213,6 +224,7 @@ export default function UserManagement() {
             agents: user.agents,
             masteragentID: user.masteragentID,
             status: user.status,
+            lastOnline: new Date(user.lastOnline),
           },
         ]);
       });
