@@ -85,7 +85,10 @@ export default function Withdrawals() {
       {
         accessorKey: "Date Requested",
         header: "요청 날짜",
-        cell: (info) => info.getValue(),
+        cell: (info) => {
+          const date = new Date(info.getValue() as any);
+          return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+        },
         footer: "Date Requested",
       },
       {
