@@ -28,7 +28,6 @@ function OrderHistoryDrawer({
   onClose: () => void;
   OrderHistoryColumn: OrderHistoryColumnInterface;
 }) {
-  console.log(OrderHistoryColumn.tradePNL, "Here", isOpen);
   const {
     balance,
     email,
