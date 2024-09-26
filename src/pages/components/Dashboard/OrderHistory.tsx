@@ -55,6 +55,12 @@ export default function OrderHistory() {
         footer: "Email",
       },
       {
+        accessorKey: "name",
+        cell: (info) => info.getValue(),
+        header: "이름",
+        footer: "Name",
+      },
+      {
         accessorKey: "type",
         header: "타입",
         cell: (info) => info.getValue(),
