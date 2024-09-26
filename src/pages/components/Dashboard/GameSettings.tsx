@@ -12,6 +12,7 @@ import {
   NumberInputStepper,
   Select,
   useToast,
+  Flex,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -81,8 +82,8 @@ const Setting = () => {
       bgColor={"whiteAlpha.800"}
       spacing={5}
     >
-      <HStack
-        spacing={10}
+      <Flex
+        direction={['column', 'row']}
         justifyContent={"space-around"}
         alignItems={"flex-start"}
       >
@@ -94,7 +95,7 @@ const Setting = () => {
             <BalanceSetting setting={setting} />
           </>
         )}
-      </HStack>
+      </Flex>
     </VStack>
   );
 };
@@ -132,6 +133,7 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
   };
   return (
     <VStack
+      m={3}
       justifyContent={"flex-start"}
       alignItems={"flex-start"}
       spacing={10}
@@ -193,7 +195,7 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
   };
 
   return (
-    <VStack alignItems={"flex-start"} spacing={7}>
+    <VStack m={3} alignItems={"flex-start"} spacing={7}>
       <Text fontWeight={"bold"}>배팅마감수정</Text>
       {tradingTime.map((time) => {
         return (
@@ -262,7 +264,7 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
     }
   };
   return (
-    <VStack alignItems={"flex-start"} spacing={7}>
+    <VStack m={3} alignItems={"flex-start"} spacing={7}>
       <Text fontWeight={"bold"}>거래현황</Text>
       {tradingStatus.map((status) => {
         return (
@@ -325,6 +327,7 @@ const BalanceSetting = ({ setting }: { setting: SiteSettting }) => {
       justifyContent={"flex-start"}
       alignItems={"flex-start"}
       spacing={10}
+      m={3}
     >
       <Text fontWeight={"bold"}>최소 금액</Text>
       <NumberInput

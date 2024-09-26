@@ -82,7 +82,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         />
       </Flex>
       {linkItems.map((link) => (
-        <NavItem index={link.index} key={link.name} icon={link.icon}>
+        <NavItem index={link.index} key={link.name} icon={link.icon} onClose={onClose}>
           {link.name}
         </NavItem>
       ))}
@@ -108,8 +108,9 @@ interface NavItemProps extends FlexProps {
   icon: IconType;
   children: string;
   index: number;
+  onClose?: () => void;
 }
-const NavItem = ({ index, icon, children, ...rest }: NavItemProps) => {
+const NavItem = ({ index, icon, onClose, children, ...rest }: NavItemProps) => {
   const { depositCount, inquiryCount, withdrawalCount, changeCounts } = useChanges();
   const { changeMenu, selectedMenu } = useNavigation();
   const { changeAuthentication } = useAuthentication();
@@ -119,6 +120,7 @@ const NavItem = ({ index, icon, children, ...rest }: NavItemProps) => {
     } else {
       changeMenu(index);
     }
+    onClose?.();
   };
   const [count, setCount] = useState<number | null>(null);
 
@@ -196,7 +198,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent="flex-start"
+      justifyContent="space-between"
       {...rest}
     >
       <IconButton
@@ -206,7 +208,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         icon={<FiMenu />}
       />
 
-      <Image src={logo} alt="logo" width={200} height={200} />
+      <Image src={logo} alt="logo" width={100} height={100} />
     </Flex>
   );
 };

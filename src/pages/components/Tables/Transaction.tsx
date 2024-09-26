@@ -28,9 +28,11 @@ import {
   Select,
   Text,
   useDisclosure,
+  TableContainer,
 } from "@chakra-ui/react";
 import EditTransaction from "../Drawer/EditTransaction";
 import { useAuthentication } from "@/utils/storage";
+import { CSVLink } from 'react-csv';
 
 export default function TransactionTable({
   data,
@@ -108,63 +110,74 @@ export default function TransactionTable({
               });
           }}
           colorScheme="red"
-          size={"sm"}
+          size={['xs', "sm"]}
         >
           선택삭제 {Object.keys(rowSelection ? rowSelection : {}).length === 0}
         </Button>
+        <CSVLink data={data} filename={"transaction.csv"}>
+          <Button
+            colorScheme="blue"
+            size={['xs', "sm"]}
+          >
+            Download CSV
+          </Button>
+        </CSVLink>
+
       </HStack>
-      <ChakraTable
-        overflowY={"scroll"}
-        size={"sm"}
-        variant={"striped"}
-        colorScheme="messenger"
-      >
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <Th key={header.id} colSpan={header.colSpan}>
-                    <div
-                      {...{
-                        className: header.column.getCanSort()
-                          ? "cursor-pointer select-none"
-                          : "",
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {{
-                        asc: " 🔼",
-                        desc: " 🔽",
-                      }[header.column.getIsSorted() as string] ?? null}
-                      {header.column.getCanFilter() ? (
-                        <div>
-                          <Filter column={header.column} table={table} />
-                        </div>
-                      ) : null}
-                    </div>
-                  </Th>
-                );
-              })}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <TransactionRow
-                row={row}
-                isWithdrawal={isWithdrawal}
-                refetch={refetch}
-              />
-            );
-          })}
-        </Tbody>
-      </ChakraTable>
+      <TableContainer w={'100%'}>
+        <ChakraTable
+          overflowY={"scroll"}
+          size={'sm'}
+          variant={"striped"}
+          colorScheme="messenger"
+        >
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <Th key={header.id} colSpan={header.colSpan}>
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? "cursor-pointer select-none"
+                            : "",
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: " 🔼",
+                          desc: " 🔽",
+                        }[header.column.getIsSorted() as string] ?? null}
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} table={table} />
+                          </div>
+                        ) : null}
+                      </div>
+                    </Th>
+                  );
+                })}
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody>
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <TransactionRow
+                  row={row}
+                  isWithdrawal={isWithdrawal}
+                  refetch={refetch}
+                />
+              );
+            })}
+          </Tbody>
+        </ChakraTable>
+      </TableContainer>
       <HStack
         w={"100%"}
         display="flex"
@@ -227,6 +240,7 @@ export default function TransactionTable({
           ))}
         </Select>
       </HStack>
+
     </VStack>
   );
 }
@@ -270,7 +284,7 @@ function TransactionRow({
           <Button
             onClick={onOpen}
             colorScheme="orange"
-            size={"sm"}
+            size={["xs", "sm"]}
             variant={"outline"}
           >
             수정

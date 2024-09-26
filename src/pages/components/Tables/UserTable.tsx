@@ -29,10 +29,13 @@ import {
   Text,
   useDisclosure,
   Switch,
+  Flex,
+  TableContainer,
 } from "@chakra-ui/react";
 import EditUser from "../Drawer/EditUser";
 import { useAuthentication } from "@/utils/storage";
 import InjectSetting from "../Drawer/InjectSetting";
+import { CSVLink } from "react-csv";
 
 export default function UserTable({
   data,
@@ -89,121 +92,139 @@ export default function UserTable({
 
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
-      <HStack w={"100%"}>
-        <HStack>
-          <Button
-            isDisabled={
-              Object.keys(rowSelection ? rowSelection : {}).length === 0
-            }
-            onClick={() => {
-              //log thw rowSelection object or data to console
-              const selectedRows = Object.keys(rowSelection)
-                .filter((id) => rowSelection[id])
-                .map((id) => data.find((row, key) => key === Number(id)));
-              const selectedIds = selectedRows?.map((row) => row?.id);
-              //removed the undefined values from the array
-              const filteredIds = selectedIds.filter((id) => id);
+      <Flex justifyContent={'space-between'} w={'100%'}>
+        <Button
+          isDisabled={
+            Object.keys(rowSelection ? rowSelection : {}).length === 0
+          }
+          onClick={() => {
+            //log thw rowSelection object or data to console
+            const selectedRows = Object.keys(rowSelection)
+              .filter((id) => rowSelection[id])
+              .map((id) => data.find((row, key) => key === Number(id)));
+            const selectedIds = selectedRows?.map((row) => row?.id);
+            //removed the undefined values from the array
+            const filteredIds = selectedIds.filter((id) => id);
 
-              const url = "/api/deletebulktransacation";
-              const payload = {
-                bulkId: filteredIds,
-              };
-              fetch(url, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
+            const url = "/api/deletebulktransacation";
+            const payload = {
+              bulkId: filteredIds,
+            };
+            fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            })
+              .then((res) => {
+                refetch();
+                setRowSelection({});
               })
-                .then((res) => {
-                  refetch();
-                  setRowSelection({});
-                })
-                .catch((error) => {
-                  refetch();
-                  setRowSelection({});
-                });
-            }}
-            colorScheme="red"
-            size={"sm"}
+              .catch((error) => {
+                refetch();
+                setRowSelection({});
+              });
+          }}
+          colorScheme="red"
+          size={["xs", "sm"]}
+        >
+          선택삭제{" "}
+          {Object.keys(rowSelection ? rowSelection : {}).length === 0}
+        </Button>
+        <Flex mr={2} ml={5} direction={['column', 'row']} w={"100%"}>
+          <HStack m={1}>
+
+            <Text fontSize={['x-small', 'medium']}>가라유저</Text>
+            <Switch
+              size={['sm', "md"]}
+              onChange={(e) => {
+                setSelectedUser({ ...selectedUser, tester: e.target.checked });
+                setRefetch(true);
+              }}
+              isChecked={selectedUser.tester}
+            ></Switch>
+          </HStack>
+          <HStack m={1}>
+            <Text fontSize={['x-small', 'medium']}>실유저</Text>
+            <Switch
+              size={['sm', "md"]}
+              isChecked={selectedUser.realUsers}
+              onChange={(e) => {
+                setRefetch(true);
+
+                setSelectedUser({ ...selectedUser, realUsers: e.target.checked });
+              }}
+            ></Switch>
+          </HStack>
+          <HStack m={1}>
+            <Text fontSize={['x-small', 'medium']}>Online Users</Text>
+            <Switch
+              size={['sm', "md"]}
+              isChecked={selectedUser.lastOnline}
+              onChange={(e) => {
+                setRefetch(true);
+                setSelectedUser({ ...selectedUser, lastOnline: e.target.checked });
+              }}
+            ></Switch>
+          </HStack>
+        </Flex>
+        <CSVLink data={data} filename={"users.csv"}>
+          <Button
+            colorScheme="blue"
+            size={'xs'}
           >
-            선택삭제{" "}
-            {Object.keys(rowSelection ? rowSelection : {}).length === 0}
+            Download CSV
           </Button>
-          <Text>가라유저</Text>
-          <Switch
-            onChange={(e) => {
-              setSelectedUser({ ...selectedUser, tester: e.target.checked });
-              setRefetch(true);
-            }}
-            isChecked={selectedUser.tester}
-          ></Switch>
-        </HStack>
-        <HStack>
-          <Text>실유저</Text>
-          <Switch
-            isChecked={selectedUser.realUsers}
-            onChange={(e) => {
-              setRefetch(true);
+        </CSVLink>
+      </Flex>
 
-              setSelectedUser({ ...selectedUser, realUsers: e.target.checked });
-            }}
-          ></Switch>
-        </HStack>
-        <HStack>
-          <Text>Online Users</Text>
-          <Switch
-            isChecked={selectedUser.lastOnline}
-            onChange={(e) => {
-              setRefetch(true);
-              setSelectedUser({ ...selectedUser, lastOnline: e.target.checked });
-            }}
-          ></Switch>
-        </HStack>
-      </HStack>
+      <TableContainer w={'100%'}>
+        <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <Th key={header.id} colSpan={header.colSpan}>
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? "cursor-pointer select-none"
+                            : "",
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: " 🔼",
+                          desc: " 🔽",
+                        }[header.column.getIsSorted() as string] ?? null}
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} table={table} />
+                          </div>
+                        ) : null}
+                      </div>
+                    </Th>
+                  );
+                })}
+                {role === "ADMIN" && <Th>Action</Th>}
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody>
+            {table.getRowModel().rows.map((row) => {
+              return <UserRow refetch={refetch} key={row.id} row={row} />;
+            })}
+          </Tbody>
+        </ChakraTable>
+      </TableContainer>
 
-      <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <Th key={header.id} colSpan={header.colSpan}>
-                    <div
-                      {...{
-                        className: header.column.getCanSort()
-                          ? "cursor-pointer select-none"
-                          : "",
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {{
-                        asc: " 🔼",
-                        desc: " 🔽",
-                      }[header.column.getIsSorted() as string] ?? null}
-                      {header.column.getCanFilter() ? (
-                        <div>
-                          <Filter column={header.column} table={table} />
-                        </div>
-                      ) : null}
-                    </div>
-                  </Th>
-                );
-              })}
-              {role === "ADMIN" && <Th>Action</Th>}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          {table.getRowModel().rows.map((row) => {
-            return <UserRow refetch={refetch} key={row.id} row={row} />;
-          })}
-        </Tbody>
-      </ChakraTable>
+
       <HStack
         w={"100%"}
         display="flex"

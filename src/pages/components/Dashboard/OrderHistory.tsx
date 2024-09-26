@@ -18,6 +18,10 @@ export default function OrderHistory() {
 
   const { role, id } = useAuthentication();
   const [rowSelection, setRowSelection] = React.useState({});
+  const [selectedUser, setSelectedUser] = React.useState({
+    tester: true,
+    realUsers: true,
+  });
   const columns = useMemo<ColumnDef<OrderHistoryColumnInterface>[]>(
     () => [
       {
@@ -119,8 +123,8 @@ export default function OrderHistory() {
     setData([]);
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllOrderHistory?page=${page}&id=${id}&role=${role}`;
     while (hasMoreData) {
+      let url = `/api/getAllOrderHistory?page=${page}&id=${id}&role=${role}`;
       const res = await axios.get<ArrayOrderHistory>(url);
       let { hasMore, orderHistory } = res.data;
       //clean first the new data by removign the duplicates from the data
@@ -137,6 +141,16 @@ export default function OrderHistory() {
           type,
         } = history;
         const { balance, name, bank, email, nickname } = members;
+        if (!selectedUser.tester) {
+          if (email.includes("test")) {
+            return;
+          }
+        }
+        if (!selectedUser.realUsers) {
+          if (!email.includes("test")) {
+            return;
+          }
+        }
         const tradeResult = trade ? "LONG" : "SHORT";
         const result =
           tradePNL > 0
@@ -208,6 +222,8 @@ export default function OrderHistory() {
         columns={columns}
         data={data}
         rowSelection={rowSelection}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
         setRefetch={setRefetch}
         setRowSelection={setRowSelection}
       />

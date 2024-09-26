@@ -20,35 +20,7 @@ import { use, useEffect, useState } from "react";
 export default function HourTab({ trades }: { trades: N1Min[] }) {
   const toast = useToast();
   const { mutate } = useSWRConfig();
-  const handleClick = async (id: string, result: boolean) => {
-    const url = "/api/changetraderesult";
-    const data = { result, id };
-    try {
-      await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      toast({
-        title: "Trade result changed.",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: "An error occurred.",
-        description: "Unable to change the trade result.",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    } finally {
-      mutate("/api/trades");
-    }
-  };
+
   return (
     <VStack boxShadow={"lg"} bgColor={"whiteAlpha.800"} w={"100%"}>
       <TableContainer
@@ -78,6 +50,36 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
               const timeLeft = new Date(time).getTime() - Date.now();
               const isTenSecondsLeft = timeLeft < 10000;
               const [timeCounter, setTimeCounter] = useState(timeLeft / 1000);
+
+              const handleClick = async (id: string, result: boolean) => {
+                const url = "/api/changetraderesult";
+                const data = { result, id };
+                try {
+                  await fetch(url, {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  });
+                  toast({
+                    title: "Trade result changed.",
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                } catch (error) {
+                  toast({
+                    title: "An error occurred.",
+                    description: "Unable to change the trade result.",
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                } finally {
+                  await mutate("/api/trades");
+                }
+              };
 
               useEffect(() => {
                 const interval = setInterval(() => {

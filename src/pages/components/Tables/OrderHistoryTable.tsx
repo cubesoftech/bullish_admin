@@ -28,6 +28,8 @@ import {
   Select,
   Text,
   useDisclosure,
+  Flex,
+  Switch,
 } from "@chakra-ui/react";
 import OrderHistoryDrawer from "../Drawer/OrderHistoryDrawer";
 
@@ -37,6 +39,8 @@ export default function OrderHistoryTable({
   pagination,
   setPagination,
   rowSelection,
+  selectedUser,
+  setSelectedUser,
   setRowSelection,
   setRefetch,
 }: {
@@ -47,6 +51,13 @@ export default function OrderHistoryTable({
   rowSelection: RowSelectionState;
   setRowSelection: React.Dispatch<React.SetStateAction<{}>>;
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedUser: { tester: boolean; realUsers: boolean };
+  setSelectedUser: React.Dispatch<
+    React.SetStateAction<{
+      tester: boolean;
+      realUsers: boolean;
+    }>
+  >;
 }) {
   const refetch = () => {
     setRefetch(true);
@@ -113,6 +124,32 @@ export default function OrderHistoryTable({
         >
           선택삭제 {Object.keys(rowSelection ? rowSelection : {}).length === 0}
         </Button>
+        <Flex mr={2} ml={5} direction={['column', 'row']} w={"100%"}>
+          <HStack m={1}>
+
+            <Text fontSize={['x-small', 'medium']}>가라유저</Text>
+            <Switch
+              size={['sm', "md"]}
+              onChange={(e) => {
+                setSelectedUser({ ...selectedUser, tester: e.target.checked });
+                setRefetch(true);
+              }}
+              isChecked={selectedUser.tester}
+            ></Switch>
+          </HStack>
+          <HStack m={1}>
+            <Text fontSize={['x-small', 'medium']}>실유저</Text>
+            <Switch
+              size={['sm', "md"]}
+              isChecked={selectedUser.realUsers}
+              onChange={(e) => {
+                setRefetch(true);
+
+                setSelectedUser({ ...selectedUser, realUsers: e.target.checked });
+              }}
+            ></Switch>
+          </HStack>
+        </Flex>
       </HStack>
 
       <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
