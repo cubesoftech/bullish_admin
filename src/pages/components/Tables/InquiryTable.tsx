@@ -193,7 +193,6 @@ function InquiryTableRow({
         }
       })
       .catch((err) => {
-        console.log(err);
       });
   };
   return (

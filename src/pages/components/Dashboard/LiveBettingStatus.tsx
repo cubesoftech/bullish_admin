@@ -22,7 +22,6 @@ export default function LiveBettingStatus() {
 
   const fetchOngoingTradeResult = async () => {
     axios.get<OngoingTradeResult>("/api/getAllOngoingTrade").then((res) => {
-      console.log(res.data);
       setResult(res.data);
     })
   }

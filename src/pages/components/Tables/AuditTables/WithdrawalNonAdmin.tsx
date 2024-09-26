@@ -264,7 +264,6 @@ function WithdrawalNonAdmin({ data }: { data: GetIncomeInterface }) {
     onRowSelectionChange: setRowSelection,
     // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
   });
-  console.log(data_, "Over Here");
 
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
@@ -310,7 +309,6 @@ function WithdrawalNonAdmin({ data }: { data: GetIncomeInterface }) {
               return (
                 <Tr key={row.id}>
                   {row.getVisibleCells().map((cell) => {
-                    console.log(cell.getContext(), cell.id);
                     return (
                       <Td key={cell.id}>
                         {flexRender(

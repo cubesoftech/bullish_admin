@@ -6,7 +6,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const user = req.body as any;
-  console.log(user);
   await prisma.members.update({
     data: {
       ...user,

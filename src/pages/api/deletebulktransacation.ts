@@ -6,7 +6,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { bulkId } = req.body as { bulkId: string[] };
-  console.log(bulkId, "bulkId");
   await prisma.membertrades.deleteMany({
     where: {
       id: {
@@ -21,7 +20,6 @@ export default async function handler(
       });
     })
     .then(e => {
-      console.log(e, "delete transaction");
     })
   res.status(200).json({
     message: "Delete announcement successfully",

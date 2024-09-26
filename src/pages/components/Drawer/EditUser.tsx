@@ -46,7 +46,6 @@ function EditUser({
 
   const updateUser = async () => {
     const url = "/api/editUser";
-    console.log(userState);
     try {
       delete userState.agents;
       delete userState.agentID;

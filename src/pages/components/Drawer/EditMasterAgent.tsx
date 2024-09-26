@@ -51,7 +51,6 @@ function EditMasterAgent({
       await mutate("/api/getAllMasterAgents");
       onClose();
     } catch (error) {
-      console.log(error);
       onClose();
     }
   };

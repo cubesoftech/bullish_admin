@@ -197,7 +197,6 @@ export default function UserManagement() {
           // if the last online is already 5 seconds ago then skip
           const lastOnline = new Date(user.lastOnline);
           const now = new Date();
-          console.log({ lastOnline, now });
           const diff = now.getTime() - lastOnline.getTime();
           if (diff > 5000) {
             return;

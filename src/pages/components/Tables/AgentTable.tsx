@@ -35,7 +35,6 @@ function AgentsTable() {
     "/api/getAllMasterAgents",
     async (url) => {
       const res = await axios.get<ArrayMasterAgent>(url);
-      console.log(res.data);
       return res.data;
     },
     {
@@ -63,7 +62,6 @@ function AgentsTable() {
         </Thead>
         <Tbody>
           {masterAgent.masteragents.map((agent, index) => {
-            console.log(agent, role, id);
             if (role === "MASTER_AGENT" && agent.memberId === id) {
               return <MasterAgent agent={agent} index={index} />;
             }

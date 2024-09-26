@@ -26,7 +26,6 @@ export default async function handler(
   }
   const { amount, membersId } = transaction;
   if (type === "deposit" && status === "completed") {
-    console.log("deposit", amount, membersId);
     await prisma.members.update({
       data: {
         balance: {
@@ -40,7 +39,6 @@ export default async function handler(
   }
 
   if (type === "withdrawal" && status === "failed") {
-    console.log("withdrawal", amount, membersId);
     await prisma.members.update({
       data: {
         balance: {

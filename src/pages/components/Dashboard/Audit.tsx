@@ -34,7 +34,6 @@ export default function AUDIT() {
     users: [],
   });
   useEffect(() => {
-    console.log(role);
     if (role === "MASTER_AGENT") {
       setShowWithdraw(true);
       setIncome({

@@ -13,9 +13,7 @@ export default async function handler(
   let agentS: any = [];
   const agent = masterAgent.map(async (master) => {
     const { email, name, nickname, password, role } = master;
-    console.log(email, role);
     const emailExists = await emailAlreadyExistsAsAgent(email);
-    console.log(email, role, emailExists);
     if (!emailExists) {
       const masterAgent = await prisma.masteragents.findFirst({
         where: {

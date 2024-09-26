@@ -87,13 +87,11 @@ export default function OrderHistoryTable({
             const selectedIds = selectedRows?.map((row) => row?.id);
             //removed the undefined values from the array
             const filteredIds = selectedIds.filter((id) => id);
-            console.log(filteredIds);
 
             const url = "/api/deletebulktransacation";
             const payload = {
               bulkId: filteredIds,
             };
-            console.log(payload);
             fetch(url, {
               method: "POST",
               headers: {
@@ -106,7 +104,6 @@ export default function OrderHistoryTable({
                 setRowSelection({});
               })
               .catch((error) => {
-                console.log("Error:", error);
                 refetch();
                 setRowSelection({});
               });

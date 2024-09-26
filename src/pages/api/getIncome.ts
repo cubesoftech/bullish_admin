@@ -89,7 +89,6 @@ const get_all_transaction2 = async (month: number) => {
       user?.withdrawals === 0 && user?.deposit === 0 ? 0 : user?.balance || 0;
     const operator_gross_income =
       user.deposit - (user.withdrawals + (userBalance || 0));
-    console.log(operator_gross_income);
     const master_agent_gross_income =
       (operator_gross_income * (user.agents?.masteragents?.royalty || 0)) / 100;
     const agent_gross_income =

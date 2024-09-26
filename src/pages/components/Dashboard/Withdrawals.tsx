@@ -147,7 +147,6 @@ export default function Withdrawals() {
           id,
         } = withdrawal;
         if (role === "AGENT" || role === "MASTER_AGENT") {
-          console.log(userId, withdrawal);
           if (userId === withdrawal.agentID) {
             setData((data) => [
               ...data,

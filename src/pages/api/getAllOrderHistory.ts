@@ -10,7 +10,6 @@ export default async function handler(
   const role = req.query.role as "ADMIN" | "AGENT" | "MASTERAGENT";
   const id = req.query.id as string;
 
-  console.log("role", role, "id", id, "page", page);
 
   if (role === "MASTERAGENT") {
     //get all agents under this master agent

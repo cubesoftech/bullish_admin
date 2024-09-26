@@ -11,7 +11,6 @@ import HourTab from "./HourTab";
 
 export default function StockTab({ stock }: { stock: Stock }) {
   const { five_min, one_min, three_min } = stock;
-  console.log(five_min, one_min, three_min);
   return (
     <VStack boxShadow={"lg"} bgColor={"whiteAlpha.800"} w={"100%"}>
       <Tabs isFitted w={"100%"}>

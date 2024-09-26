@@ -45,7 +45,6 @@ function WithdrawalAdmin({
         email: withdrawal.members?.email,
       };
     });
-    console.log(newData);
     setData({ withdrawal: newData });
   }, [data]);
   const [rowSelection, setRowSelection] = useState({});
@@ -157,7 +156,6 @@ function WithdrawalAdmin({
               return (
                 <Tr key={row.id}>
                   {row.getVisibleCells().map((cell) => {
-                    console.log(cell.getContext(), cell.id);
                     return (
                       <Td key={cell.id}>
                         {flexRender(

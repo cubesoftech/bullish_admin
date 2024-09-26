@@ -38,7 +38,6 @@ export default async function handler(
         },
       });
       agentID = agentMember?.email;
-      console.log(agent?.masteragentsId);
       if (agent?.masteragentsId) {
         const masterAgent = await prisma.masteragents.findFirst({
           where: {
