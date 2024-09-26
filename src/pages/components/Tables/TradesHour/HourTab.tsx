@@ -31,7 +31,6 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
           "Content-Type": "application/json",
         },
       });
-      await mutate("/api/trades");
       toast({
         title: "Trade result changed.",
         status: "success",
@@ -46,6 +45,8 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
         duration: 9000,
         isClosable: true,
       });
+    } finally {
+      mutate("/api/trades");
     }
   };
   return (
