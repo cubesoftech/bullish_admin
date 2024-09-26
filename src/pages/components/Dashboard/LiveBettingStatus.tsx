@@ -8,6 +8,7 @@ import {
   Select,
   Button,
   useDisclosure,
+  Box,
   SimpleGrid,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ import { GiFamilyTree } from "react-icons/gi";
 import axios from "axios";
 import { OngoingTradeResult } from "@/utils/interface";
 import { Chart } from 'react-google-charts'
+import { title } from "process";
 
 export default function LiveBettingStatus() {
 
@@ -82,29 +84,63 @@ const CircleChart = ({ data }: { data: OngoingTradeResult }) => {
     return <Text>No Trading Data</Text>
   }
   return (
-    <SimpleGrid w={'100%'} columns={[1, 2]} spacing={1}>
+    <SimpleGrid w={'100%'} columns={[1, 3]} spacing={1}>
       {
         Object.keys(data).map((key, index) => {
-          const { totalAmountLong, totalAmountShort, totalLong, totalShort } = data[key];
+          const { totalAmountLong, totalAmountShort, totalLong, totalShort, result } = data[key];
           const datas = [
             ['Task', 'Total'],
             ['Long', totalAmountLong],
             ['Short', totalAmountShort],
           ];
+          const companyProfit = !result ? totalAmountLong - totalAmountShort : totalAmountShort - totalAmountLong;
+          const [loading, setLoading] = useState(false);
+          const handleClick = async () => {
+            setLoading(true);
+            await axios.post('/api/changetraderesult', {
+              id: data[key].tradeID,
+              result: !result,
+            });
+            setLoading(false);
+          }
           return (
-            <VStack alignItems={'center'} key={index} m={1}>
+            <VStack alignItems={'center'} justifyContent={'center'} key={index} m={1}>
               <Chart
                 options={{
                   is3D: true,
-                  height: 400,
-                  width: 400,
                   title: key,
                   backgroundColor: 'transparent',
+                  colors: ['green', 'red'],
+                  chartArea: { width: '100%', height: '100%' },
                 }}
-
                 chartType="PieChart"
                 data={datas}
               />
+              <Text w={'100%'} fontWeight={'bold'} textAlign={'left'}>{key}</Text>
+              <SimpleGrid fontWeight={'bold'} fontSize={'x-small'} w={'100%'} columns={2} spacing={1}>
+                <Text>Total Long: {totalLong}</Text>
+                <Text>Total Short: {totalShort}</Text>
+
+              </SimpleGrid>
+              <SimpleGrid fontWeight={'bold'} fontSize={'x-small'} w={'100%'} columns={2} spacing={1}>
+                <Text>Total Long Amount: {totalAmountLong.toLocaleString()}</Text>
+                <Text>Total Short Amount: {totalAmountShort.toLocaleString()}</Text>
+              </SimpleGrid>
+              <Box fontSize={'sm'} textAlign={'center'} width={'100%'} justifyContent={'center'} bgColor={'gray.300'} alignItems={'center'} w={'100%'} color={result ? "green" : "red"} >
+                {result ? <Text>Incoming Result: LONG</Text> : <Text>Incoming Result: SHORT</Text>}
+                <Text color={'black'}>Company Profit: {companyProfit.toLocaleString()}</Text>
+              </Box>
+              <Button
+                onClick={() => {
+                  handleClick();
+                }}
+                isLoading={loading}
+                w={'100%'}
+                colorScheme={'blue'}
+                size={'sm'}
+              >
+                Change Result
+              </Button>
             </VStack>
           );
         })

@@ -296,4 +296,6 @@ export interface Btc1__Min {
   totalShort: number;
   totalAmountLong: number;
   totalAmountShort: number;
+  result: boolean;
+  tradeID: string;
 }
