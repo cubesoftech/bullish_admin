@@ -66,7 +66,6 @@ export default function Home() {
     //listen to event observerChanges
     socket.on("observerChanges", (data: SocketListenerPayload) => {
       const { withdrawals, deposits, inquires, newmembers, trades } = data;
-      console.log({ withdrawals, deposits, inquires, newmembers, trades });
       if (withdrawals) {
         handlePlaySound();
         toast.dismiss();
