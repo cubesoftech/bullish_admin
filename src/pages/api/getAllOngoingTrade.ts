@@ -7,6 +7,21 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    // const allPendingTrades = await prisma.membertrades.findMany({
+    //     where: {
+    //         tradePNL: 0,
+    //         members: {
+    //             email: {
+    //                 not: {
+    //                     contains: "test"
+    //                 }
+    //             }
+    //         }
+    //     },
+    //     orderBy: {
+    //         type: "asc"
+    //     }
+    // });
     const allPendingTrades = await prisma.membertrades.findMany({
         where: {
             tradePNL: 0

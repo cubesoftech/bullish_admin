@@ -48,7 +48,7 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
               const [isLoading, setIsLoading] = useState(false);
               //get the time left before the trading hour ends
               const timeLeft = new Date(time).getTime() - Date.now();
-              const isTenSecondsLeft = timeLeft < 10000;
+              const isTenSecondsLeft = timeLeft < 5000;
               const [timeCounter, setTimeCounter] = useState(timeLeft / 1000);
 
               const handleClick = async (id: string, result: boolean) => {
