@@ -236,6 +236,10 @@ export interface Site {
   wti: boolean;
   nasdaq: boolean;
   gold: boolean;
+  eth: boolean;
+  xrp: boolean;
+  sol: boolean;
+  bnb: boolean;
   minimumAmount: number;
 }
 

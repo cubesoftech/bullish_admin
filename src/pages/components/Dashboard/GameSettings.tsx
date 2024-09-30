@@ -221,15 +221,20 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
 };
 
 const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
-  const { nasdaq, btc, gold, wti } = setting.site;
+  const { nasdaq, bnb, eth, sol, xrp, btc, gold, wti } = setting.site;
   const tradingStatus = [
     {
       label: "BTCUSDT",
       status: btc ? "OPEN" : "CLOSED",
     },
+    { label: "BNBUSDT", status: bnb ? "OPEN" : "CLOSED" },
+    { label: "ETHUSDT", status: eth ? "OPEN" : "CLOSED" },
+    { label: "XRPUSDT", status: xrp ? "OPEN" : "CLOSED" },
+    { label: "SOLUSDT", status: sol ? "OPEN" : "CLOSED" },
     { label: "GOLD", status: gold ? "OPEN" : "CLOSED" },
     { label: "NASDAQ", status: nasdaq ? "OPEN" : "CLOSED" },
     { label: "WTI", status: wti ? "OPEN" : "CLOSED" },
+
   ];
 
   const options = ["OPEN", "CLOSED"];
@@ -238,7 +243,7 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
 
   const updateSetting = async (value: string, index: number) => {
     const url = "/api/updateSetting";
-    const label = ["btc", "gold", "nasdaq", "wti"];
+    const label = ["btc", "bnb", "eth", "xrp", "sol", "gold", "nasdaq", "wti"];
     try {
       await axios.post<SiteSettting>(url, {
         site: {

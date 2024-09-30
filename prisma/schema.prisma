@@ -189,6 +189,10 @@ model sitesettings {
   wti           Boolean
   nasdaq        Boolean
   gold          Boolean
+  eth           Boolean @default(true)
+  xrp           Boolean @default(true)
+  bnb           Boolean @default(true)
+  sol           Boolean @default(true)
   minimumAmount Int
 }
 
