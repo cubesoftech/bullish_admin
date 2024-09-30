@@ -48,7 +48,7 @@ export default function SimpleSidebar({ children }: { children: ReactNode }) {
         </DrawerContent>
       </Drawer>
       <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
+      <Box maxW={'100%'} ml={{ base: 0, md: 60 }} p="2">
         {children}
       </Box>
     </Box>
@@ -207,8 +207,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         aria-label="open menu"
         icon={<FiMenu />}
       />
-
-      <Image src={logo} alt="logo" width={100} height={100} />
     </Flex>
   );
 };

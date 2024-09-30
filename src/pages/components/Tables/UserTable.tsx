@@ -234,24 +234,28 @@ export default function UserTable({
       >
         <HStack>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.firstPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<<"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.previousPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.nextPage()}
             isDisabled={!table.getCanNextPage()}
           >
             {">"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.lastPage()}
             isDisabled={!table.getCanNextPage()}
           >
@@ -259,7 +263,7 @@ export default function UserTable({
           </Button>
         </HStack>
 
-        <HStack>
+        <HStack fontSize={['xs', 'md']}>
           <Text>Page</Text>
           <Text
             w={"fit-content"}
@@ -274,6 +278,7 @@ export default function UserTable({
         </HStack>
 
         <Select
+          size={['xs', 'sm']}
           w={"fit-content"}
           value={table.getState().pagination.pageSize}
           onChange={(e) => {

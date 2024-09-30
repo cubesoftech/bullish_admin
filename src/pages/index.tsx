@@ -17,48 +17,6 @@ export default function Home() {
     setTimeout(() => setPlaySound(false), 1000); // Reset playSound after 1 second
   };
 
-  // const [play] = useSound("/assets/sound.mp3", {
-  //   playbackRate,
-  //   // `interrupt` ensures that if the sound starts again before it's
-  //   // ended, it will truncate it. Otherwise, the sound can overlap.
-  //   interrupt: true,
-  // });
-
-  // useSWR(
-  //   "https://mslot10.com/reports",
-  //   async (url) => {
-  //     const res = await axios.get<SocketListenerPayload>(url);
-  //     return res.data;
-  //   },
-  //   {
-  //     refreshInterval: 1000,
-  //     onSuccess: (data) => {
-  //       const { withdrawals, deposits, inquires, newmembers, trades } = data;
-  //       console.log({ withdrawals, deposits, inquires, newmembers, trades });
-  //       if (withdrawals) {
-  //         handlePlaySound();
-  //         toast.info(`New Withdrawal Request: ${withdrawals} withdrawals`);
-  //       }
-  //       if (deposits) {
-  //         handlePlaySound();
-  //         toast.info(`New Deposit Request: ${deposits} deposits`);
-  //       }
-  //       if (inquires) {
-  //         handlePlaySound();
-  //         toast.info(`New Inquiry: ${inquires} inquries`);
-  //       }
-  //       if (newmembers) {
-  //         handlePlaySound();
-  //         toast.info(`New Member: ${newmembers} new members`);
-  //       }
-  //       if (trades) {
-  //         handlePlaySound();
-  //         toast.info(`New Trade: ${trades} trades`);
-  //       }
-  //     },
-  //   }
-  // );
-
   useEffect(() => {
     const socket_server = "https://onewoo.online/";
     const socket = io(socket_server);
@@ -93,13 +51,10 @@ export default function Home() {
       }
     });
 
-    // Use the socket connection here
-
-    // Clean up the connection when the component unmounts
     return () => {
       socket.disconnect();
     };
-  }, []); // Empty dependency array means this effect runs once on mount and clean up on unmount
+  }, []);
 
   if (isAuthenticated) {
     return (

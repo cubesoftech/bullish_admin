@@ -23,6 +23,10 @@ export default function TradesTab() {
       <Tabs isFitted w={"100%"}>
         <TabList>
           <Tab>BTC</Tab>
+          <Tab>ETH</Tab>
+          <Tab>BNB</Tab>
+          <Tab>XRP</Tab>
+          <Tab>SOLANA</Tab>
           <Tab>GOLD</Tab>
           <Tab>OIL</Tab>
           <Tab>US100</Tab>
@@ -31,6 +35,18 @@ export default function TradesTab() {
         <TabPanels>
           <TabPanel>
             <StockTab stock={data.btc} />
+          </TabPanel>
+          <TabPanel>
+            <StockTab stock={data.eth} />
+          </TabPanel>
+          <TabPanel>
+            <StockTab stock={data.bnb} />
+          </TabPanel>
+          <TabPanel>
+            <StockTab stock={data.xrp} />
+          </TabPanel>
+          <TabPanel>
+            <StockTab stock={data.sol} />
           </TabPanel>
           <TabPanel>
             <StockTab stock={data.gold} />

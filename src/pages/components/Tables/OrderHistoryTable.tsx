@@ -30,6 +30,7 @@ import {
   useDisclosure,
   Flex,
   Switch,
+  TableContainer,
 } from "@chakra-ui/react";
 import OrderHistoryDrawer from "../Drawer/OrderHistoryDrawer";
 
@@ -151,49 +152,52 @@ export default function OrderHistoryTable({
           </HStack>
         </Flex>
       </HStack>
+      <TableContainer fontSize={["xs", "sm"]} w={"100%"}>
+        <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <Th key={header.id} colSpan={header.colSpan}>
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? "cursor-pointer select-none"
+                            : "",
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: " 🔼",
+                          desc: " 🔽",
+                        }[header.column.getIsSorted() as string] ?? null}
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} table={table} />
+                          </div>
+                        ) : null}
+                      </div>
+                    </Th>
+                  );
+                })}
+                <Th>수정</Th>
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody>
+            {table.getRowModel().rows.map((row) => {
+              return <OrderHistoryRow key={row.id} row={row} />;
+            })}
+          </Tbody>
+        </ChakraTable>
+      </TableContainer>
 
-      <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <Th key={header.id} colSpan={header.colSpan}>
-                    <div
-                      {...{
-                        className: header.column.getCanSort()
-                          ? "cursor-pointer select-none"
-                          : "",
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {{
-                        asc: " 🔼",
-                        desc: " 🔽",
-                      }[header.column.getIsSorted() as string] ?? null}
-                      {header.column.getCanFilter() ? (
-                        <div>
-                          <Filter column={header.column} table={table} />
-                        </div>
-                      ) : null}
-                    </div>
-                  </Th>
-                );
-              })}
-              <Th>수정</Th>
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          {table.getRowModel().rows.map((row) => {
-            return <OrderHistoryRow key={row.id} row={row} />;
-          })}
-        </Tbody>
-      </ChakraTable>
+
       <HStack
         w={"100%"}
         display="flex"
@@ -203,24 +207,28 @@ export default function OrderHistoryTable({
       >
         <HStack>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.firstPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<<"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.previousPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.nextPage()}
             isDisabled={!table.getCanNextPage()}
           >
             {">"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.lastPage()}
             isDisabled={!table.getCanNextPage()}
           >
@@ -228,7 +236,7 @@ export default function OrderHistoryTable({
           </Button>
         </HStack>
 
-        <HStack>
+        <HStack fontSize={['xs', 'md']}>
           <Text>Page</Text>
           <Text
             w={"fit-content"}
@@ -243,6 +251,7 @@ export default function OrderHistoryTable({
         </HStack>
 
         <Select
+          size={['xs', 'md']}
           w={"fit-content"}
           value={table.getState().pagination.pageSize}
           onChange={(e) => {

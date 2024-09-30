@@ -269,6 +269,10 @@ export interface SocketListenerPayload {
 
 export interface TradeLock {
   btc: Stock;
+  bnb: Stock;
+  eth: Stock;
+  xrp: Stock;
+  sol: Stock;
   oil: Stock;
   gold: Stock;
   us100: Stock;

@@ -62,20 +62,18 @@ export default function TransactionTable({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
     state: {
       pagination,
       rowSelection,
     },
     enableMultiRowSelection: true,
     onRowSelectionChange: setRowSelection,
-    // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
   });
 
   const { role } = useAuthentication();
   const isAdmin = role === "ADMIN";
   return (
-    <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+    <VStack spacing={5} bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
       <HStack w={"100%"} justifyContent={"space-between"}>
         <Button
           isDisabled={
@@ -124,7 +122,7 @@ export default function TransactionTable({
         </CSVLink>
 
       </HStack>
-      <TableContainer w={'100%'}>
+      <TableContainer fontSize={['xs', 'sm']} w={'100%'}>
         <ChakraTable
           overflowY={"scroll"}
           size={'sm'}
@@ -183,28 +181,31 @@ export default function TransactionTable({
         display="flex"
         alignItems="center"
         justifyContent={"space-between"}
-        gap={2}
       >
         <HStack>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.firstPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<<"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.previousPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.nextPage()}
             isDisabled={!table.getCanNextPage()}
           >
             {">"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.lastPage()}
             isDisabled={!table.getCanNextPage()}
           >
@@ -212,7 +213,7 @@ export default function TransactionTable({
           </Button>
         </HStack>
 
-        <HStack>
+        <HStack fontSize={['xs', 'sm']}>
           <Text>Page</Text>
           <Text
             w={"fit-content"}
@@ -227,6 +228,7 @@ export default function TransactionTable({
         </HStack>
 
         <Select
+          size={['xs', 'sm']}
           w={"fit-content"}
           value={table.getState().pagination.pageSize}
           onChange={(e) => {

@@ -208,21 +208,6 @@ model inject_setting {
   multiplier Int
 }
 
-enum recenttrades_type {
-  btc_1_min
-  btc_3_mins
-  btc_5_mins
-  wti_1_min
-  wti_3_mins
-  wti_5_mins
-  us100_1_min
-  us100_3_mins
-  us100_5_mins
-  gold_1_min
-  gold_3_mins
-  gold_5_mins
-}
-
 enum transaction_type {
   deposit
   withdrawal
@@ -234,10 +219,29 @@ enum transaction_status {
   failed
 }
 
-enum membertrades_type {
+enum Role {
+  ADMIN
+  MASTER_AGENT
+  AGENT
+  USER
+}
+
+enum recenttrades_type {
   btc_1_min
   btc_3_mins
   btc_5_mins
+  eth_1_min
+  eth_3_mins
+  eth_5_mins
+  bnb_1_min
+  bnb_3_mins
+  bnb_5_mins
+  xrp_1_min
+  xrp_3_mins
+  xrp_5_mins
+  sol_1_min
+  sol_3_mins
+  sol_5_mins
   wti_1_min
   wti_3_mins
   wti_5_mins
@@ -249,9 +253,29 @@ enum membertrades_type {
   gold_5_mins
 }
 
-enum Role {
-  ADMIN
-  MASTER_AGENT
-  AGENT
-  USER
+enum membertrades_type {
+  btc_1_min
+  btc_3_mins
+  btc_5_mins
+  eth_1_min
+  eth_3_mins
+  eth_5_mins
+  bnb_1_min
+  bnb_3_mins
+  bnb_5_mins
+  xrp_1_min
+  xrp_3_mins
+  xrp_5_mins
+  sol_1_min
+  sol_3_mins
+  sol_5_mins
+  wti_1_min
+  wti_3_mins
+  wti_5_mins
+  us100_1_min
+  us100_3_mins
+  us100_5_mins
+  gold_1_min
+  gold_3_mins
+  gold_5_mins
 }

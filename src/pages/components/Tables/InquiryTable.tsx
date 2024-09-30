@@ -27,6 +27,7 @@ import {
   Select,
   Text,
   useDisclosure,
+  TableContainer,
 } from "@chakra-ui/react";
 import EditInqury from "../Drawer/EditInqury";
 import axios from "axios";
@@ -62,48 +63,51 @@ export default function InquiryTable({
 
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
-      <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <Th key={header.id} colSpan={header.colSpan}>
-                    <div
-                      {...{
-                        className: header.column.getCanSort()
-                          ? "cursor-pointer select-none"
-                          : "",
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {{
-                        asc: " 🔼",
-                        desc: " 🔽",
-                      }[header.column.getIsSorted() as string] ?? null}
-                      {header.column.getCanFilter() ? (
-                        <div>
-                          <Filter column={header.column} table={table} />
-                        </div>
-                      ) : null}
-                    </div>
-                  </Th>
-                );
-              })}
-              <Th>수정</Th>
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          {table.getRowModel().rows.map((row) => {
-            return <InquiryTableRow row={row} refetch={refetch} />;
-          })}
-        </Tbody>
-      </ChakraTable>
+      <TableContainer fontSize={["xs", "sm"]} w={"100%"}>
+        <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <Th key={header.id} colSpan={header.colSpan}>
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? "cursor-pointer select-none"
+                            : "",
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: " 🔼",
+                          desc: " 🔽",
+                        }[header.column.getIsSorted() as string] ?? null}
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} table={table} />
+                          </div>
+                        ) : null}
+                      </div>
+                    </Th>
+                  );
+                })}
+                <Th>수정</Th>
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody>
+            {table.getRowModel().rows.map((row) => {
+              return <InquiryTableRow row={row} refetch={refetch} />;
+            })}
+          </Tbody>
+        </ChakraTable>
+      </TableContainer>
+
       <HStack
         w={"100%"}
         display="flex"
@@ -113,24 +117,28 @@ export default function InquiryTable({
       >
         <HStack>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.firstPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<<"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.previousPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.nextPage()}
             isDisabled={!table.getCanNextPage()}
           >
             {">"}
           </Button>
           <Button
+            size={['xs', "sm"]}
             onClick={() => table.lastPage()}
             isDisabled={!table.getCanNextPage()}
           >
@@ -138,7 +146,7 @@ export default function InquiryTable({
           </Button>
         </HStack>
 
-        <HStack>
+        <HStack fontSize={['xs', 'md']}>
           <Text>Page</Text>
           <Text
             w={"fit-content"}
@@ -153,6 +161,7 @@ export default function InquiryTable({
         </HStack>
 
         <Select
+          size={['xs', 'md']}
           w={"fit-content"}
           value={table.getState().pagination.pageSize}
           onChange={(e) => {
@@ -210,12 +219,12 @@ function InquiryTableRow({
           <Button
             onClick={onOpen}
             colorScheme="orange"
-            size={"sm"}
+            size={['xs', 'sm']}
             variant={"outline"}
           >
             답변
           </Button>
-          <Button onClick={handleClicked} colorScheme="red" size={"sm"}>
+          <Button onClick={handleClicked} colorScheme="red" size={['xs', 'sm']}>
             삭제
           </Button>
         </HStack>

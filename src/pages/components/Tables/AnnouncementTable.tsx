@@ -9,6 +9,7 @@ import {
   HStack,
   Button,
   useDisclosure,
+  TableContainer,
 } from "@chakra-ui/react";
 import React from "react";
 import AddAnnouncement from "../Drawer/AddAnouncement";
@@ -64,28 +65,31 @@ function AnnouncementTable() {
   const isAdmin = role === "ADMIN";
   return (
     <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
-      <Table size={"sm"} variant={"striped"} colorScheme="cyan">
-        <Thead>
-          <Tr>
-            <Th>#</Th>
-            <Th>제목</Th>
-            <Th>생성 일자</Th>
-            {isAdmin && <Th>수정</Th>}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {announcements.map((announcement, index) => {
-            return (
-              <AnnouncementRow
-                announcement={announcement}
-                deleteAnnouncement={deleteAnnouncement}
-                isAdmin={isAdmin}
-                index={index}
-              />
-            );
-          })}
-        </Tbody>
-      </Table>
+      <TableContainer fontSize={["xs", "sm"]} w={"100%"}>
+        <Table size={"sm"} variant={"striped"} colorScheme="cyan">
+          <Thead>
+            <Tr>
+              <Th>#</Th>
+              <Th>제목</Th>
+              <Th>생성 일자</Th>
+              {isAdmin && <Th>수정</Th>}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {announcements.map((announcement, index) => {
+              return (
+                <AnnouncementRow
+                  announcement={announcement}
+                  deleteAnnouncement={deleteAnnouncement}
+                  isAdmin={isAdmin}
+                  index={index}
+                />
+              );
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
+
       <AddAnnouncement isOpen={isOpen} onClose={onClose} />
       {role === "ADMIN" && (
         <HStack justifyContent={"flex-end"} w={"100%"}>
