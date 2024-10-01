@@ -62,7 +62,7 @@ export default function LiveBettingStatus() {
             }}
             as={GiFamilyTree}
           />
-          <Heading>Live Betting Status</Heading>
+          <Heading fontSize={['medium', 'large']}>Live Betting Status</Heading>
         </HStack>
 
       </HStack>

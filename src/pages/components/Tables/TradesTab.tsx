@@ -21,7 +21,7 @@ export default function TradesTab() {
   return (
     <VStack boxShadow={"lg"} bgColor={"whiteAlpha.500"} w={"100%"}>
       <Tabs isFitted w={"100%"}>
-        <TabList>
+        <TabList overflow={'scroll'} >
           <Tab>BTC</Tab>
           <Tab>ETH</Tab>
           <Tab>BNB</Tab>

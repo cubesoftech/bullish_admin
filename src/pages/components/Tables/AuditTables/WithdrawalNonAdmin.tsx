@@ -347,24 +347,28 @@ function WithdrawalNonAdmin({ data }: { data: GetIncomeInterface }) {
       >
         <HStack>
           <Button
+            size={['xs', 'md']}
             onClick={() => table.firstPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<<"}
           </Button>
           <Button
+            size={['xs', 'md']}
             onClick={() => table.previousPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<"}
           </Button>
           <Button
+            size={['xs', 'md']}
             onClick={() => table.nextPage()}
             isDisabled={!table.getCanNextPage()}
           >
             {">"}
           </Button>
           <Button
+            size={['xs', 'md']}
             onClick={() => table.lastPage()}
             isDisabled={!table.getCanNextPage()}
           >
@@ -372,7 +376,7 @@ function WithdrawalNonAdmin({ data }: { data: GetIncomeInterface }) {
           </Button>
         </HStack>
 
-        <HStack>
+        <HStack fontSize={['xs', 'md']}>
           <Text>Page</Text>
           <Text
             w={"fit-content"}
@@ -388,6 +392,7 @@ function WithdrawalNonAdmin({ data }: { data: GetIncomeInterface }) {
 
         <Select
           w={"fit-content"}
+          size={['xs', 'md']}
           value={table.getState().pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value));

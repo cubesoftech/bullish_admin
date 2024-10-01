@@ -82,41 +82,44 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
   return (
     <>
       <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
-        <Table size={"sm"} variant={"striped"} colorScheme="cyan">
-          <Thead>
-            <Tr>
-              <Th>#</Th>
-              {role === "ADMIN" && <Th>본사</Th>}
-              {(role === "ADMIN" || role === "MASTER_AGENT") && <Th>총판</Th>}
-              <Th>에이전트</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            <Tr>
-              <Td>매출</Td>
-              {role === "ADMIN" && (
-                <Td>{income.totalOperatorGrossIncome.toLocaleString()} KRW</Td>
-              )}
-              {(role === "ADMIN" || role === "MASTER_AGENT") && (
-                <Td>
-                  {income.totalMasterAgentGrossIncome.toLocaleString()} KRW
-                </Td>
-              )}
+        <TableContainer w={"100%"} overflowY={"scroll"}>
+          <Table size={"sm"} variant={"striped"} colorScheme="cyan">
+            <Thead>
+              <Tr>
+                <Th>#</Th>
+                {role === "ADMIN" && <Th>본사</Th>}
+                {(role === "ADMIN" || role === "MASTER_AGENT") && <Th>총판</Th>}
+                <Th>에이전트</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>매출</Td>
+                {role === "ADMIN" && (
+                  <Td>{income.totalOperatorGrossIncome.toLocaleString()} KRW</Td>
+                )}
+                {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                  <Td>
+                    {income.totalMasterAgentGrossIncome.toLocaleString()} KRW
+                  </Td>
+                )}
 
-              <Td>{income.totalAgentGrossIncome.toLocaleString()} KRW</Td>
-            </Tr>
-            <Tr>
-              <Td>수익</Td>
-              {role === "ADMIN" && (
-                <Td>{income.totalOperatorNetIncome.toLocaleString()} KRW</Td>
-              )}
-              {(role === "ADMIN" || role === "MASTER_AGENT") && (
-                <Td>{income.totalMasterAgentNetIncome.toLocaleString()} KRW</Td>
-              )}
-              <Td>{income.totalAgentNetIncome.toLocaleString()} KRW</Td>
-            </Tr>
-          </Tbody>
-        </Table>
+                <Td>{income.totalAgentGrossIncome.toLocaleString()} KRW</Td>
+              </Tr>
+              <Tr>
+                <Td>수익</Td>
+                {role === "ADMIN" && (
+                  <Td>{income.totalOperatorNetIncome.toLocaleString()} KRW</Td>
+                )}
+                {(role === "ADMIN" || role === "MASTER_AGENT") && (
+                  <Td>{income.totalMasterAgentNetIncome.toLocaleString()} KRW</Td>
+                )}
+                <Td>{income.totalAgentNetIncome.toLocaleString()} KRW</Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </TableContainer>
+
       </VStack>
       <WithdrawalNonAdmin data={income} />
       {role === "ADMIN" && data && (
@@ -126,9 +129,8 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
         <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
           <TableContainer w={"100%"} overflowY={"scroll"} h={"40vh"}>
             <Table size={"sm"} variant={"striped"} colorScheme="cyan">
-              <TableCaption placement="top">{`누적 출금액 - ${
-                income?.withdrawal?.toLocaleString() || 0
-              } KRW`}</TableCaption>
+              <TableCaption placement="top">{`누적 출금액 - ${income?.withdrawal?.toLocaleString() || 0
+                } KRW`}</TableCaption>
               <Thead>
                 <Tr>
                   <Th>#</Th>

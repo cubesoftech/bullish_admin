@@ -86,9 +86,9 @@ export default function AUDIT() {
   return (
     <VStack spacing={5}>
       <HStack
-        alignItems={"flex-end"}
+        alignItems={"center"}
         h={"10vh"}
-        justifyContent={"flex-start"}
+        justifyContent={"space-between"}
         w={"100%"}
         p={5}
         boxShadow={"lg"}
@@ -99,35 +99,30 @@ export default function AUDIT() {
           isOpen={isOpen}
           onClose={onClose}
         />
-        <HStack justifyContent={"center"}>
-          <Icon
-            mr="4"
-            fontSize="30"
-            _groupHover={{
-              color: "white",
-            }}
-            as={GiFamilyTree}
-          />
-          <Heading>정산</Heading>
-          <HStack m={5}>
-            <Text>매출 I :</Text>
-            <Text>{income.grossIncome.toLocaleString()} KRW</Text>
+        <VStack>
+          <HStack justifyContent={"center"}>
+            <Icon
+              mr="4"
+              fontSize="30"
+              _groupHover={{
+                color: "white",
+              }}
+              as={GiFamilyTree}
+            />
+            <Heading fontSize={['medium', 'large']} >정산</Heading>
+            {showWithdraw && (
+              <Button onClick={onOpen} colorScheme="red">
+                출금
+              </Button>
+            )}
           </HStack>
-          <HStack m={5} alignItems={"flex-end"}>
-            <Text>수익 :</Text>
-            <Text>{income.netIncome.toLocaleString()} KRW</Text>
-          </HStack>
+        </VStack>
 
-          {showWithdraw && (
-            <Button onClick={onOpen} colorScheme="red">
-              출금
-            </Button>
-          )}
-        </HStack>
-        <VStack flex={1} justifyContent={"flex-end"} alignItems={"flex-end"}>
+        <VStack justifyContent={"flex-end"} alignItems={"flex-end"}>
           <HStack m={5} alignItems={"center"}>
             <Text>month</Text>
             <Select
+              size={['xs', 'md']}
               value={selectedMonth}
               onChange={(e) => {
                 setSelectedMonth(Number(e.target.value));
@@ -142,6 +137,16 @@ export default function AUDIT() {
           </HStack>
         </VStack>
       </HStack>
+      <VStack p={5}
+        fontSize={['small', 'medium']}
+        boxShadow={"lg"}
+        w={"100%"}
+        bgColor={"whiteAlpha.800"} h={"100vh"} flex={1} justifyContent={"flex-end"} alignItems={"flex-end"}>
+        <HStack w={"100%"} m={1} alignItems={"center"}>
+          <Text>총 수익 : {income.grossIncome.toLocaleString()} KRW</Text>
+          <Text>총 순수익 : {income.netIncome.toLocaleString()} KRW</Text>
+        </HStack>
+      </VStack>
       <AuditTable income={data} />
     </VStack>
   );

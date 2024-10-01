@@ -195,24 +195,28 @@ function WithdrawalAdmin({
       >
         <HStack>
           <Button
+            size={['xs', 'md']}
             onClick={() => table.firstPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<<"}
           </Button>
           <Button
+            size={['xs', 'md']}
             onClick={() => table.previousPage()}
             isDisabled={!table.getCanPreviousPage()}
           >
             {"<"}
           </Button>
           <Button
+            size={['xs', 'md']}
             onClick={() => table.nextPage()}
             isDisabled={!table.getCanNextPage()}
           >
             {">"}
           </Button>
           <Button
+            size={['xs', 'md']}
             onClick={() => table.lastPage()}
             isDisabled={!table.getCanNextPage()}
           >
@@ -220,7 +224,7 @@ function WithdrawalAdmin({
           </Button>
         </HStack>
 
-        <HStack>
+        <HStack fontSize={['xs', 'medium']}>
           <Text>Page</Text>
           <Text
             w={"fit-content"}
@@ -235,6 +239,7 @@ function WithdrawalAdmin({
         </HStack>
 
         <Select
+          size={['xs', 'md']}
           w={"fit-content"}
           value={table.getState().pagination.pageSize}
           onChange={(e) => {
