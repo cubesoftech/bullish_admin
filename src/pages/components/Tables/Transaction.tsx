@@ -101,6 +101,7 @@ export default function TransactionTable({
         <Flex direction={['column', 'row']}>
           <Button
             m={1}
+            minW={["100%", "auto"]}
             isDisabled={
               Object.keys(rowSelection ? rowSelection : {}).length === 0
             }
