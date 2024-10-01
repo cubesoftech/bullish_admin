@@ -13,7 +13,7 @@ import {
   Row,
   RowSelectionState,
 } from "@tanstack/react-table";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Table as ChakraTable,
   Thead,
@@ -26,12 +26,10 @@ import {
   VStack,
   Button,
   Select,
+  Flex,
   Text,
   useDisclosure,
   TableContainer,
-  InputGroup,
-  InputLeftAddon,
-  Flex,
 } from "@chakra-ui/react";
 import EditTransaction from "../Drawer/EditTransaction";
 import { useAuthentication } from "@/utils/storage";
@@ -56,10 +54,9 @@ export default function TransactionTable({
   rowSelection: RowSelectionState;
   setRowSelection: React.Dispatch<React.SetStateAction<{}>>;
 }) {
-  const [dataCopy, setDataCopy] = React.useState<TransactionColumn[]>(data);
   const table = useReactTable({
     columns,
-    data: dataCopy,
+    data,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -76,84 +73,46 @@ export default function TransactionTable({
 
   const { role } = useAuthentication();
   const isAdmin = role === "ADMIN";
-  //set the start date and end date
-  //start date is 30 ago from the current date
-  //end date is the current date
-  const [startDate, setStartDate] = React.useState<string>(
-    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
-  );
-  const [endDate, setEndDate] = React.useState<string>(
-    new Date().toISOString().split("T")[0]
-  );
-
-  useEffect(() => {
-    const filteredData = data.filter((row) => {
-      const date = new Date(row["Date Requested"]);
-      return date >= new Date(startDate) && date <= new Date(endDate);
-    });
-    setDataCopy(filteredData);
-  }, [startDate, endDate, data]);
-
   return (
     <VStack spacing={5} bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
       <HStack w={"100%"} justifyContent={"space-between"}>
-
-        <Flex direction={['column', 'row']}>
-          <Button
-            m={1}
-            minW={["100%", "auto"]}
-            isDisabled={
-              Object.keys(rowSelection ? rowSelection : {}).length === 0
-            }
-            onClick={() => {
-              //log thw rowSelection object or data to console
-              const selectedRows = Object.keys(rowSelection)
-                .filter((id) => rowSelection[id])
-                .map((id) => data.find((row, key) => key === Number(id)));
-              const selectedIds = selectedRows?.map((row) => row?.id);
-              //removed the undefined values from the array
-              const filteredIds = selectedIds.filter((id) => id);
-              const url = "/api/deletebulktransacation";
-              const payload = {
-                bulkId: filteredIds,
-              };
-              fetch(url, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
+        <Button
+          isDisabled={
+            Object.keys(rowSelection ? rowSelection : {}).length === 0
+          }
+          onClick={() => {
+            //log thw rowSelection object or data to console
+            const selectedRows = Object.keys(rowSelection)
+              .filter((id) => rowSelection[id])
+              .map((id) => data.find((row, key) => key === Number(id)));
+            const selectedIds = selectedRows?.map((row) => row?.id);
+            //removed the undefined values from the array
+            const filteredIds = selectedIds.filter((id) => id);
+            const url = "/api/deletebulktransacation";
+            const payload = {
+              bulkId: filteredIds,
+            };
+            fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            })
+              .then((res) => {
+                refetch();
+                setRowSelection({});
               })
-                .then((res) => {
-                  refetch();
-                  setRowSelection({});
-                })
-                .catch((error) => {
-                  refetch();
-                  setRowSelection({});
-                });
-            }}
-            colorScheme="red"
-            size={['xs', "sm"]}
-          >
-            선택삭제 {Object.keys(rowSelection ? rowSelection : {}).length === 0}
-          </Button>
-          <InputGroup m={1} size={['xs', 'md']} >
-            <InputLeftAddon children="Start" />
-            <Input value={startDate}
-              onChange={(e) => {
-                setStartDate(e.target.value);
-              }}
-              placeholder="Start Date" type="date" />
-          </InputGroup>
-          <InputGroup
-            m={1} size={['xs', 'md']} >
-            <InputLeftAddon children="End" />
-            <Input value={endDate} onChange={(e) => {
-              setEndDate(e.target.value);
-            }} type="date" />
-          </InputGroup>
-        </Flex>
+              .catch((error) => {
+                refetch();
+                setRowSelection({});
+              });
+          }}
+          colorScheme="red"
+          size={['xs', "sm"]}
+        >
+          선택삭제 {Object.keys(rowSelection ? rowSelection : {}).length === 0}
+        </Button>
         <CSVLink data={data} filename={"transaction.csv"}>
           <Button
             colorScheme="blue"
