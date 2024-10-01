@@ -15,13 +15,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     let recentrades = await prisma.membertrades.findMany({
         where: {
-            membersId: member?.id
+            membersId: member?.id,
+        },
+        orderBy: {
+            timeExecuted: 'desc'
         }
     });
 
     let tansactions = await prisma.transaction.findMany({
         where: {
-            membersId: member?.id
+            membersId: member?.id,
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     });
     return res.status(200).json({ member, recentrades, tansactions });
