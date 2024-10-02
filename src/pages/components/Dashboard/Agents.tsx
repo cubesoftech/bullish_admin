@@ -1,4 +1,4 @@
-import { VStack, Heading, Icon, HStack } from "@chakra-ui/react";
+import { VStack, Heading, Icon, HStack, useColorModeValue } from "@chakra-ui/react";
 import { GiFamilyTree } from "react-icons/gi";
 import AgentsTable from "../Tables/AgentTable";
 
@@ -12,7 +12,7 @@ export default function Agents() {
         w={"100%"}
         p={5}
         boxShadow={"lg"}
-        bgColor={"whiteAlpha.800"}
+        bgColor={useColorModeValue("whiteAlpha.800", "gray.700")}
       >
         <HStack justifyContent={"center"}>
           <Icon

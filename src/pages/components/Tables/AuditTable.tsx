@@ -14,6 +14,7 @@ import {
   Thead,
   Tr,
   VStack,
+  useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import useSWR, { useSWRConfig } from "swr";
@@ -81,7 +82,7 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
 
   return (
     <>
-      <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+      <VStack bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
         <TableContainer w={"100%"} overflowY={"scroll"}>
           <Table size={"sm"} variant={"striped"} colorScheme="cyan">
             <Thead>
@@ -164,7 +165,7 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
 export default AuditTable;
 function newFunction(role: string, income: GetIncomeInterface) {
   return (
-    <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+    <VStack bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
       <TableContainer w={"100%"} overflowY={"scroll"} h={"40vh"}>
         <Table size={"sm"} variant={"striped"} colorScheme="cyan">
           <Thead>

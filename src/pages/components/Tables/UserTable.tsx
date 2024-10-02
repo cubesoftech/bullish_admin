@@ -31,6 +31,7 @@ import {
   Switch,
   Flex,
   TableContainer,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import EditUser from "../Drawer/EditUser";
 import { useAuthentication } from "@/utils/storage";
@@ -91,7 +92,7 @@ export default function UserTable({
   const { role } = useAuthentication();
 
   return (
-    <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+    <VStack bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
       <Flex justifyContent={'space-between'} w={'100%'}>
         <Button
           isDisabled={
@@ -180,13 +181,13 @@ export default function UserTable({
       </Flex>
 
       <TableContainer w={'100%'}>
-        <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
+        <ChakraTable size={"sm"} variant={"striped"} colorScheme={useColorModeValue("blue", "green")}>
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <Th key={header.id} colSpan={header.colSpan}>
+                    <Th color={useColorModeValue('black', 'white')} key={header.id} colSpan={header.colSpan}>
                       <div
                         {...{
                           className: header.column.getCanSort()
@@ -324,7 +325,7 @@ function UserRow({
       {row.getVisibleCells().map((cell) => {
         const { status } = row.original;
         return (
-          <Td key={cell.id} color={status ? "black" : "red"}>
+          <Td key={cell.id} color={useColorModeValue(status ? "black" : "red", status ? "white" : "red")}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </Td>
         );

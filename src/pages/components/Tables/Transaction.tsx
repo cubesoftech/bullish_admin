@@ -13,7 +13,7 @@ import {
   Row,
   RowSelectionState,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { use } from "react";
 import {
   Table as ChakraTable,
   Thead,
@@ -30,6 +30,7 @@ import {
   Text,
   useDisclosure,
   TableContainer,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import EditTransaction from "../Drawer/EditTransaction";
 import { useAuthentication } from "@/utils/storage";
@@ -74,7 +75,7 @@ export default function TransactionTable({
   const { role } = useAuthentication();
   const isAdmin = role === "ADMIN";
   return (
-    <VStack spacing={5} bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+    <VStack spacing={5} bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
       <HStack w={"100%"} justifyContent={"space-between"}>
         <Button
           isDisabled={
@@ -128,14 +129,14 @@ export default function TransactionTable({
           overflowY={"scroll"}
           size={'sm'}
           variant={"striped"}
-          colorScheme="messenger"
+          colorScheme={useColorModeValue("blue", "green")}
         >
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <Th key={header.id} colSpan={header.colSpan}>
+                    <Th color={useColorModeValue('black', 'white')} key={header.id} colSpan={header.colSpan}>
                       <div
                         {...{
                           className: header.column.getCanSort()
@@ -276,7 +277,7 @@ function TransactionRow({
             className={row.getIsSelected() ? "selected" : undefined}
             onClick={row.getToggleSelectedHandler()}
             key={cell.id}
-            color={status === "completed" ? "black" : "red"}
+            color={useColorModeValue(status === "completed" ? "black" : "red", status === "completed" ? "white" : "red")}
           >
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </Td>

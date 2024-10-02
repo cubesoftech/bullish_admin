@@ -15,6 +15,7 @@ import {
   Divider,
   Badge,
   HStack,
+  useColorMode,
 } from "@chakra-ui/react";
 import { FiMenu, FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
@@ -25,11 +26,36 @@ import { LinkItems, LinkItemsMasterAgent } from "@/utils";
 import { GiFamilyTree } from "react-icons/gi";
 import useSWR from "swr";
 import axios from "axios";
+import { FaRegSun, FaRegMoon } from "react-icons/fa6";
 
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { toggleColorMode, colorMode } = useColorMode();
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+      {
+        colorMode === "light" ? <IconButton
+          aria-label="Dark mode"
+          icon={<Icon as={FaRegMoon} />}
+          onClick={toggleColorMode}
+          colorScheme="teal"
+          size={['xs', 'sm']}
+          position="fixed"
+          top="5"
+          zIndex={5}
+          right="5"
+        /> : <IconButton
+          aria-label="Light mode"
+          icon={<Icon as={FaRegSun} />}
+          onClick={toggleColorMode}
+          colorScheme="teal"
+          size={['xs', 'sm']}
+          position="fixed"
+          top="5"
+          zIndex={5}
+          right="5"
+        />
+      }
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
@@ -62,21 +88,25 @@ interface SidebarProps extends BoxProps {
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const { role } = useAuthentication();
   const linkItems = role === "ADMIN" ? LinkItems : LinkItemsMasterAgent;
+
+
+
   return (
     <Box
-      bgColor={"blackAlpha.900"}
+      bgColor={useColorModeValue("white", "gray.900")}
       borderRight="1px"
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
       w={{ base: "full", md: 60 }}
       pos="fixed"
       h="full"
+      color={useColorModeValue("gray.600", "gray.200")}
       {...rest}
     >
       <Flex h="20" alignItems="center" mx={20} justifyContent="space-between">
         <Image src={logo} alt="logo" width={200} height={200} />
 
         <CloseButton
-          color={"white"}
+          color={useColorModeValue("gray.600", "gray.200")}
           display={{ base: "flex", md: "none" }}
           onClick={onClose}
         />
@@ -152,7 +182,7 @@ const NavItem = ({ index, icon, onClose, children, ...rest }: NavItemProps) => {
       p="4"
       mx="4"
       borderRadius="lg"
-      color={"white"}
+      color={useColorModeValue("gray.600", "gray.200")}
       bgColor={selectedMenu === index ? "cyan.400" : "transparent"}
       role="group"
       cursor="pointer"

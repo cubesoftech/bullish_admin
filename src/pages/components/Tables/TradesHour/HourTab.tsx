@@ -12,6 +12,7 @@ import {
   Tr,
   VStack,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { N1Min } from "@/utils/interface";
 import { useSWRConfig } from "swr";
@@ -22,7 +23,7 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
   const { mutate } = useSWRConfig();
 
   return (
-    <VStack boxShadow={"lg"} bgColor={"whiteAlpha.800"} w={"100%"}>
+    <VStack boxShadow={"lg"} bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"}>
       <TableContainer
         overflowY={"scroll"}
         h={"80vh"}

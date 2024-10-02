@@ -13,6 +13,7 @@ import {
   Select,
   useToast,
   Flex,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -28,7 +29,7 @@ export default function GameSetting() {
         w={"100%"}
         p={5}
         boxShadow={"lg"}
-        bgColor={"whiteAlpha.800"}
+        bgColor={useColorModeValue("whiteAlpha.800", "gray.700")}
       >
         <HStack justifyContent={"center"}>
           <Icon
@@ -79,7 +80,7 @@ const Setting = () => {
       w={"100%"}
       p={5}
       boxShadow={"lg"}
-      bgColor={"whiteAlpha.800"}
+      bgColor={useColorModeValue("whiteAlpha.800", "gray.700")}
       spacing={5}
     >
       <Flex

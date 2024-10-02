@@ -10,6 +10,7 @@ import {
   Button,
   useDisclosure,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
 import useSwr, { mutate } from "swr";
@@ -45,7 +46,7 @@ function AgentsTable() {
   );
 
   return (
-    <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+    <VStack bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
       <Table size={"md"} variant={"striped"} colorScheme="cyan">
         <Thead>
           <Tr>
@@ -142,7 +143,7 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
   };
 
   return (
-    <Tr color={status ? "black" : "red"} key={agent.id}>
+    <Tr color={useColorModeValue(status ? "black" : "red", status ? "white" : "red")} key={agent.id}>
       <SubAgentDrawer
         masterAgentId={id}
         masterMemberName={agent.member.email}

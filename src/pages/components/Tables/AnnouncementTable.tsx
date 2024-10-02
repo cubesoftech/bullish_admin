@@ -10,6 +10,7 @@ import {
   Button,
   useDisclosure,
   TableContainer,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
 import AddAnnouncement from "../Drawer/AddAnouncement";
@@ -64,7 +65,7 @@ function AnnouncementTable() {
   const { role } = useAuthentication();
   const isAdmin = role === "ADMIN";
   return (
-    <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+    <VStack bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
       <TableContainer fontSize={["xs", "sm"]} w={"100%"}>
         <Table size={"sm"} variant={"striped"} colorScheme="cyan">
           <Thead>

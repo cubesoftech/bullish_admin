@@ -28,6 +28,7 @@ import {
   Text,
   useDisclosure,
   TableContainer,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import EditInqury from "../Drawer/EditInqury";
 import axios from "axios";
@@ -62,7 +63,7 @@ export default function InquiryTable({
   });
 
   return (
-    <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+    <VStack bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
       <TableContainer fontSize={["xs", "sm"]} w={"100%"}>
         <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
           <Thead>
@@ -70,7 +71,7 @@ export default function InquiryTable({
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <Th key={header.id} colSpan={header.colSpan}>
+                    <Th color={useColorModeValue('black', 'white')} key={header.id} colSpan={header.colSpan}>
                       <div
                         {...{
                           className: header.column.getCanSort()

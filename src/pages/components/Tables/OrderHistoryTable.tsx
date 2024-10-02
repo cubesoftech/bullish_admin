@@ -31,6 +31,7 @@ import {
   Flex,
   Switch,
   TableContainer,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import OrderHistoryDrawer from "../Drawer/OrderHistoryDrawer";
 
@@ -85,7 +86,7 @@ export default function OrderHistoryTable({
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
-    <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+    <VStack bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
       <HStack w={"100%"}>
         <Button
           isDisabled={

@@ -10,6 +10,7 @@ import {
   useDisclosure,
   Box,
   SimpleGrid,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { GiFamilyTree } from "react-icons/gi";
@@ -50,7 +51,7 @@ export default function LiveBettingStatus() {
         w={"100%"}
         p={5}
         boxShadow={"lg"}
-        bgColor={"whiteAlpha.800"}
+        bgColor={useColorModeValue("whiteAlpha.800", "gray.700")}
       >
 
         <HStack justifyContent={"center"}>

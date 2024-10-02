@@ -15,6 +15,7 @@ import {
   Input,
   Text,
   Select,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   Column,
@@ -112,7 +113,7 @@ function WithdrawalAdmin({
   const { role } = useAuthentication();
 
   return (
-    <VStack bgColor={"whiteAlpha.800"} w={"100%"} boxShadow={"lg"} p={5}>
+    <VStack bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
       <TableContainer w={"100%"} overflowY={"scroll"} h={"40vh"}>
         <ChakraTable size={"sm"} variant={"striped"} colorScheme="cyan">
           <TableCaption placement="top">정산내역</TableCaption>

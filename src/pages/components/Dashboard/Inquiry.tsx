@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { VStack, Heading, Icon, HStack } from "@chakra-ui/react";
+import { VStack, Heading, Icon, HStack, useColorModeValue } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayInquiry, InquryColumn } from "@/utils/interface";
 import axios from "axios";
@@ -138,7 +138,7 @@ export default function UserManagement() {
         w={"100%"}
         p={5}
         boxShadow={"lg"}
-        bgColor={"whiteAlpha.800"}
+        bgColor={useColorModeValue("whiteAlpha.800", "gray.700")}
       >
         <HStack justifyContent={"center"}>
           <Icon

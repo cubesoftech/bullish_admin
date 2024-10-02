@@ -8,6 +8,7 @@ import {
   Select,
   Button,
   useDisclosure,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { GiFamilyTree } from "react-icons/gi";
@@ -92,7 +93,7 @@ export default function AUDIT() {
         w={"100%"}
         p={5}
         boxShadow={"lg"}
-        bgColor={"whiteAlpha.800"}
+        bgColor={useColorModeValue("whiteAlpha.800", "gray.700")}
       >
         <Withdraw
           limit={income.grossIncome}
@@ -141,7 +142,7 @@ export default function AUDIT() {
         fontSize={['small', 'medium']}
         boxShadow={"lg"}
         w={"100%"}
-        bgColor={"whiteAlpha.800"} h={"100vh"} flex={1} justifyContent={"flex-end"} alignItems={"flex-end"}>
+        bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} h={"100vh"} flex={1} justifyContent={"flex-end"} alignItems={"flex-end"}>
         <HStack w={"100%"} m={1} alignItems={"center"}>
           <Text>총 수익 : {income.grossIncome.toLocaleString()} KRW</Text>
           <Text>총 순수익 : {income.netIncome.toLocaleString()} KRW</Text>

@@ -5,6 +5,7 @@ import {
   TabPanels,
   TabPanel,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import useSWR from "swr";
 import { TradeLock } from "@/utils/interface";
@@ -19,7 +20,7 @@ export default function TradesTab() {
   if (isLoading) return <div>loading...</div>;
   if (!data) return <div>no data</div>;
   return (
-    <VStack boxShadow={"lg"} bgColor={"whiteAlpha.500"} w={"100%"}>
+    <VStack boxShadow={"lg"} bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"}>
       <Tabs isFitted w={"100%"}>
         <TabList overflow={'scroll'} >
           <Tab>BTC</Tab>
