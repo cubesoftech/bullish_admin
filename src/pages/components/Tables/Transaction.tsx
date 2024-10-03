@@ -31,6 +31,8 @@ import {
   useDisclosure,
   TableContainer,
   useColorModeValue,
+  InputGroup,
+  InputLeftAddon,
 } from "@chakra-ui/react";
 import EditTransaction from "../Drawer/EditTransaction";
 import { useAuthentication } from "@/utils/storage";
@@ -45,6 +47,10 @@ export default function TransactionTable({
   refetch,
   rowSelection,
   setRowSelection,
+  endDate,
+  setEndDate,
+  startDate,
+  setStartDate,
 }: {
   data: TransactionColumn[];
   columns: ColumnDef<TransactionColumn>[];
@@ -54,6 +60,10 @@ export default function TransactionTable({
   refetch: () => void;
   rowSelection: RowSelectionState;
   setRowSelection: React.Dispatch<React.SetStateAction<{}>>;
+  startDate: string;
+  setStartDate: React.Dispatch<React.SetStateAction<string>>;
+  endDate: string;
+  setEndDate: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const table = useReactTable({
     columns,
@@ -77,43 +87,61 @@ export default function TransactionTable({
   return (
     <VStack spacing={5} bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
       <HStack w={"100%"} justifyContent={"space-between"}>
-        <Button
-          isDisabled={
-            Object.keys(rowSelection ? rowSelection : {}).length === 0
-          }
-          onClick={() => {
-            //log thw rowSelection object or data to console
-            const selectedRows = Object.keys(rowSelection)
-              .filter((id) => rowSelection[id])
-              .map((id) => data.find((row, key) => key === Number(id)));
-            const selectedIds = selectedRows?.map((row) => row?.id);
-            //removed the undefined values from the array
-            const filteredIds = selectedIds.filter((id) => id);
-            const url = "/api/deletebulktransacation";
-            const payload = {
-              bulkId: filteredIds,
-            };
-            fetch(url, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(payload),
-            })
-              .then((res) => {
-                refetch();
-                setRowSelection({});
+        <Flex direction={['column', 'row']}>
+          <Button
+            m={1}
+            isDisabled={
+              Object.keys(rowSelection ? rowSelection : {}).length === 0
+            }
+            onClick={() => {
+              //log thw rowSelection object or data to console
+              const selectedRows = Object.keys(rowSelection)
+                .filter((id) => rowSelection[id])
+                .map((id) => data.find((row, key) => key === Number(id)));
+              const selectedIds = selectedRows?.map((row) => row?.id);
+              //removed the undefined values from the array
+              const filteredIds = selectedIds.filter((id) => id);
+              const url = "/api/deletebulktransacation";
+              const payload = {
+                bulkId: filteredIds,
+              };
+              fetch(url, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
               })
-              .catch((error) => {
-                refetch();
-                setRowSelection({});
-              });
-          }}
-          colorScheme="red"
-          size={['xs', "sm"]}
-        >
-          선택삭제 {Object.keys(rowSelection ? rowSelection : {}).length === 0}
-        </Button>
+                .then((res) => {
+                  refetch();
+                  setRowSelection({});
+                })
+                .catch((error) => {
+                  refetch();
+                  setRowSelection({});
+                });
+            }}
+            colorScheme="red"
+            size={['xs', "sm"]}
+          >
+            선택삭제 {Object.keys(rowSelection ? rowSelection : {}).length === 0}
+          </Button>
+          <InputGroup m={1} size={['xs', 'md']} >
+            <InputLeftAddon children="Start" />
+            <Input value={startDate}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+              }}
+              placeholder="Start Date" type="date" />
+          </InputGroup>
+          <InputGroup
+            m={1} size={['xs', 'md']} >
+            <InputLeftAddon children="End" />
+            <Input value={endDate} onChange={(e) => {
+              setEndDate(e.target.value);
+            }} type="date" />
+          </InputGroup>
+        </Flex>
         <CSVLink data={data} filename={"transaction.csv"}>
           <Button
             colorScheme="blue"

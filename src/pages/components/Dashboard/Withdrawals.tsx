@@ -13,6 +13,14 @@ export default function Withdrawals() {
     pageSize: 10,
   });
 
+  const [startDate, setStartDate] = React.useState<string>(
+    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+  );
+
+  const [endDate, setEndDate] = React.useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
+
   const [rowSelection, setRowSelection] = React.useState({});
 
   const { role, userId } = useAuthentication();
@@ -132,7 +140,8 @@ export default function Withdrawals() {
   const requestAllWithdrawals = async () => {
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllWithdrawals?page=${page}`;
+    const url = `/api/getAllWithdrawals?page=${page}&startDate=${startDate}&endDate=${endDate}`;
+    setData([]);
     while (hasMoreData) {
       const res = await axios.get<ArrayUserTransaction>(url);
       let { hasMore, withdrawals } = res.data;
@@ -206,7 +215,22 @@ export default function Withdrawals() {
         isClosable: true,
       });
     }
-  }, [refetch]);
+  }, [refetch, startDate, endDate]);
+
+  useEffect(() => {
+    try {
+      requestAllWithdrawals();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while fetching data",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+
+  }, [startDate, endDate]);
 
   return (
     <VStack spacing={5}>
@@ -232,6 +256,10 @@ export default function Withdrawals() {
         </HStack>
       </HStack>
       <MyTable
+        endDate={endDate}
+        setEndDate={setEndDate}
+        startDate={startDate}
+        setStartDate={setStartDate}
         pagination={pagination}
         setPagination={setPagination}
         columns={columns}

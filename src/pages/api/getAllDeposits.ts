@@ -7,10 +7,19 @@ export default async function handler(
 ) {
   const page = parseInt(req.query.page as string) || 1;
   const pageSize = 1000; // Set your page size here
+  const startDate = req.query.startDate as string;
+  const endDate = req.query.endDate as string;
+
+  const startDate_ = new Date(startDate);
+  const endDate_ = new Date(endDate);
 
   const withdrawals = await prisma.transaction.findMany({
     where: {
       type: "deposit",
+      createdAt: {
+        gte: startDate_,
+        lte: endDate_,
+      },
     },
     include: {
       members: true,

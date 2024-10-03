@@ -13,6 +13,14 @@ export default function Deposits() {
     pageSize: 10,
   });
 
+  const [startDate, setStartDate] = React.useState<string>(
+    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+  );
+
+  const [endDate, setEndDate] = React.useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
+
   const [rowSelection, setRowSelection] = React.useState({});
 
   const { role, userId } = useAuthentication();
@@ -135,7 +143,7 @@ export default function Deposits() {
     let hasMoreData = true;
     let page = 1;
     setData([]);
-    const url = `/api/getAllDeposits?page=${page}`;
+    const url = `/api/getAllDeposits?page=${page}&startDate=${startDate}&endDate=${endDate}`;
     while (hasMoreData) {
       const res = await axios.get<ArrayUserTransaction>(url);
       let { hasMore, withdrawals } = res.data;
@@ -212,6 +220,21 @@ export default function Deposits() {
       });
     }
   }, [refetch]);
+
+  useEffect(() => {
+    try {
+      requestAllWithdrawals();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while fetching data",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+
+  }, [startDate, endDate]);
   return (
     <VStack spacing={5}>
       <HStack
@@ -246,6 +269,10 @@ export default function Deposits() {
         }}
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        startDate={startDate}
+        setStartDate={setStartDate}
       />
     </VStack>
   );
