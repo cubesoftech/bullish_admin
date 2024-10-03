@@ -12,6 +12,7 @@ export default async function handler(
 
   const startDate_ = new Date(startDate);
   const endDate_ = new Date(endDate);
+  endDate_.setDate(endDate_.getDate() + 1);
 
   const withdrawals = await prisma.transaction.findMany({
     where: {
