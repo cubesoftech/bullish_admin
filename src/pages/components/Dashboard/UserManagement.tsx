@@ -110,12 +110,12 @@ export default function UserManagement() {
       },
       {
         accessorKey: "lastOnline",
-        header: "Last Online",
+        header: "최근접속순",
         cell: (info: any) => info.getValue()?.toLocaleString(),
       },
       {
         accessorKey: "createdAt",
-        header: "User Created",
+        header: "가입일순",
         cell: (info: any) => info.getValue()?.toLocaleString(),
       }
     ],
