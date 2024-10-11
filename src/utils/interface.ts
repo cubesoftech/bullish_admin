@@ -130,6 +130,7 @@ export interface Members {
     memberId: string;
   };
   agentID: string;
+  agentsId: string;
   masteragentID: string;
   status?: boolean;
   lastOnline: Date;

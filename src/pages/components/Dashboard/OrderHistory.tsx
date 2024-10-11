@@ -16,7 +16,7 @@ export default function OrderHistory() {
     pageSize: 10,
   });
 
-  const { role, id } = useAuthentication();
+  const { role, id, userId } = useAuthentication();
   const [rowSelection, setRowSelection] = React.useState({});
   const [selectedUser, setSelectedUser] = React.useState({
     tester: true,
@@ -146,7 +146,8 @@ export default function OrderHistory() {
           tradePNL,
           type,
         } = history;
-        const { balance, name, bank, email, nickname } = members;
+        const { balance, name, bank, email, nickname, agentsId, agentID } = members;
+        console.log({ agentID, userId, id });
         if (!selectedUser.tester) {
           if (email.includes("test")) {
             return;

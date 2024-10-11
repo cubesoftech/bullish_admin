@@ -7,11 +7,11 @@ export default async function handler(
 ) {
   const page = parseInt(req.query.page as string) || 1;
   const pageSize = 1000; // Set your page size here
-  const role = req.query.role as "ADMIN" | "AGENT" | "MASTERAGENT";
+  const role = req.query.role as "ADMIN" | "AGENT" | "MASTER_AGENT";
   const id = req.query.id as string;
 
 
-  if (role === "MASTERAGENT") {
+  if (role === "MASTER_AGENT") {
     //get all agents under this master agent
     const masteragent = await prisma.masteragents.findFirst({
       where: {
