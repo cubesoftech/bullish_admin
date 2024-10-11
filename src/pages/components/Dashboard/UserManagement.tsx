@@ -108,6 +108,16 @@ export default function UserManagement() {
         header: "잔액",
         footer: "Balance",
       },
+      {
+        accessorKey: "lastOnline",
+        header: "Last Online",
+        cell: (info: any) => info.getValue()?.toLocaleString(),
+      },
+      {
+        accessorKey: "createdAt",
+        header: "User Created",
+        cell: (info: any) => info.getValue()?.toLocaleString(),
+      }
     ],
     []
   );
@@ -187,6 +197,8 @@ export default function UserManagement() {
           balance,
           password,
           nickname,
+          createdAt,
+          lastOnline
         } = user;
         if (!selectedUser.tester) {
           if (email.includes("test")) {
@@ -224,6 +236,7 @@ export default function UserManagement() {
             masteragentID: user.masteragentID,
             status: user.status,
             lastOnline: new Date(user.lastOnline),
+            createdAt: new Date(user.createdAt),
           },
         ]);
       });

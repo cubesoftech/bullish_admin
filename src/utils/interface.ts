@@ -37,7 +37,8 @@ export interface UserColumn {
   agentID?: string;
   masteragentID?: string;
   status?: boolean;
-  lastOnline: Date
+  lastOnline: Date;
+  createdAt: Date;
 }
 
 export interface InquryColumn {
@@ -134,6 +135,7 @@ export interface Members {
   masteragentID: string;
   status?: boolean;
   lastOnline: Date;
+  createdAt: Date
 }
 
 export interface AnnouncementInterface {
