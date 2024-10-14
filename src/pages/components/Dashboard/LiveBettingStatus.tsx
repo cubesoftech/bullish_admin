@@ -88,64 +88,76 @@ const CircleChart = ({ data }: { data: OngoingTradeResult }) => {
     <SimpleGrid w={'100%'} columns={[1, 3]} spacing={1}>
       {
         Object.keys(data).map((key, index) => {
-          const { totalAmountLong, totalAmountShort, totalLong, totalShort, result } = data[key];
-          const datas = [
-            ['Task', 'Total'],
-            ['Long', totalAmountLong],
-            ['Short', totalAmountShort],
-          ];
-          const companyProfit = !result ? totalAmountLong - totalAmountShort : totalAmountShort - totalAmountLong;
-          const [loading, setLoading] = useState(false);
-          const handleClick = async () => {
-            setLoading(true);
-            await axios.post('/api/changetraderesult', {
-              id: data[key].tradeID,
-              result: !result,
-            });
-            setLoading(false);
-          }
-          return (
-            <VStack alignItems={'center'} justifyContent={'center'} key={index} m={1}>
-              <Chart
-                options={{
-                  is3D: true,
-                  title: key,
-                  backgroundColor: 'transparent',
-                  colors: ['green', 'red'],
-                  chartArea: { width: '100%', height: '100%' },
-                }}
-                chartType="PieChart"
-                data={datas}
-              />
-              <Text w={'100%'} fontWeight={'bold'} textAlign={'left'}>{key}</Text>
-              <SimpleGrid fontWeight={'bold'} fontSize={'x-small'} w={'100%'} columns={2} spacing={1}>
-                <Text>Total Long: {totalLong}</Text>
-                <Text>Total Short: {totalShort}</Text>
-
-              </SimpleGrid>
-              <SimpleGrid fontWeight={'bold'} fontSize={'x-small'} w={'100%'} columns={2} spacing={1}>
-                <Text>Total Long Amount: {totalAmountLong.toLocaleString()}</Text>
-                <Text>Total Short Amount: {totalAmountShort.toLocaleString()}</Text>
-              </SimpleGrid>
-              <Box fontSize={'sm'} textAlign={'center'} width={'100%'} justifyContent={'center'} bgColor={'gray.300'} alignItems={'center'} w={'100%'} color={result ? "green" : "red"} >
-                {result ? <Text>Incoming Result: LONG</Text> : <Text>Incoming Result: SHORT</Text>}
-                <Text color={'black'}>Company Profit: {companyProfit.toLocaleString()}</Text>
-              </Box>
-              <Button
-                onClick={() => {
-                  handleClick();
-                }}
-                isLoading={loading}
-                w={'100%'}
-                colorScheme={'blue'}
-                size={'sm'}
-              >
-                Change Result
-              </Button>
-            </VStack>
-          );
+          return <DisplayTradeStatus key={index} data={data} index={index} keys={key} />
         })
       }
     </SimpleGrid>
+  );
+}
+
+function DisplayTradeStatus({ data, index, keys }: { data: OngoingTradeResult, index: number, keys: string }) {
+  const { totalAmountLong, totalAmountShort, totalLong, totalShort, result } = data[keys];
+  const datas = [
+    ['Task', 'Total'],
+    ['Long', totalAmountLong],
+    ['Short', totalAmountShort],
+  ];
+  const companyProfit = !result ? totalAmountLong - totalAmountShort : totalAmountShort - totalAmountLong;
+  const [loading, setLoading] = useState(false);
+  const handleClick = async () => {
+    setLoading(true);
+    try {
+      await axios.post('/api/changetraderesult', {
+        id: data[keys].tradeID,
+        result: !result,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+  return (
+    <VStack alignItems={'center'} justifyContent={'center'} key={index} m={1}>
+      <Chart
+        options={{
+          is3D: true,
+          title: keys,
+          backgroundColor: 'transparent',
+          colors: ['green', 'red'],
+          chartArea: { width: '100%', height: '100%' },
+        }}
+        chartType="PieChart"
+        data={datas} />
+      <Text w={'100%'} fontWeight={'bold'} textAlign={'left'}>{keys}</Text>
+      <SimpleGrid fontWeight={'bold'} fontSize={'x-small'} w={'100%'} columns={2} spacing={1}>
+        <Text>Total Long: {totalLong}</Text>
+        <Text>Total Short: {totalShort}</Text>
+
+      </SimpleGrid>
+      <SimpleGrid fontWeight={'bold'} fontSize={'x-small'} w={'100%'} columns={2} spacing={1}>
+        <Text>Total Long Amount: {totalAmountLong.toLocaleString()}</Text>
+        <Text>Total Short Amount: {totalAmountShort.toLocaleString()}</Text>
+      </SimpleGrid>
+      <Box fontSize={'sm'} textAlign={'center'} width={'100%'} justifyContent={'center'} bgColor={'gray.300'} alignItems={'center'} w={'100%'} color={result ? "green" : "red"}>
+        {result ? <Text>Incoming Result: LONG</Text> : <Text>Incoming Result: SHORT</Text>}
+        <Text color={'black'}>Company Profit: {companyProfit.toLocaleString()}</Text>
+      </Box>
+      <Button
+        onClick={() => {
+          handleClick();
+        }}
+        isLoading={loading}
+        w={'100%'}
+        colorScheme={'blue'}
+        size={'sm'}
+      >
+        Change Result
+      </Button>
+    </VStack>
   );
 }
