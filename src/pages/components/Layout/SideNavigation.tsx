@@ -22,7 +22,7 @@ import { IconType } from "react-icons";
 import Image from "next/image";
 import logo from "../../../assets/image.png";
 import { useAuthentication, useChanges, useNavigation } from "@/utils/storage";
-import { LinkItems, LinkItemsMasterAgent } from "@/utils";
+import { LinkItems, LinkItemsAgent, LinkItemsMasterAgent } from "@/utils";
 import { GiFamilyTree } from "react-icons/gi";
 import useSWR from "swr";
 import axios from "axios";
@@ -87,7 +87,7 @@ interface SidebarProps extends BoxProps {
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const { role } = useAuthentication();
-  const linkItems = role === "ADMIN" ? LinkItems : LinkItemsMasterAgent;
+  const linkItems = role === "ADMIN" ? LinkItems : role === "MASTER_AGENT" ? LinkItemsMasterAgent : LinkItemsAgent;
 
 
 
