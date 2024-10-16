@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const page = parseInt(req.query.page as string) || 1;
-  const pageSize = 1000; // Set your page size here
+  const pageSize = 50; // Set your page size here
   const role = req.query.role as "ADMIN" | "AGENT" | "MASTER_AGENT";
   const id = req.query.id as string;
 

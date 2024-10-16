@@ -180,8 +180,9 @@ export default function UserManagement() {
     setData([]);
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllUsers?page=${page}&role=${role}&id=${id}`;
     while (hasMoreData) {
+      console.log("Fetching page", page);
+      let url = `/api/getAllUsers?page=${page}&role=${role}&id=${id}`;
       const res = await axios.get<ArrayUser>(url);
       let { hasMore, users } = res.data;
       //clean first the new data by removign the duplicates from the data
@@ -240,6 +241,7 @@ export default function UserManagement() {
           },
         ]);
       });
+      console.log(hasMore)
       hasMoreData = hasMore;
       page++;
     }
@@ -250,6 +252,7 @@ export default function UserManagement() {
   useEffect(() => {
     if (refetch) {
       try {
+        console.log("Refetching");
         requestAllUsers();
         setRefetch(false);
       } catch (error) {

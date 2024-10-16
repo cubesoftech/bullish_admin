@@ -6,13 +6,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const page = parseInt(req.query.page as string) || 1;
-  const pageSize = 1000; // Set your page size here
+  const pageSize = 10; // Set your page size here
   const startDate = req.query.startDate as string;
   const endDate = req.query.endDate as string;
 
   const startDate_ = new Date(startDate);
   const endDate_ = new Date(endDate);
   endDate_.setDate(endDate_.getDate() + 1);
+  console.log(page, pageSize);
 
   const withdrawals = await prisma.transaction.findMany({
     where: {
@@ -31,6 +32,8 @@ export default async function handler(
     take: pageSize + 1, // Fetch one extra record
     skip: (page - 1) * pageSize,
   });
+
+  console.log(withdrawals.length);
   const withdrawalsModifiedPromises = withdrawals.map(async (withdrawal) => {
     const { members } = withdrawal;
     const { agentsId } = members;
