@@ -140,9 +140,9 @@ export default function Withdrawals() {
   const requestAllWithdrawals = async () => {
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllWithdrawals?page=${page}&startDate=${startDate}&endDate=${endDate}`;
     setData([]);
     while (hasMoreData) {
+      let url = `/api/getAllWithdrawals?page=${page}&startDate=${startDate}&endDate=${endDate}`;
       const res = await axios.get<ArrayUserTransaction>(url);
       let { hasMore, withdrawals } = res.data;
       //clean first the new data by removign the duplicates from the data

@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const page = parseInt(req.query.page as string) || 1;
-  const pageSize = 1000; // Set your page size here
+  const pageSize = 10; // Set your page size here
   const startDate = req.query.startDate as string;
   const endDate = req.query.endDate as string;
 

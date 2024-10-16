@@ -143,8 +143,8 @@ export default function Deposits() {
     let hasMoreData = true;
     let page = 1;
     setData([]);
-    const url = `/api/getAllDeposits?page=${page}&startDate=${startDate}&endDate=${endDate}`;
     while (hasMoreData) {
+      let url = `/api/getAllDeposits?page=${page}&startDate=${startDate}&endDate=${endDate}`;
       const res = await axios.get<ArrayUserTransaction>(url);
       let { hasMore, withdrawals } = res.data;
       //clean first the new data by removign the duplicates from the data
@@ -207,6 +207,7 @@ export default function Deposits() {
   useEffect(() => {
     try {
       if (refetch) {
+        console.log("Refetching");
         requestAllWithdrawals();
         setRefetch(false);
       }
@@ -223,6 +224,7 @@ export default function Deposits() {
 
   useEffect(() => {
     try {
+      console.log("Refetching from date change");
       requestAllWithdrawals();
     } catch (error) {
       toast({
