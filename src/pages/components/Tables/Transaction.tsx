@@ -37,6 +37,7 @@ import {
 import EditTransaction from "../Drawer/EditTransaction";
 import { useAuthentication } from "@/utils/storage";
 import { CSVLink } from 'react-csv';
+import _ from "lodash";
 
 export default function TransactionTable({
   data,
@@ -65,9 +66,14 @@ export default function TransactionTable({
   endDate: string;
   setEndDate: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const [receivedData, setReceivedData] = React.useState(data);
+  React.useEffect(() => {
+    const filteredData = _.uniqBy(data, "id");
+    setReceivedData(filteredData);
+  }, [data]);
   const table = useReactTable({
     columns,
-    data,
+    data: receivedData,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
