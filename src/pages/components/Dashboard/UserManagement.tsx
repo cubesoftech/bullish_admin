@@ -1,5 +1,5 @@
 import React, { HTMLProps, useEffect, useMemo } from "react";
-import { VStack, Heading, Icon, HStack, useToast, Text, useDisclosure, useColorModeValue } from "@chakra-ui/react";
+import { VStack, Heading, Icon, HStack, useToast, Text, useDisclosure, useColorModeValue, Switch } from "@chakra-ui/react";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUser, UserColumn } from "@/utils/interface";
 import axios from "axios";
@@ -8,6 +8,30 @@ import UserTable from "../Tables/UserTable";
 import { useAuthentication } from "@/utils/storage";
 import { useRouter } from "next/router";
 import User from "./User";
+
+const SwitchButton = ({ id, isChecked, setRefetch }: { id: string, isChecked: boolean, setRefetch: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const [checked, setChecked] = React.useState(isChecked);
+
+  const handleChange = () => {
+    setChecked(!checked);
+    axios.post(`/api/updateSwitch`, { id, force: !checked })
+      .then((res) => {
+        setChecked(!checked);
+        setRefetch(true);
+      })
+      .catch((err) => {
+        setChecked(checked);
+      });
+  }
+  return (
+    <Switch
+      isChecked={checked}
+      onChange={handleChange}
+      size="lg"
+      ml={2}
+    />
+  );
+}
 
 export default function UserManagement() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -28,30 +52,6 @@ export default function UserManagement() {
 
   let columns = useMemo<ColumnDef<UserColumn>[]>(
     () => [
-      // {
-      //   id: "select",
-      //   header: ({ table }) => (
-      //     <IndeterminateCheckbox
-      //       {...{
-      //         checked: table.getIsAllRowsSelected(),
-      //         indeterminate: table.getIsSomeRowsSelected(),
-      //         onChange: table.getToggleAllRowsSelectedHandler(),
-      //       }}
-      //     />
-      //   ),
-      //   cell: ({ row }) => (
-      //     <div className="px-1">
-      //       <IndeterminateCheckbox
-      //         {...{
-      //           checked: row.getIsSelected(),
-      //           disabled: !row.getCanSelect(),
-      //           indeterminate: row.getIsSomeSelected(),
-      //           onChange: row.getToggleSelectedHandler(),
-      //         }}
-      //       />
-      //     </div>
-      //   ),
-      // },
       {
         accessorKey: "name",
         cell: (info) => info.getValue(),
@@ -77,12 +77,6 @@ export default function UserManagement() {
         },
         footer: "Email",
       },
-      // {
-      //   accessorKey: "nickname",
-      //   header: "닉네임",
-      //   cell: (info) => info.getValue(),
-      //   footer: "Nickname",
-      // },
       {
         accessorKey: "bank",
         header: "은행",
@@ -117,12 +111,15 @@ export default function UserManagement() {
         accessorKey: "createdAt",
         header: "가입일순",
         cell: (info: any) => info.getValue()?.toLocaleString(),
+      },
+      {
+        accessorKey: "force",
+        header: "Force Logout",
+        cell: (info) => <SwitchButton isChecked={info.getValue() as boolean} id={info.row.original.id} setRefetch={setRefetch} />,
       }
     ],
     []
   );
-
-  useEffect(() => { }, [selectedUser.realUsers, selectedUser.tester]);
 
   if (role === "ADMIN") {
     columns.unshift({
@@ -238,6 +235,7 @@ export default function UserManagement() {
             status: user.status,
             lastOnline: new Date(user.lastOnline),
             createdAt: new Date(user.createdAt),
+            force: user.force,
           },
         ]);
       });

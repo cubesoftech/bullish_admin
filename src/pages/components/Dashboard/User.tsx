@@ -41,7 +41,7 @@ export interface Tansaction {
 
 function User({ isOpen, onClose, id }: { isOpen: boolean, onClose: () => void, id: string }) {
     //access the query
-    const { data, error, isLoading } = useSWR<Root>(`/api/getUserDetails?id=${id}`, async (url: string) => {
+    const { data, error, isLoading } = useSWR<Root>(isOpen ? `/api/getUserDetails?id=${id}` : null, async (url: string) => {
         const res = await fetch(url);
         return res.json();
     })
