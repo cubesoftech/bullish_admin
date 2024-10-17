@@ -39,6 +39,7 @@ export interface UserColumn {
   status?: boolean;
   lastOnline: Date;
   createdAt: Date;
+  force: boolean;
 }
 
 export interface InquryColumn {
@@ -136,6 +137,7 @@ export interface Members {
   status?: boolean;
   lastOnline: Date;
   createdAt: Date
+  force: boolean;
 }
 
 export interface AnnouncementInterface {

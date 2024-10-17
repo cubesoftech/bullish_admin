@@ -51,6 +51,7 @@ model members {
   status             Boolean              @default(false)
   multiplier         Int?                 @default(0)
   lastOnline         DateTime?            @default(now())
+  force              Boolean              @default(false)
   inquiries          Inquiries[]
   agents_withdrawals agents_withdrawals[]
   agents             agents?              @relation(fields: [agentsId], references: [id])
@@ -189,11 +190,11 @@ model sitesettings {
   wti           Boolean
   nasdaq        Boolean
   gold          Boolean
-  eth           Boolean @default(true)
-  xrp           Boolean @default(true)
-  bnb           Boolean @default(true)
-  sol           Boolean @default(true)
   minimumAmount Int
+  bnb           Boolean @default(true)
+  eth           Boolean @default(true)
+  sol           Boolean @default(true)
+  xrp           Boolean @default(true)
 }
 
 model announcement {

@@ -417,7 +417,7 @@ function Filter({
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
-  const disableHeader = ["은행", "계좌 번호", "계좌 주", "잔액", "가입일순", "최근접속순"];
+  const disableHeader = ["은행", "계좌 번호", "계좌 주", "잔액", "가입일순", "최근접속순", "Force Logout"];
   if (disableHeader.includes(column?.columnDef?.header as string)) {
     return null;
   }
