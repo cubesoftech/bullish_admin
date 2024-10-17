@@ -465,8 +465,9 @@ function Filter({
     </HStack>
   ) : (
     <Input
-      w={150}
+      w={70}
       size={"sm"}
+      padding={1}
       border={"1px"}
       borderColor={"gray.300"}
       onChange={(e) => column.setFilterValue(e.target.value)}
