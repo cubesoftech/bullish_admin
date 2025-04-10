@@ -16,11 +16,12 @@ import {
   Badge,
   HStack,
   useColorMode,
+  Show
 } from "@chakra-ui/react";
 import { FiMenu, FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import Image from "next/image";
-import logo from "../../../assets/image.png";
+import logo from "../../../assets/sjinvestment_logo.jpg";
 import { useAuthentication, useChanges, useNavigation } from "@/utils/storage";
 import { LinkItems, LinkItemsAgent, LinkItemsMasterAgent } from "@/utils";
 import { GiFamilyTree } from "react-icons/gi";
@@ -103,7 +104,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx={20} justifyContent="space-between">
-        {/* <Image src={logo} alt="logo" width={200} height={200} /> */}
+        <Show above="md">
+          <Image src={logo} alt="logo" width={200} height={200} />
+        </Show>
+        <Show below="md">
+          <Image src={logo} alt="logo" width={100} height={100} />
+        </Show>
 
         <CloseButton
           color={useColorModeValue("gray.600", "gray.200")}
