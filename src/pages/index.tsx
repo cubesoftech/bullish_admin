@@ -1,12 +1,12 @@
 import Login from "@/pages/components/Login";
 import { useAuthentication } from "@/utils/storage";
 import Main from "./components/Layout/Main";
-import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SocketListenerPayload } from "@/utils/interface";
 import SoundPlayer from "./components/utils/SoundPlayer";
+import { socket } from "@/utils/socket";
 // import useSound from "use-sound";
 
 export default function Home() {
@@ -18,9 +18,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const socket_server = "https://onewoo.online/";
-    const socket = io(socket_server);
-
     //listen to event observerChanges
     socket.on("observerChanges", (data: SocketListenerPayload) => {
       const { withdrawals, deposits, inquires, newmembers, trades } = data;
@@ -51,6 +48,12 @@ export default function Home() {
       }
     });
 
+    socket.on("user_logged_in", ( data: { time:string } ) => {
+      handlePlaySound();
+      toast.dismiss();
+      toast.info("User logged in");
+    })
+
     return () => {
       socket.disconnect();
     };
@@ -80,5 +83,3 @@ export default function Home() {
 
   return <Login />;
 }
-
-//a

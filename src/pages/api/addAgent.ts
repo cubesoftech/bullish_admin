@@ -46,6 +46,9 @@ export default async function handler(
       confirmpassword: password,
       status: true,
       id: Math.floor(Math.random() * 1000000).toString(),
+      krw_trade: "usdkrw",
+      eur_trade: "eurusd",
+      jpy_trade: "jpyusd",
     },
   });
 

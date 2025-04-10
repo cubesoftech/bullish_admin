@@ -8,6 +8,8 @@ export default async function handler(
 ) {
     const payload = req.body as inject_setting
 
+    console.log("payload: ", payload)
+
     const { id } = payload;
 
     if (id) {

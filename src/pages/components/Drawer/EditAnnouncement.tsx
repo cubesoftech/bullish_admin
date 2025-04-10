@@ -13,7 +13,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import React from "react";
-import { Announcement } from "@prisma/client";
+import { announcement } from "@prisma/client";
 import { Editor } from "@tinymce/tinymce-react";
 
 function EditAnnouncement({
@@ -23,7 +23,7 @@ function EditAnnouncement({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  announcement: Announcement;
+  announcement: announcement;
 }) {
   const { content, createdAt, id, title } = announcement;
   const editorRef = React.useRef<any>(null);

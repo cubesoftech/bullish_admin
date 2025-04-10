@@ -12,6 +12,7 @@ export default async function handler(
     data: {
       content,
       createdAt: createdDate,
+      updatedAt: new Date(), // Add the updatedAt field
       title,
       id: Math.floor(Math.random() * 1000000).toString(),
     },

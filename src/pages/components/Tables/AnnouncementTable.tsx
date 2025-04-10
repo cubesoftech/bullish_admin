@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import AddAnnouncement from "../Drawer/AddAnouncement";
-import { Announcement } from "@prisma/client";
+import { announcement } from "@prisma/client";
 import EditAnnouncement from "../Drawer/EditAnnouncement";
 import useSwr from "swr";
 import axios from "axios";
@@ -47,12 +47,12 @@ function AnnouncementTable() {
     mutate("/api/getAllAnnouncement");
   };
 
-  const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
+  const [announcements, setAnnouncements] = React.useState<announcement[]>([]);
 
   useSwr(
     "/api/getAllAnnouncement",
     async (url) => {
-      const res = await axios.get<{ announcement: Announcement[] }>(url);
+      const res = await axios.get<{ announcement: announcement[] }>(url);
       return res.data;
     },
     {

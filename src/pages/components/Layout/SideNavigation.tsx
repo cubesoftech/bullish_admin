@@ -103,7 +103,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx={20} justifyContent="space-between">
-        <Image src={logo} alt="logo" width={200} height={200} />
+        {/* <Image src={logo} alt="logo" width={200} height={200} /> */}
 
         <CloseButton
           color={useColorModeValue("gray.600", "gray.200")}

@@ -71,18 +71,18 @@ function EditUser({
     }
   };
   return (
-    <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
+    <Drawer isOpen={isOpen} placement="right" size={"xs"} onClose={onClose}>
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader>수정</DrawerHeader>
 
-        <DrawerBody mb={10}>
+        <DrawerBody>
           <VStack
             justifyContent={"flex-start"}
             alignItems={"flex-start"}
             spacing={1}
           >
-            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
               <Text>이름</Text>
               <Input
                 onChange={(e) => {
@@ -91,7 +91,7 @@ function EditUser({
                 defaultValue={name}
               />
             </VStack>
-            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
               <Text>아이디</Text>
               <Input
                 defaultValue={email}
@@ -100,7 +100,7 @@ function EditUser({
                 }}
               />
             </VStack>
-            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
               <Text>은행</Text>
               <Input
                 defaultValue={bank}
@@ -109,7 +109,7 @@ function EditUser({
                 }}
               />
             </VStack>
-            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
               <Text>계좌번호</Text>
               <Input
                 onChange={(e) => {
@@ -118,7 +118,7 @@ function EditUser({
                 defaultValue={accountnumber}
               />
             </VStack>
-            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
               <Text>예금주</Text>
               <Input
                 defaultValue={accountholder}
@@ -127,7 +127,7 @@ function EditUser({
                 }}
               />
             </VStack>
-            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
               <Text>보유자산</Text>
               <Input
                 defaultValue={balance}
@@ -140,7 +140,7 @@ function EditUser({
                 }}
               />
             </VStack>
-            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
               <Text>닉네임</Text>
               <Input
                 defaultValue={nickname}
@@ -149,7 +149,7 @@ function EditUser({
                 }}
               />
             </VStack>
-            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
               <Text>비밀번호</Text>
               <Input
                 defaultValue={password}
@@ -158,7 +158,7 @@ function EditUser({
                 }}
               />
             </VStack>
-            <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
               <Text>Status</Text>
               <Select
                 value={userState.status ? 1 : 0}

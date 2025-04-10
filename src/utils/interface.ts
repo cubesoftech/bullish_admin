@@ -2,6 +2,7 @@ import {
   recenttrades_type,
   transaction_status,
   transaction_type,
+  trades_type
 } from "@prisma/client";
 
 export interface TransactionColumn {
@@ -40,6 +41,7 @@ export interface UserColumn {
   lastOnline: Date;
   createdAt: Date;
   force: boolean;
+  switchBet: boolean;
 }
 
 export interface InquryColumn {
@@ -138,6 +140,8 @@ export interface Members {
   lastOnline: Date;
   createdAt: Date
   force: boolean;
+  switchBet: boolean;
+  changeTrades: UserTrades;
 }
 
 export interface AnnouncementInterface {
@@ -235,18 +239,15 @@ export interface Site {
   id: string;
   returnOnWin: number;
   oneMinLock: number;
-  threeMinLock: number;
+  twoMinLock: number;
   fiveMinLock: number;
-  btc: boolean;
-  wti: boolean;
-  nasdaq: boolean;
-  gold: boolean;
-  eth: boolean;
-  xrp: boolean;
-  sol: boolean;
-  bnb: boolean;
+  krw: boolean;
+  eur: boolean;
+  jpy: boolean;
   minimumAmount: number;
 }
+
+export type TradesType = trades_type
 
 export interface TransactionPayload {
   status: transaction_status;
@@ -277,19 +278,14 @@ export interface SocketListenerPayload {
 }
 
 export interface TradeLock {
-  btc: Stock;
-  bnb: Stock;
-  eth: Stock;
-  xrp: Stock;
-  sol: Stock;
-  oil: Stock;
-  gold: Stock;
-  us100: Stock;
+  krw: Stock;
+  eur: Stock;
+  jpy: Stock;
 }
 
 export interface Stock {
   one_min: N1Min[];
-  three_min: N1Min[];
+  two_min: N1Min[];
   five_min: N1Min[];
 }
 
@@ -311,4 +307,10 @@ export interface Btc1__Min {
   totalAmountShort: number;
   result: boolean;
   tradeID: string;
+}
+
+export interface UserTrades {
+  krw_trade: trades_type;
+  eur_trade: trades_type;
+  jpy_trade: trades_type;
 }

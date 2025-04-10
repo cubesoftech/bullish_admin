@@ -1,23 +1,10 @@
-import { SiteSettting } from "@/utils/interface";
-import {
-  VStack,
-  Heading,
-  Icon,
-  HStack,
-  Text,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
-  useToast,
-  Flex,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Site, SiteSettting, TradesType } from "@/utils/interface";
+import { VStack, Heading, Icon, HStack, Text, Select, useToast, Flex, useColorModeValue, Stack } from "@chakra-ui/react";
+import { NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper } from "@chakra-ui/react"
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FiCompass } from "react-icons/fi";
+import { socket } from "@/utils/socket";
 
 export default function GameSetting() {
   return (
@@ -94,6 +81,7 @@ const Setting = () => {
             <BetDeadlineSetting setting={setting} />
             <TradingStatus setting={setting} />
             <BalanceSetting setting={setting} />
+            {/* <ChangeSymbol setting={setting}/> */}
           </>
         )}
       </Flex>
@@ -115,6 +103,7 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
           returnOnWin: value,
         },
       });
+      socket.emit("change_site_settings")
       toast({
         title: "Success",
         description: "Setting updated successfully",
@@ -158,10 +147,10 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
 };
 
 const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
-  const { oneMinLock, fiveMinLock, threeMinLock, id } = setting.site;
+  const { oneMinLock, fiveMinLock, twoMinLock, id } = setting.site;
   const tradingTime: Array<{ label: string; value: number }> = [
     { label: "1 Minute Trading", value: oneMinLock },
-    { label: "3 Minutes Trading", value: threeMinLock },
+    { label: "2 Minutes Trading", value: twoMinLock },
     { label: "5 Minutes Trading", value: fiveMinLock },
   ];
 
@@ -169,7 +158,7 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
 
   const updateSetting = async (value: number, index: number) => {
     const url = "/api/updateSetting";
-    const label = ["oneMinLock", "threeMinLock", "fiveMinLock"];
+    const label = ["oneMinLock", "twoMinLock", "fiveMinLock"];
     try {
       await axios.post<SiteSettting>(url, {
         site: {
@@ -177,6 +166,7 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
           [label[index]]: value,
         },
       });
+      socket.emit("change_site_settings")
       toast({
         title: "Success",
         description: "Setting updated successfully",
@@ -222,25 +212,61 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
 };
 
 const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
-  const { nasdaq, bnb, eth, sol, xrp, btc, gold, wti } = setting.site;
+  const { id, krw, eur, jpy } = setting.site;
+
+  const initialRender = useRef(true)
+
   const tradingStatus = [
-    {
-      label: "BTCUSDT",
-      status: btc ? "OPEN" : "CLOSED",
-    },
-    { label: "BNBUSDT", status: bnb ? "OPEN" : "CLOSED" },
-    { label: "ETHUSDT", status: eth ? "OPEN" : "CLOSED" },
-    { label: "XRPUSDT", status: xrp ? "OPEN" : "CLOSED" },
-    { label: "SOLUSDT", status: sol ? "OPEN" : "CLOSED" },
-    { label: "GOLD", status: gold ? "OPEN" : "CLOSED" },
-    { label: "NASDAQ", status: nasdaq ? "OPEN" : "CLOSED" },
-    { label: "WTI", status: wti ? "OPEN" : "CLOSED" },
+    { label: "USD/KRW", status: krw ? "OPEN" : "CLOSED", },
+    { label: "EUR/USD", status: eur ? "OPEN" : "CLOSED" },
+    { label: "JPY/USD", status: jpy ? "OPEN" : "CLOSED" },
+  ]
 
-  ];
-
-  const options = ["OPEN", "CLOSED"];
+  const [ siteSettings, setSiteSettings ] = useState(tradingStatus)
 
   const toast = useToast();
+
+  useEffect(() => {
+    if(initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    const updateSettings = setTimeout(async () => {
+      const url = "/api/updateSetting";
+      try {
+        const res = await axios.post<SiteSettting>(url, {
+          site: {
+            id,
+            krw: siteSettings[0].status === "OPEN" ? true : false,
+            eur: siteSettings[1].status === "OPEN" ? true : false,
+            jpy: siteSettings[2].status === "OPEN" ? true : false,
+          }
+        });
+        if(res.status === 200) {
+          socket.emit("change_site_settings")
+          toast({
+            title: "Success",
+            description: "Setting updated successfully",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      } catch (e) {
+        toast({
+          title: "Error",
+          description: e as string,
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+    }, 1000)
+
+    return () => clearTimeout(updateSettings)
+  }, [siteSettings])
+
+  const options = ["OPEN", "CLOSED"];
 
   const updateSetting = async (value: string, index: number) => {
     const url = "/api/updateSetting";
@@ -269,6 +295,7 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
       });
     }
   };
+
   return (
     <VStack m={3} alignItems={"flex-start"} spacing={7}>
       <Text fontWeight={"bold"}>거래현황</Text>
@@ -277,13 +304,21 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
           <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
             <Text>{status.label}</Text>
             <Select
-              onChange={async (e) => {
-                await updateSetting(
-                  e.target.value,
-                  tradingStatus.indexOf(status)
-                );
+              // onChange={async (e) => {
+              //   await updateSetting(
+              //     e.target.value,
+              //     tradingStatus.indexOf(status)
+              //   );
+              // }}
+              onChange={(e) => {
+                const storedStatus = siteSettings.map((item, idx) => 
+                  idx === tradingStatus.indexOf(status)
+                    ? { ...item, status: e.target.value }
+                    : item
+                )
+                setSiteSettings(storedStatus)
               }}
-              size={"sm"}
+              size={"md"}
               defaultValue={status.status}
               w={200}
             >
@@ -311,6 +346,7 @@ const BalanceSetting = ({ setting }: { setting: SiteSettting }) => {
           minimumAmount: value,
         },
       });
+      socket.emit("change_site_settings")
       toast({
         title: "Success",
         description: "Setting updated successfully",

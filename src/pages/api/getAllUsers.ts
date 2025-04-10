@@ -175,6 +175,7 @@ export default async function handler(
     take: pageSize + 1, // Fetch one extra record
     skip: (page - 1) * pageSize,
   });
+
   const userModifiedPromises = users.map(async (user) => {
     const { agents } = user;
     let agentID: undefined | string = undefined;

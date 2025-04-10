@@ -73,6 +73,8 @@ function InjectSetting({
             })
     }, [id, isOpen]);
 
+    const toast = useToast()
+
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -109,8 +111,14 @@ function InjectSetting({
                 <ModalFooter>
                     <Button variant="outline" mr={3} onClick={() => {
                         injectSetting(setting)
-                            .finally(() => onClose());
-
+                            .finally(() => {
+                                toast({
+                                    title: "Success",
+                                    description: "Injected",
+                                    status: "success"
+                                })
+                                onClose()
+                            });
                     }}>
                         적용
                     </Button>

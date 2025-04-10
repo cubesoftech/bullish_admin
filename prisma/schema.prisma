@@ -52,8 +52,12 @@ model members {
   multiplier         Int?                 @default(0)
   lastOnline         DateTime?            @default(now())
   force              Boolean              @default(false)
-  inquiries          Inquiries[]
+  switchBet          Boolean              @default(false)
+  eur_trade          trades_type
+  jpy_trade          trades_type
+  krw_trade          trades_type
   agents_withdrawals agents_withdrawals[]
+  inquiries          inquiries[]
   agents             agents?              @relation(fields: [agentsId], references: [id])
   membertrades       membertrades[]
   transaction        transaction[]
@@ -89,7 +93,7 @@ model membertrades {
   tradePNL     Int
   membersId    String
   type         membertrades_type
-  members      members           @relation(fields: [membersId], references: [id], map: "MemberTrades_membersId_fkey")
+  members      members           @relation(fields: [membersId], references: [id], onDelete: Cascade, map: "MemberTrades_membersId_fkey")
 
   @@index([membersId], map: "MemberTrades_membersId_fkey")
 }
@@ -120,7 +124,7 @@ model transaction {
   membersId   String
   createdAt   DateTime           @default(now())
   updatedAt   DateTime
-  members     members            @relation(fields: [membersId], references: [id], map: "Transaction_membersId_fkey")
+  members     members            @relation(fields: [membersId], references: [id], onDelete: Cascade, map: "Transaction_membersId_fkey")
 
   @@index([membersId], map: "Transaction_membersId_fkey")
 }
@@ -133,7 +137,7 @@ model agents_withdrawals {
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
   membersId String?
-  members   members?           @relation(fields: [membersId], references: [id])
+  members   members?           @relation(fields: [membersId], references: [id], onDelete: Cascade)
 
   @@index([membersId], map: "agents_withdrawals_membersId_fkey")
 }
@@ -157,44 +161,16 @@ model verificationtokens {
   @@unique([identifier, token])
 }
 
-model Announcement {
-  id        String   @id
-  title     String
-  content   String   @db.VarChar(5000)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Inquiries {
-  id              String   @id
-  title           String
-  content         String   @db.VarChar(5000)
-  answer          String   @db.VarChar(5000)
-  memberId        String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  alreadyAnswered Boolean  @default(false)
-  membersId       String?
-  members         members? @relation(fields: [membersId], references: [id])
-
-  @@index([membersId], map: "Inquiries_membersId_fkey")
-}
-
 model sitesettings {
   id            String  @id
   returnOnWin   Float
   oneMinLock    Int
-  threeMinLock  Int
+  twoMinLock    Int
   fiveMinLock   Int
-  btc           Boolean
-  wti           Boolean
-  nasdaq        Boolean
-  gold          Boolean
+  krw           Boolean
+  eur           Boolean
+  jpy           Boolean
   minimumAmount Int
-  bnb           Boolean @default(true)
-  eth           Boolean @default(true)
-  sol           Boolean @default(true)
-  xrp           Boolean @default(true)
 }
 
 model announcement {
@@ -211,6 +187,21 @@ model inject_setting {
   createdAt  DateTime @default(now())
   userId     String
   multiplier Int
+}
+
+model inquiries {
+  id              String   @id
+  title           String
+  content         String   @db.VarChar(5000)
+  answer          String   @db.VarChar(5000)
+  memberId        String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  alreadyAnswered Boolean  @default(false)
+  membersId       String?
+  members         members? @relation(fields: [membersId], references: [id], onDelete: Cascade, map: "Inquiries_membersId_fkey")
+
+  @@index([membersId], map: "Inquiries_membersId_fkey")
 }
 
 enum transaction_type {
@@ -232,55 +223,31 @@ enum Role {
 }
 
 enum recenttrades_type {
-  btc_1_min
-  btc_3_mins
-  btc_5_mins
-  eth_1_min
-  eth_3_mins
-  eth_5_mins
-  bnb_1_min
-  bnb_3_mins
-  bnb_5_mins
-  xrp_1_min
-  xrp_3_mins
-  xrp_5_mins
-  sol_1_min
-  sol_3_mins
-  sol_5_mins
-  wti_1_min
-  wti_3_mins
-  wti_5_mins
-  us100_1_min
-  us100_3_mins
-  us100_5_mins
-  gold_1_min
-  gold_3_mins
-  gold_5_mins
+  usdkrw_1_min
+  usdkrw_2_mins
+  usdkrw_5_mins
+  eurusd_1_min
+  eurusd_2_mins
+  eurusd_5_mins
+  jpyusd_1_min
+  jpyusd_2_mins
+  jpyusd_5_mins
 }
 
 enum membertrades_type {
-  btc_1_min
-  btc_3_mins
-  btc_5_mins
-  eth_1_min
-  eth_3_mins
-  eth_5_mins
-  bnb_1_min
-  bnb_3_mins
-  bnb_5_mins
-  xrp_1_min
-  xrp_3_mins
-  xrp_5_mins
-  sol_1_min
-  sol_3_mins
-  sol_5_mins
-  wti_1_min
-  wti_3_mins
-  wti_5_mins
-  us100_1_min
-  us100_3_mins
-  us100_5_mins
-  gold_1_min
-  gold_3_mins
-  gold_5_mins
+  usdkrw_1_min
+  usdkrw_2_mins
+  usdkrw_5_mins
+  eurusd_1_min
+  eurusd_2_mins
+  eurusd_5_mins
+  jpyusd_1_min
+  jpyusd_2_mins
+  jpyusd_5_mins
+}
+
+enum trades_type {
+  usdkrw
+  eurusd
+  jpyusd
 }
