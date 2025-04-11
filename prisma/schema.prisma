@@ -58,6 +58,7 @@ model members {
   krw_trade          trades_type
   agents_withdrawals agents_withdrawals[]
   inquiries          inquiries[]
+  member_login_logs  member_login_logs?
   agents             agents?              @relation(fields: [agentsId], references: [id])
   membertrades       membertrades[]
   transaction        transaction[]
@@ -202,6 +203,16 @@ model inquiries {
   members         members? @relation(fields: [membersId], references: [id], onDelete: Cascade, map: "Inquiries_membersId_fkey")
 
   @@index([membersId], map: "Inquiries_membersId_fkey")
+}
+
+model member_login_logs {
+  id          String    @id
+  membersID   String    @unique
+  lastSignIn  DateTime?
+  lastSignOut DateTime?
+  members     members   @relation(fields: [membersID], references: [id], onDelete: Cascade)
+
+  @@index([membersID, lastSignIn])
 }
 
 enum transaction_type {
