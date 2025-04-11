@@ -20,7 +20,7 @@ export default function Home() {
   useEffect(() => {
     //listen to event observerChanges
     socket.on("observerChanges", (data: SocketListenerPayload) => {
-      const { withdrawals, deposits, inquires, newmembers, trades } = data;
+      const { withdrawals, deposits, inquires, newmembers, trades, online } = data;
       if (withdrawals) {
         handlePlaySound();
         toast.dismiss();
@@ -46,13 +46,18 @@ export default function Home() {
         toast.dismiss();
         toast.info(`New Trade: ${trades} trades`);
       }
+      if (online) {
+        handlePlaySound();
+        toast.dismiss();
+        toast.info(`Online member: ${online} member${online > 1 ? "s" : ""}`);
+      }
     });
 
-    socket.on("user_logged_in", ( data: { time:string } ) => {
-      handlePlaySound();
-      toast.dismiss();
-      toast.info("User logged in");
-    })
+    // socket.on("user_logged_in", ( data: { time:string } ) => {
+    //   handlePlaySound();
+    //   toast.dismiss();
+    //   toast.info("User logged in");
+    // })
 
     return () => {
       socket.disconnect();

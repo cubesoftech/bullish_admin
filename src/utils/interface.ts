@@ -275,6 +275,7 @@ export interface SocketListenerPayload {
   withdrawals: number;
   deposits: number;
   trades: number;
+  online: number
 }
 
 export interface TradeLock {
