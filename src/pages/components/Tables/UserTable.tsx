@@ -1,10 +1,10 @@
 import { UserColumn } from "@/utils/interface";
-import { Table, ColumnDef, PaginationState,  useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel, flexRender, Column, Row, RowSelectionState, } from "@tanstack/react-table";
+import { Table, ColumnDef, PaginationState, useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel, flexRender, Column, Row, RowSelectionState, } from "@tanstack/react-table";
 import React, { useState, useEffect } from "react";
 import { Stack, Input, HStack, VStack, Button, Select, Text, useDisclosure, Switch, Flex, useColorModeValue } from "@chakra-ui/react";
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverBody, PopoverFooter, PopoverArrow, PopoverCloseButton, PopoverAnchor, } from '@chakra-ui/react'
 import { Table as ChakraTable, Thead, Th, Tr, Td, Tbody, TableContainer } from "@chakra-ui/react"
-import { NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper,} from "@chakra-ui/react"
+import { NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, } from "@chakra-ui/react"
 import EditUser from "../Drawer/EditUser";
 import { useAuthentication } from "@/utils/storage";
 import InjectSetting from "../Drawer/InjectSetting";
@@ -315,7 +315,7 @@ function UserRow({
               <PopoverContent>
                 <PopoverArrow />
                 <PopoverBody p={3} shadow={"2xl"}>
-                  <NewInjectSetting user={row.original} { ...injectSetting }/>
+                  <NewInjectSetting user={row.original} {...injectSetting} />
                 </PopoverBody>
               </PopoverContent>
             </Popover>
@@ -348,7 +348,7 @@ function UserRow({
             <PopoverContent>
               <PopoverArrow />
               <PopoverBody p={3} shadow={"2xl"}>
-                <NewInjectSetting user={row.original} { ...injectSetting }/>
+                <NewInjectSetting user={row.original} {...injectSetting} />
               </PopoverBody>
             </PopoverContent>
           </Popover>
@@ -408,7 +408,7 @@ function Filter({
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
-  const disableHeader = ["은행", "계좌 번호", "계좌 주", "잔액", "가입일순", "최근접속순", "강제 로그아웃", "역방향 베팅", "거래 수정"];
+  const disableHeader = ["은행", "계좌 번호", "계좌 주", "잔액", "가입일순", "최근접속순", "강제 로그아웃", "역방향 베팅", "거래 수정", "Max"];
   if (disableHeader.includes(column?.columnDef?.header as string)) {
     return null;
   }

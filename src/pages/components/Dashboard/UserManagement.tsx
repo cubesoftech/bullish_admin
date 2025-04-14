@@ -37,7 +37,7 @@ const SwitchButton = ({ id, isChecked, setRefetch }: { id: string, isChecked: bo
 }
 
 const ReverseBetSwitch = ({ id, isChecked, setRefetch }: { id: string, isChecked: boolean, setRefetch: React.Dispatch<React.SetStateAction<boolean>> }) => {
-  const [ checked, setChecked ] = useState<boolean>(isChecked);
+  const [checked, setChecked] = useState<boolean>(isChecked);
 
   const toast = useToast()
 
@@ -46,7 +46,7 @@ const ReverseBetSwitch = ({ id, isChecked, setRefetch }: { id: string, isChecked
     setChecked(!checked);
     const res = await axios.post(url, { id, value: !checked })
 
-    if(res.status === 200){
+    if (res.status === 200) {
       setChecked(!checked);
       setRefetch(true);
     } else {
@@ -54,7 +54,7 @@ const ReverseBetSwitch = ({ id, isChecked, setRefetch }: { id: string, isChecked
     }
   }
 
-  return(
+  return (
     <Switch
       isChecked={checked}
       onChange={handleChange}
@@ -64,11 +64,11 @@ const ReverseBetSwitch = ({ id, isChecked, setRefetch }: { id: string, isChecked
   )
 }
 
-const ChangeTrade = ( { id, setRefetch }:{ id:string, setRefetch: React.Dispatch<React.SetStateAction<boolean>> } ) => {
+const ChangeTrade = ({ id, setRefetch }: { id: string, setRefetch: React.Dispatch<React.SetStateAction<boolean>> }) => {
 
   const toast = useToast()
 
-  const [ userTrades, setUserTrades ] = useState<UserTrades>()
+  const [userTrades, setUserTrades] = useState<UserTrades>()
   const changeTrades = useDisclosure()
 
   const Trades = [
@@ -77,7 +77,7 @@ const ChangeTrade = ( { id, setRefetch }:{ id:string, setRefetch: React.Dispatch
     { label: "JPY/USD", value: userTrades?.jpy_trade },
   ]
 
-  const Options: { label:string, value: trades_type }[] = [
+  const Options: { label: string, value: trades_type }[] = [
     { label: "USD/KRW", value: "usdkrw" },
     { label: "EUR/USD", value: "eurusd" },
     { label: "JPY/USD", value: "jpyusd" }
@@ -87,7 +87,7 @@ const ChangeTrade = ( { id, setRefetch }:{ id:string, setRefetch: React.Dispatch
     const fetch = async () => {
       try {
         const url = "/api/getUserTrades"
-        const res = await axios.post<{ data:UserTrades }>(url, { id })
+        const res = await axios.post<{ data: UserTrades }>(url, { id })
         console.log("data: ", res.data.data)
         setUserTrades(res.data.data)
       } catch (e) {
@@ -103,7 +103,7 @@ const ChangeTrade = ( { id, setRefetch }:{ id:string, setRefetch: React.Dispatch
 
       const res = await axios.post(url, { id, trades: userTrades })
 
-      if(res.status === 200){
+      if (res.status === 200) {
         toast({
           title: "성공",
           description: "거래가 변경되었습니다.",
@@ -111,7 +111,7 @@ const ChangeTrade = ( { id, setRefetch }:{ id:string, setRefetch: React.Dispatch
         })
         socket.emit("change_site_settings")
         setRefetch(true)
-      }else {
+      } else {
         console.log("Something went wrong")
       }
     } catch (e) {
@@ -138,20 +138,20 @@ const ChangeTrade = ( { id, setRefetch }:{ id:string, setRefetch: React.Dispatch
           <Stack w={"100%"} h={"full"} gap={4}>
             {
               Trades.map((trade, index) => {
-                return(
+                return (
                   <Stack w={"100%"} gap={2} key={index}>
                     <Text fontSize={"medium"} fontWeight={500}>{trade.label}</Text>
                     <Select value={trade.value} onChange={(e) => {
-                      const trades = {...userTrades};
+                      const trades = { ...userTrades };
                       const tradeKey = Object.keys(userTrades || [])[index] as keyof UserTrades;
-                      if(tradeKey){
-                          trades[tradeKey] = e.target.value as trades_type;
-                          setUserTrades(trades as UserTrades )
+                      if (tradeKey) {
+                        trades[tradeKey] = e.target.value as trades_type;
+                        setUserTrades(trades as UserTrades)
                       }
                     }} >
                       {
                         Options.map((option, idx) => {
-                          return(
+                          return (
                             <option value={option.value} key={idx}>{option.label}</option>
                           );
                         })
@@ -168,6 +168,38 @@ const ChangeTrade = ( { id, setRefetch }:{ id:string, setRefetch: React.Dispatch
         </PopoverBody>
       </PopoverContent>
     </Popover>
+  );
+}
+
+const MaxBetSwitch = ({ id, isChecked, setRefetch }: { id: string, isChecked: boolean, setRefetch: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const [checked, setChecked] = useState<boolean>(isChecked);
+
+  const toast = useToast()
+
+  const handleChange = async () => {
+    try {
+      const url = "/api/updateMaxBet"
+      const res = await axios.post(url, { id, value: !checked })
+      if (res.status === 200) {
+        setChecked(!checked)
+        setRefetch(true)
+      }
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: "Error updating max bet",
+        status: "error"
+      })
+    }
+  }
+
+  return (
+    <Switch
+      isChecked={checked}
+      onChange={handleChange}
+      size="lg"
+      ml={2}
+    />
   );
 }
 
@@ -256,12 +288,17 @@ export default function UserManagement() {
       {
         accessorKey: "switchBet",
         header: "역방향 베팅",
-        cell: (info) => <ReverseBetSwitch isChecked={ info.getValue() as boolean } id={info.row.original.id} setRefetch={setRefetch}/>,
+        cell: (info) => <ReverseBetSwitch isChecked={info.getValue() as boolean} id={info.row.original.id} setRefetch={setRefetch} />,
+      },
+      {
+        accessorKey: "maxBet",
+        header: "Max",
+        cell: (info) => <MaxBetSwitch isChecked={info.getValue() as boolean} id={info.row.original.id} setRefetch={setRefetch} />,
       },
       {
         accessorKey: "changeTrades",
         header: "거래 수정",
-        cell: (info) => <ChangeTrade id={info.row.original.id} setRefetch={setRefetch}/>
+        cell: (info) => <ChangeTrade id={info.row.original.id} setRefetch={setRefetch} />
       }
     ],
     []
@@ -384,7 +421,8 @@ export default function UserManagement() {
             createdAt: new Date(user.createdAt),
             force: user.force,
             switchBet: user.switchBet,
-            changeTrades: user.changeTrades
+            changeTrades: user.changeTrades,
+            maxBet: user.maxBet
           },
         ]);
       });

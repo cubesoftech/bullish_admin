@@ -53,6 +53,7 @@ model members {
   lastOnline         DateTime?            @default(now())
   force              Boolean              @default(false)
   switchBet          Boolean              @default(false)
+  maxBet             Boolean              @default(false)
   eur_trade          trades_type
   jpy_trade          trades_type
   krw_trade          trades_type

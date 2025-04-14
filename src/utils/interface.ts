@@ -42,6 +42,7 @@ export interface UserColumn {
   createdAt: Date;
   force: boolean;
   switchBet: boolean;
+  maxBet: boolean;
 }
 
 export interface InquryColumn {
@@ -142,6 +143,7 @@ export interface Members {
   force: boolean;
   switchBet: boolean;
   changeTrades: UserTrades;
+  maxBet: boolean;
 }
 
 export interface AnnouncementInterface {
