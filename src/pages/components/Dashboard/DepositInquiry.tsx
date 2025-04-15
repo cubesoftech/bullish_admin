@@ -7,7 +7,7 @@ import { FiStar } from "react-icons/fi";
 import InquiryTable from "../Tables/InquiryTable";
 import { useAuthentication } from "@/utils/storage";
 
-export default function UserManagement() {
+export default function DepositInquiry() {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -57,7 +57,7 @@ export default function UserManagement() {
   const requestInquiries = async () => {
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllInquiries?page=${page}&filter=all`;
+    const url = `/api/getAllInquiries?page=${page}&filter=deposit`;
     setData([]);
     while (hasMoreData) {
       const res = await axios.get<ArrayInquiry>(url);

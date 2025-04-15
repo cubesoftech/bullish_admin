@@ -19,8 +19,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             alreadyAnswered: false
         }
     })
+    const depositInquiryPromise = prisma.inquiries.count({
+        where: {
+            alreadyAnswered: false,
+            title: "입금계좌문의"
+        }
+    })
 
-    const promise = [depositCountPromise, withdrawalCountPromise, inquiryCountPromise]
-    const [depositCount, withdrawalCount, inquiryCount] = await Promise.all(promise)
-    return res.status(200).json({ depositCount, withdrawalCount, inquiryCount })
+    const promise = [depositCountPromise, withdrawalCountPromise, inquiryCountPromise, depositInquiryPromise]
+    const [depositCount, withdrawalCount, inquiryCount, depositInquiryCount] = await Promise.all(promise)
+    return res.status(200).json({ depositCount, withdrawalCount, inquiryCount, depositInquiryCount })
 }

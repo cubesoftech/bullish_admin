@@ -1,23 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import {
-  IconButton,
-  Box,
-  CloseButton,
-  Flex,
-  Icon,
-  useColorModeValue,
-  Drawer,
-  DrawerContent,
-  Text,
-  useDisclosure,
-  BoxProps,
-  FlexProps,
-  Divider,
-  Badge,
-  HStack,
-  useColorMode,
-  Show
-} from "@chakra-ui/react";
+import { IconButton, Box, CloseButton, Flex, Icon, useColorModeValue, Drawer, DrawerContent, Text, useDisclosure, BoxProps, FlexProps, Divider, Badge, HStack, useColorMode, Show } from "@chakra-ui/react";
 import { FiMenu, FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import Image from "next/image";
@@ -90,8 +72,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const { role } = useAuthentication();
   const linkItems = role === "ADMIN" ? LinkItems : role === "MASTER_AGENT" ? LinkItemsMasterAgent : LinkItemsAgent;
 
-
-
   return (
     <Box
       bgColor={useColorModeValue("white", "gray.900")}
@@ -147,7 +127,7 @@ interface NavItemProps extends FlexProps {
   onClose?: () => void;
 }
 const NavItem = ({ index, icon, onClose, children, ...rest }: NavItemProps) => {
-  const { depositCount, inquiryCount, withdrawalCount, changeCounts } = useChanges();
+  const { depositCount, inquiryCount, withdrawalCount, depositInquiryCount, changeCounts } = useChanges();
   const { changeMenu, selectedMenu } = useNavigation();
   const { changeAuthentication } = useAuthentication();
   const handleClick = () => {
@@ -160,12 +140,12 @@ const NavItem = ({ index, icon, onClose, children, ...rest }: NavItemProps) => {
   };
   const [count, setCount] = useState<number | null>(null);
 
-  useSWR<{ depositCount: number, withdrawalCount: number, inquiryCount: number }>("/api/lookoutchanges", () => {
+  useSWR<{ depositCount: number, withdrawalCount: number, inquiryCount: number, depositInquiryCount: number }>("/api/lookoutchanges", () => {
     return axios.get("/api/lookoutchanges").then((res) => res.data);
   }, {
     onSuccess: (data) => {
-      const { depositCount, withdrawalCount, inquiryCount } = data;
-      changeCounts(depositCount, withdrawalCount, inquiryCount);
+      const { depositCount, withdrawalCount, inquiryCount, depositInquiryCount } = data;
+      changeCounts(depositCount, withdrawalCount, inquiryCount, depositInquiryCount);
     },
     refreshInterval: 1000,
   });
@@ -177,6 +157,8 @@ const NavItem = ({ index, icon, onClose, children, ...rest }: NavItemProps) => {
       setCount(withdrawalCount);
     } else if (children === "문의") {
       setCount(inquiryCount);
+    } else if (children === "입금 계좌 문의") {
+      setCount(depositInquiryCount);
     } else {
       setCount(null);
     }

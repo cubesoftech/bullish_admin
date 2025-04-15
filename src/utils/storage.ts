@@ -51,10 +51,12 @@ interface CHANGESINTERFACE {
   depositCount: number;
   withdrawalCount: number;
   inquiryCount: number;
+  depositInquiryCount: number;
   changeCounts: (
     depositCount: number,
     withdrawalCount: number,
-    inquiryCount: number
+    inquiryCount: number,
+    depositInquiryCount: number
   ) => void;
 }
 
@@ -65,8 +67,9 @@ export const useChanges = create<CHANGESINTERFACE>()(
         depositCount: 0,
         withdrawalCount: 0,
         inquiryCount: 0,
-        changeCounts: (depositCount, withdrawalCount, inquiryCount) =>
-          set({ depositCount, withdrawalCount, inquiryCount }),
+        depositInquiryCount: 0,
+        changeCounts: (depositCount, withdrawalCount, inquiryCount, depositInquiryCount) =>
+          set({ depositCount, withdrawalCount, inquiryCount, depositInquiryCount }),
       }),
       { name: "useChanges" }
     )

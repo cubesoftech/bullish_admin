@@ -1,20 +1,44 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/utils";
+
+type Filter = "all" | "deposit"
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const page = parseInt(req.query.page as string) || 1;
+  const { filter } = req.query as { filter: Filter }
   const pageSize = 1000; // Set your page size here
 
-  const withdrawals = await prisma.inquiries.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: pageSize + 1, // Fetch one extra record
-    skip: (page - 1) * pageSize,
-  });
+  const getInquiries = async (filter: Filter) => {
+    if (filter === "deposit") {
+      const inquiries = await prisma.inquiries.findMany({
+        where: {
+          title: "입금계좌문의"
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: pageSize + 1, // Fetch one extra record
+        skip: (page - 1) * pageSize,
+      });
+
+      return inquiries
+    } else {
+      const inquiries = await prisma.inquiries.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: pageSize + 1, // Fetch one extra record
+        skip: (page - 1) * pageSize,
+      });
+
+      return inquiries
+    }
+  }
+
+  const withdrawals = await getInquiries(filter)
 
   let inquiriesWithDetails: any = [];
   await Promise.all(withdrawals.map(async (inquiry) => {

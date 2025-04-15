@@ -10,6 +10,7 @@ import {
   FiMessageSquare,
 } from "react-icons/fi";
 import { FaChartPie } from "react-icons/fa";
+import { TbMessage2Dollar } from "react-icons/tb";
 
 export const prisma = new PrismaClient();
 
@@ -26,6 +27,7 @@ export const LinkItems: Array<LinkItemProps> = [
   { name: "사용자 관리", icon: FiStar, index: 3 },
   { name: "공지사항", icon: FiSettings, index: 5 },
   { name: "문의", icon: FiMessageSquare, index: 7 },
+  { name: "입금 계좌 문의", icon: TbMessage2Dollar, index: 11 },
   { name: "주문 내역", icon: FiRotateCcw, index: 6 },
   { name: "답안지", icon: FiRotateCcw, index: 8 },
   { name: "정산", icon: FiStar, index: 9 },
@@ -38,6 +40,7 @@ export const LinkItemsMasterAgent: Array<LinkItemProps> = [
   { name: "사용자 관리", icon: FiStar, index: 3 },
   { name: "공지사항", icon: FiSettings, index: 5 },
   { name: "문의", icon: FiMessageSquare, index: 7 },
+  { name: "입금 계좌 문의", icon: TbMessage2Dollar, index: 11 },
   { name: "주문 내역", icon: FiRotateCcw, index: 6 },
   { name: "답안지", icon: FiRotateCcw, index: 8 },
   { name: "정산", icon: FiStar, index: 9 },
@@ -51,6 +54,7 @@ export const LinkItemsAgent: Array<LinkItemProps> = [
   { name: "사용자 관리", icon: FiStar, index: 3 },
   { name: "공지사항", icon: FiSettings, index: 5 },
   { name: "문의", icon: FiMessageSquare, index: 7 },
+  { name: "입금계좌문의", icon: TbMessage2Dollar, index: 11 },
   { name: "주문 내역", icon: FiRotateCcw, index: 6 },
   { name: "답안지", icon: FiRotateCcw, index: 8 },
   { name: "정산", icon: FiStar, index: 9 },
