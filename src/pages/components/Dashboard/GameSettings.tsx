@@ -81,7 +81,6 @@ const Setting = () => {
             <BetDeadlineSetting setting={setting} />
             <TradingStatus setting={setting} />
             <BalanceSetting setting={setting} />
-            {/* <ChangeSymbol setting={setting}/> */}
           </>
         )}
       </Flex>
@@ -92,7 +91,47 @@ const Setting = () => {
 const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
   const { returnOnWin } = setting.site;
 
+  const [siteSettings, setSiteSettings] = useState(returnOnWin)
+
+  const initialRender = useRef(true)
+
   const toast = useToast();
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    const updateSettings = setTimeout(async () => {
+      const url = "/api/updateSetting";
+      try {
+        await axios.post<SiteSettting>(url, {
+          site: {
+            ...setting.site,
+            returnOnWin: siteSettings,
+          },
+        });
+        socket.emit("change_site_settings")
+        toast({
+          title: "Success",
+          description: "Setting updated successfully",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "An error occurred while updating setting",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+    }, 1000)
+
+    return () => clearTimeout(updateSettings)
+  }, [siteSettings]);
 
   const updateSetting = async (value: number) => {
     const url = "/api/updateSetting";
@@ -131,10 +170,12 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
       <Text fontWeight={"bold"}>배당수정</Text>
       <NumberInput
         step={0.01}
-        onChange={async (e) => {
-          await updateSetting(Number(e));
-        }}
-        defaultValue={returnOnWin}
+        // onChange={async (e) => {
+        //   await updateSetting(Number(e));
+        // }}
+        // defaultValue={returnOnWin}
+        defaultValue={siteSettings}
+        onChange={(e) => setSiteSettings(Number(e))}
       >
         <NumberInputField />
         <NumberInputStepper>
@@ -154,7 +195,49 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
     { label: "5 Minutes Trading", value: fiveMinLock },
   ];
 
+  const [siteSettings, setSiteSettings] = useState(tradingTime)
+
   const toast = useToast();
+
+  const initialRender = useRef(true)
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    const updateSettings = setTimeout(async () => {
+      const url = "/api/updateSetting";
+      try {
+        await axios.post<SiteSettting>(url, {
+          site: {
+            id,
+            oneMinLock: siteSettings[0].value,
+            twoMinLock: siteSettings[1].value,
+            fiveMinLock: siteSettings[2].value,
+          },
+        });
+        socket.emit("change_site_settings")
+        toast({
+          title: "Success",
+          description: "Setting updated successfully",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "An error occurred while updating setting",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+    }, 1000)
+
+    return () => clearTimeout(updateSettings)
+  }, [siteSettings]);
 
   const updateSetting = async (value: number, index: number) => {
     const url = "/api/updateSetting";
@@ -193,10 +276,19 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
           <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
             <Text textAlign={"left"}>{time.label}</Text>
             <NumberInput
-              onChange={async (e) => {
-                await updateSetting(Number(e), tradingTime.indexOf(time));
-              }}
+              // onChange={async (e) => {
+              //   await updateSetting(Number(e), tradingTime.indexOf(time));
+              // }}
+              // defaultValue={time.value}
               defaultValue={time.value}
+              onChange={(e) => {
+                const storedStatus = siteSettings.map((item, idx) =>
+                  idx === tradingTime.indexOf(time)
+                    ? { ...item, value: Number(e) }
+                    : item
+                )
+                setSiteSettings(storedStatus)
+              }}
             >
               <NumberInputField />
               <NumberInputStepper>
@@ -222,12 +314,12 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
     { label: "JPY/USD", status: jpy ? "OPEN" : "CLOSED" },
   ]
 
-  const [ siteSettings, setSiteSettings ] = useState(tradingStatus)
+  const [siteSettings, setSiteSettings] = useState(tradingStatus)
 
   const toast = useToast();
 
   useEffect(() => {
-    if(initialRender.current) {
+    if (initialRender.current) {
       initialRender.current = false;
       return;
     }
@@ -242,7 +334,7 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
             jpy: siteSettings[2].status === "OPEN" ? true : false,
           }
         });
-        if(res.status === 200) {
+        if (res.status === 200) {
           socket.emit("change_site_settings")
           toast({
             title: "Success",
@@ -311,7 +403,7 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
               //   );
               // }}
               onChange={(e) => {
-                const storedStatus = siteSettings.map((item, idx) => 
+                const storedStatus = siteSettings.map((item, idx) =>
                   idx === tradingStatus.indexOf(status)
                     ? { ...item, status: e.target.value }
                     : item
@@ -336,6 +428,46 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
 const BalanceSetting = ({ setting }: { setting: SiteSettting }) => {
   const { minimumAmount } = setting.site;
   const toast = useToast();
+
+  const [siteSettings, setSiteSettings] = useState(minimumAmount)
+
+  const initialRender = useRef(true)
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    const updateSettings = setTimeout(async () => {
+      const url = "/api/updateSetting";
+      try {
+        await axios.post<SiteSettting>(url, {
+          site: {
+            ...setting.site,
+            minimumAmount: siteSettings,
+          },
+        });
+        socket.emit("change_site_settings")
+        toast({
+          title: "Success",
+          description: "Setting updated successfully",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "An error occurred while updating setting",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+    }, 1000)
+
+    return () => clearTimeout(updateSettings)
+  }, [siteSettings]);
 
   const updateSetting = async (value: number) => {
     const url = "/api/updateSetting";
@@ -373,10 +505,12 @@ const BalanceSetting = ({ setting }: { setting: SiteSettting }) => {
     >
       <Text fontWeight={"bold"}>최소 금액</Text>
       <NumberInput
-        onChange={async (e) => {
-          await updateSetting(Number(e));
-        }}
-        defaultValue={minimumAmount}
+        // onChange={async (e) => {
+        //   await updateSetting(Number(e));
+        // }}
+        // defaultValue={minimumAmount}
+        defaultValue={siteSettings}
+        onChange={(e) => setSiteSettings(Number(e))}
       >
         <NumberInputField />
         <NumberInputStepper>

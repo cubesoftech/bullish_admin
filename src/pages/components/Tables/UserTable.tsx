@@ -289,8 +289,16 @@ function UserRow({
         onClose={onClose}
         user={row.original}
       />
-      {row.getVisibleCells().map((cell) => {
-        const { status } = row.original;
+      {row.getVisibleCells().map((cell, index) => {
+        const { status, bank, accountholder, accountnumber } = row.original;
+        const columnHeader = cell.column.columnDef.header
+        if (columnHeader === "은행" || columnHeader === "계좌 번호" || columnHeader === "계좌 주") {
+          return (
+            <Td key={cell.id} color={useColorModeValue(status ? "black" : "red", status ? "white" : "red")}>
+              ***
+            </Td>
+          );
+        }
         return (
           <Td key={cell.id} color={useColorModeValue(status ? "black" : "red", status ? "white" : "red")}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
