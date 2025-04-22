@@ -70,6 +70,8 @@ export interface OrderHistoryColumnInterface {
   email: string;
   nickname: string;
   balance: number;
+  remainingBalance: number;
+  origTradeAmount: number
 }
 
 export type ArrayUserTransaction = {
@@ -110,6 +112,8 @@ export interface OrderHistory {
   tradePNL: number;
   membersId: string;
   type: string;
+  remainingBalance: number;
+  origTradeAmount: number
   members: Members;
 }
 

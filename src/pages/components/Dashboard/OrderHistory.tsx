@@ -145,6 +145,8 @@ export default function OrderHistory() {
           tradeAmount,
           tradePNL,
           type,
+          remainingBalance,
+          origTradeAmount
         } = history;
         const { balance, name, bank, email, nickname, agentsId, agentID } = members;
         console.log({ agentID, userId, id });
@@ -181,6 +183,8 @@ export default function OrderHistory() {
             tradeAmount,
             tradePNL,
             type,
+            remainingBalance,
+            origTradeAmount
           },
         ]);
       });

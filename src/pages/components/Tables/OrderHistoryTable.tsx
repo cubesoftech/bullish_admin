@@ -13,27 +13,11 @@ import {
   Row,
   RowSelectionState,
 } from "@tanstack/react-table";
-import React from "react";
-import {
-  Table as ChakraTable,
-  Thead,
-  Th,
-  Tr,
-  Td,
-  Tbody,
-  Input,
-  HStack,
-  VStack,
-  Button,
-  Select,
-  Text,
-  useDisclosure,
-  Flex,
-  Switch,
-  TableContainer,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Input, HStack, VStack, Button, Select, Text, useDisclosure, Flex, Switch, useColorModeValue, Stack, useToast } from "@chakra-ui/react";
+import { Table as ChakraTable, Thead, Th, Tr, Td, Tbody, TableContainer } from "@chakra-ui/react"
 import OrderHistoryDrawer from "../Drawer/OrderHistoryDrawer";
+import axios from "axios";
 
 export default function OrderHistoryTable({
   data,
@@ -272,9 +256,95 @@ export default function OrderHistoryTable({
 function OrderHistoryRow({ row, refetch }: { row: Row<OrderHistoryColumnInterface>, refetch: () => void }) {
   const data = row.original;
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const toast = useToast()
+
+  const handleChangeTrade = async (id: string, data: boolean, refetch: () => void) => {
+    try {
+      const url = "/api/switchTrade"
+      const res = await axios.post<{ message: string }>(url, { id, value: !data })
+      if (res.status === 200) {
+        refetch();
+      } else {
+        toast({
+          title: "Error",
+          description: res.data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+      refetch();
+    } catch (e: any) {
+      toast({
+        title: "Error",
+        description: e.response.data.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      })
+      refetch();
+    }
+  }
+
+  const handleMaxTrade = async (id: string, memberId: string, isChecked: boolean, refetch: () => void) => {
+    try {
+      const url = "/api/maxBet";
+      const res = await axios.post<{ message: string }>(url, { id, memberId, value: !isChecked })
+
+      if (res.status === 200) {
+        refetch();
+      } else {
+        toast({
+          title: "Error",
+          description: res.data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        })
+      }
+      refetch();
+    } catch (e: any) {
+      toast({
+        title: "Error",
+        description: e.response.data.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      })
+      refetch();
+    }
+  }
   return (
     <Tr key={row.id}>
       {row.getVisibleCells().map((cell) => {
+        const header = cell.column.columnDef.header;
+        if (header === "거래" || header === "거래 금액") {
+          if (data.tradePNL === 0) {
+            return (
+              <Td key={cell.id}>
+                <Stack w={"100%"} direction={"row"} justifyContent={header === "거래" ? "flex-start" : "space-between"} alignItems={"center"}>
+                  <Text w={header === "거래" ? "30%" : "fit-content"}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Text>
+                  {
+                    header === "거래" && (
+                      <Switch
+                        onChange={() => handleChangeTrade(data.id, data.trade === "LONG", refetch)}
+                      />
+                    )
+                  }
+                  {
+                    header === "거래 금액" && (
+                      <Switch
+                        isChecked={data.remainingBalance === 0 || (data.remainingBalance !== 0 && data.balance === 0 && data.tradeAmount !== data.origTradeAmount)}
+                        isDisabled={data.remainingBalance === 0}
+                        onChange={() => handleMaxTrade(data.id, data.membersId, data.remainingBalance !== 0 && data.balance === 0 && data.tradeAmount !== data.origTradeAmount, refetch)}
+                      />
+                    )
+                  }
+                </Stack>
+              </Td>
+            );
+          }
+        }
         return (
           <Td key={cell.id}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
