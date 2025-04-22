@@ -1,13 +1,13 @@
 import React, { useState, useEffect, use } from "react";
 import { Stack, Text, Button, Select, useToast } from "@chakra-ui/react";
-import { NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper,} from "@chakra-ui/react"
+import { NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, } from "@chakra-ui/react"
 import { UserColumn } from "@/utils/interface";
 import { inject_setting } from "@prisma/client";
 import { useAdminHooks } from "@/hooks/useAdminHooks";
 
 type InjectSettingPayload = Omit<inject_setting, 'id'> & { id?: string };
 
-export default function NewInjectSetting( { isOpen, onClose, user }:{ isOpen: boolean, onClose: () => void, user:UserColumn }) {
+export default function NewInjectSetting({ isOpen, onClose, user }: { isOpen: boolean, onClose: () => void, user: UserColumn }) {
 
     const toast = useToast()
 
@@ -27,7 +27,6 @@ export default function NewInjectSetting( { isOpen, onClose, user }:{ isOpen: bo
             .then((response) => {
                 if (response) {
                     setSetting(response);
-                    console.log("response: ", response)
                 } else {
                     setSetting({
                         createdAt: new Date(),
@@ -39,11 +38,11 @@ export default function NewInjectSetting( { isOpen, onClose, user }:{ isOpen: bo
             })
     }, [id, isOpen]);
 
-    return(
+    return (
         <Stack w={"100%"} h={"full"}>
             <Stack w={"100%"} direction={"row"} gap={0} alignItems={"center"}>
                 <Text w={"30%"}>Multiplier</Text>
-                <NumberInput 
+                <NumberInput
                     min={0} w={'70%'}
                     value={setting.multiplier} onChange={e => setSetting({ ...setting, multiplier: Number(e) })}
                 >
@@ -60,23 +59,23 @@ export default function NewInjectSetting( { isOpen, onClose, user }:{ isOpen: bo
                     value={setting.status ? 'true' : 'false'}
                     onChange={(e) => setSetting({ ...setting, status: e.target.value === 'true' })}
                 >
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
                 </Select>
             </Stack>
             <Stack w={"100%"} direction={"row"} justifyContent={"flex-end"} alignItems={"center"}>
-                <Button 
+                <Button
                     colorScheme="blue" variant={"outline"}
                     onClick={() => {
                         injectSetting(setting)
-                            .finally( () => {
+                            .finally(() => {
                                 toast({
                                     title: "Success",
                                     description: "Injected",
                                     status: "success"
                                 })
                             })
-                    }}  
+                    }}
                 >
                     적용
                 </Button>

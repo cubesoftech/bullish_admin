@@ -26,7 +26,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (willDuplicate) {
             return res.status(400).json({ message: "Trade already exists." })
-
         }
 
         await prisma.membertrades.update({

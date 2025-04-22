@@ -88,7 +88,6 @@ const ChangeTrade = ({ id, setRefetch }: { id: string, setRefetch: React.Dispatc
       try {
         const url = "/api/getUserTrades"
         const res = await axios.post<{ data: UserTrades }>(url, { id })
-        console.log("data: ", res.data.data)
         setUserTrades(res.data.data)
       } catch (e) {
         console.log("Error: ", e)
@@ -361,7 +360,6 @@ export default function UserManagement() {
     let hasMoreData = true;
     let page = 1;
     while (hasMoreData) {
-      console.log("Fetching page", page);
       let url = `/api/getAllUsers?page=${page}&role=${role}&id=${id}`;
       const res = await axios.get<ArrayUser>(url);
       let { hasMore, users } = res.data;
@@ -426,7 +424,6 @@ export default function UserManagement() {
           },
         ]);
       });
-      console.log(hasMore)
       hasMoreData = hasMore;
       page++;
     }
@@ -437,7 +434,6 @@ export default function UserManagement() {
   useEffect(() => {
     if (refetch) {
       try {
-        console.log("Refetching");
         requestAllUsers();
         setRefetch(false);
       } catch (error) {

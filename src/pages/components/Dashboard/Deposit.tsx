@@ -207,7 +207,6 @@ export default function Deposits() {
   useEffect(() => {
     try {
       if (refetch) {
-        console.log("Refetching");
         requestAllWithdrawals();
         setRefetch(false);
       }
@@ -224,7 +223,6 @@ export default function Deposits() {
 
   useEffect(() => {
     try {
-      console.log("Refetching from date change");
       requestAllWithdrawals();
     } catch (error) {
       toast({

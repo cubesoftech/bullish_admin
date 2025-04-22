@@ -11,8 +11,6 @@ export default async function handler(
   const role = req.query.role as Role;
   const id = req.query.id as string;
 
-  console.log(page, pageSize);
-
   if (role === "AGENT") {
     const agents = await prisma.agents.findFirst({
       where: {

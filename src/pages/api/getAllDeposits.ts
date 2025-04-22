@@ -13,7 +13,6 @@ export default async function handler(
   const startDate_ = new Date(startDate);
   const endDate_ = new Date(endDate);
   endDate_.setDate(endDate_.getDate() + 1);
-  console.log(page, pageSize);
 
   const withdrawals = await prisma.transaction.findMany({
     where: {
@@ -33,7 +32,6 @@ export default async function handler(
     skip: (page - 1) * pageSize,
   });
 
-  console.log(withdrawals.length);
   const withdrawalsModifiedPromises = withdrawals.map(async (withdrawal) => {
     const { members } = withdrawal;
     const { agentsId } = members;

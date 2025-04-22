@@ -149,7 +149,6 @@ export default function OrderHistory() {
           origTradeAmount
         } = history;
         const { balance, name, bank, email, nickname, agentsId, agentID } = members;
-        console.log({ agentID, userId, id });
         if (!selectedUser.tester) {
           if (email.includes("test")) {
             return;

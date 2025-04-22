@@ -4,8 +4,6 @@ import { prisma } from "@/utils";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { id, memberId, value } = req.body as { id: string, memberId: string, value: boolean }
 
-    console.log(value)
-
     try {
         const trade = await prisma.membertrades.findFirst({
             where: {
@@ -39,7 +37,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         if (trade && trade.origTradeAmount && trade.remainingBalance && balance >= 0) {
-            console.log(member, trade)
             const { origTradeAmount, remainingBalance, tradeAmount } = trade
             await prisma.membertrades.update({
                 where: {
