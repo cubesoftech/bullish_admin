@@ -53,10 +53,10 @@ model members {
   lastOnline         DateTime?            @default(now())
   force              Boolean              @default(false)
   switchBet          Boolean              @default(false)
-  maxBet             Boolean              @default(false)
   eur_trade          trades_type
   jpy_trade          trades_type
   krw_trade          trades_type
+  maxBet             Boolean              @default(false)
   agents_withdrawals agents_withdrawals[]
   inquiries          inquiries[]
   member_login_logs  member_login_logs?
@@ -88,14 +88,16 @@ model agents {
 }
 
 model membertrades {
-  id           String            @id @unique(map: "MemberTrades_id_key")
-  timeExecuted DateTime          @default(now())
-  trade        Boolean
-  tradeAmount  Int
-  tradePNL     Int
-  membersId    String
-  type         membertrades_type
-  members      members           @relation(fields: [membersId], references: [id], onDelete: Cascade, map: "MemberTrades_membersId_fkey")
+  id               String            @id @unique(map: "MemberTrades_id_key")
+  timeExecuted     DateTime          @default(now())
+  trade            Boolean
+  tradeAmount      Int
+  tradePNL         Int
+  membersId        String
+  type             membertrades_type
+  remainingBalance Int?
+  origTradeAmount  Int?
+  members          members           @relation(fields: [membersId], references: [id], onDelete: Cascade, map: "MemberTrades_membersId_fkey")
 
   @@index([membersId], map: "MemberTrades_membersId_fkey")
 }

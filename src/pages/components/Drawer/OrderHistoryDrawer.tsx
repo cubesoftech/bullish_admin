@@ -15,18 +15,23 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MdCheckCircle } from "react-icons/md";
 import { OrderHistoryColumnInterface } from "@/utils/interface";
+import axios from "axios";
+
+
 
 function OrderHistoryDrawer({
   isOpen,
   onClose,
   OrderHistoryColumn,
+  refetch,
 }: {
   isOpen: boolean;
   onClose: () => void;
   OrderHistoryColumn: OrderHistoryColumnInterface;
+  refetch: () => void;
 }) {
   const {
     balance,
@@ -45,89 +50,50 @@ function OrderHistoryDrawer({
 
   const isWon = tradePNL > 0;
 
-  const [additionalValue, setAdditionalValue] = React.useState<number>(0);
-
-  const [newBalance, setNewBalance] = React.useState<number>(balance);
-
-  const [newTradeAmount, setNewTradeAmount] =
-    React.useState<number>(tradeAmount);
-
-  const [newTradePNL, setNewTradePNL] = React.useState<number>(tradePNL);
-
-  useEffect(() => {
-    if (isWon) {
-      setNewBalance(balance + additionalValue);
-      setNewTradeAmount(tradeAmount + additionalValue);
-      setNewTradePNL(tradePNL + additionalValue);
-    } else {
-      setNewBalance(balance - additionalValue);
-      setNewTradeAmount(tradeAmount + additionalValue);
-      setNewTradePNL(tradePNL - additionalValue);
-    }
-  }, [additionalValue]);
+  const [newTrade, setNewTrade] = useState<number>(tradeAmount);
 
   const toast = useToast();
 
   const handleSave = async () => {
-    if (additionalValue === 0) {
-      toast({
-        title: "Error",
-        description: "Please input a value",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
-    const payload = {
-      tradeId: id,
-      membersId,
-      balance: newBalance,
-      tradeAmount: newTradeAmount,
-      tradePNL: newTradePNL,
-      type,
-    };
-    const url = "/api/orderhistorychanger";
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          toast({
-            title: "Success",
-            description: "Successfully updated",
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-          });
-          onClose();
-        } else {
-          toast({
-            title: "Error",
-            description: "Failed to update",
-            status: "error",
-            duration: 9000,
-            isClosable: true,
-          });
-        }
-      })
-      .catch((err) => {
+    try {
+      const payload = {
+        tradeID: id,
+        membersId,
+        newAmount: newTrade
+      }
+      const url = "/api/changeHistory";
+      const res = await axios.post<{ message: string }>(url, payload)
+
+
+      if (res.status === 200) {
+        toast({
+          title: "Success",
+          description: res.data.message,
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      } else {
         toast({
           title: "Error",
-          description: "Failed to update",
+          description: res.data.message,
           status: "error",
           duration: 9000,
           isClosable: true,
         });
-      })
-      .finally(() => {
-        onClose();
-        setAdditionalValue(0);
+      }
+    } catch (e: any) {
+      const message = e.response?.data?.message || "Something went wrong"
+      toast({
+        title: "Error",
+        description: message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
       });
+    }
+    onClose();
+    refetch();
   };
   return (
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>
@@ -151,10 +117,7 @@ function OrderHistoryDrawer({
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
-              보유잔액: {balance.toLocaleString()} KRW{" "}
-              {additionalValue != 0 &&
-                !isNaN(additionalValue) &&
-                `----> ( ${newBalance.toLocaleString()} KRW )`}
+              보유잔액: {balance.toLocaleString()} KRW
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
@@ -167,16 +130,10 @@ function OrderHistoryDrawer({
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
               수익결과: {tradePNL.toLocaleString()} KRW
-              {additionalValue !== 0 &&
-                !isNaN(additionalValue) &&
-                `----> ( ${newTradePNL.toLocaleString()} KRW )`}
             </ListItem>
             <ListItem>
               <ListIcon as={MdCheckCircle} color="green.500" />
               거래금액: {tradeAmount.toLocaleString()} KRW
-              {additionalValue !== 0 &&
-                !isNaN(additionalValue) &&
-                `----> ( ${newTradeAmount.toLocaleString()} KRW )`}
             </ListItem>
           </List>
           <VStack mt={5}>
@@ -188,7 +145,7 @@ function OrderHistoryDrawer({
             >
               <Text fontWeight={"bold"}>수정할 거래금액을 입력해주세요 :</Text>
               <Input
-                onChange={(e) => setAdditionalValue(parseInt(e.target.value))}
+                onChange={(e) => setNewTrade(Number(e.target.value))}
                 type="number"
                 placeholder="거래금액"
               />

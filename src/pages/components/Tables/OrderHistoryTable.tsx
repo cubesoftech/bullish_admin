@@ -134,7 +134,7 @@ export default function OrderHistoryTable({
               size={['sm', "md"]}
               onChange={(e) => {
                 setSelectedUser({ ...selectedUser, tester: e.target.checked });
-                setRefetch(true);
+                refetch()
               }}
               isChecked={selectedUser.tester}
             ></Switch>
@@ -145,8 +145,7 @@ export default function OrderHistoryTable({
               size={['sm', "md"]}
               isChecked={selectedUser.realUsers}
               onChange={(e) => {
-                setRefetch(true);
-
+                refetch()
                 setSelectedUser({ ...selectedUser, realUsers: e.target.checked });
               }}
             ></Switch>
@@ -192,7 +191,7 @@ export default function OrderHistoryTable({
           </Thead>
           <Tbody>
             {table.getRowModel().rows.map((row) => {
-              return <OrderHistoryRow key={row.id} row={row} />;
+              return <OrderHistoryRow key={row.id} row={row} refetch={refetch} />;
             })}
           </Tbody>
         </ChakraTable>
@@ -270,7 +269,7 @@ export default function OrderHistoryTable({
   );
 }
 
-function OrderHistoryRow({ row }: { row: Row<OrderHistoryColumnInterface> }) {
+function OrderHistoryRow({ row, refetch }: { row: Row<OrderHistoryColumnInterface>, refetch: () => void }) {
   const data = row.original;
   const { isOpen, onClose, onOpen } = useDisclosure();
   return (
@@ -287,12 +286,14 @@ function OrderHistoryRow({ row }: { row: Row<OrderHistoryColumnInterface> }) {
           isOpen={isOpen}
           onClose={onClose}
           OrderHistoryColumn={data}
+          refetch={refetch}
         />
         <Button
           onClick={onOpen}
           colorScheme="orange"
           size={"sm"}
           variant={"outline"}
+          isDisabled={data.tradePNL !== 0}
         >
           수정
         </Button>
