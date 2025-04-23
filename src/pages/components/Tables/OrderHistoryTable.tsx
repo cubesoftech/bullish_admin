@@ -143,7 +143,7 @@ export default function OrderHistoryTable({
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <Th key={header.id} colSpan={header.colSpan}>
+                    <Th key={header.id} colSpan={header.colSpan} px={1} w={"fit-content"}>
                       <div
                         {...{
                           className: header.column.getCanSort()
@@ -151,6 +151,7 @@ export default function OrderHistoryTable({
                             : "",
                           onClick: header.column.getToggleSortingHandler(),
                         }}
+                        style={{ padding: 0, width: "fit-content" }}
                       >
                         {flexRender(
                           header.column.columnDef.header,
@@ -161,7 +162,7 @@ export default function OrderHistoryTable({
                           desc: " 🔽",
                         }[header.column.getIsSorted() as string] ?? null}
                         {header.column.getCanFilter() ? (
-                          <div>
+                          <div style={{ padding: 0, width: "fit-content" }}>
                             <Filter column={header.column} table={table} />
                           </div>
                         ) : null}
@@ -169,7 +170,7 @@ export default function OrderHistoryTable({
                     </Th>
                   );
                 })}
-                <Th>수정</Th>
+                <Th px={1} w={"fit-content"}>수정</Th>
               </Tr>
             ))}
           </Thead>
@@ -321,7 +322,7 @@ function OrderHistoryRow({ row, refetch }: { row: Row<OrderHistoryColumnInterfac
         if (header === "거래" || header === "거래 금액") {
           if (data.tradePNL === 0) {
             return (
-              <Td key={cell.id}>
+              <Td key={cell.id} px={1} pr={2} w={"fit-content"}>
                 <Stack w={"100%"} direction={"row"} justifyContent={header === "거래" ? "flex-start" : "space-between"} alignItems={"center"}>
                   <Text w={header === "거래" ? "30%" : "fit-content"}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Text>
                   {
@@ -346,7 +347,7 @@ function OrderHistoryRow({ row, refetch }: { row: Row<OrderHistoryColumnInterfac
           }
         }
         return (
-          <Td key={cell.id}>
+          <Td key={cell.id} px={1} w={"fit-content"}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </Td>
         );
@@ -387,7 +388,6 @@ function Filter({
 
   return typeof firstValue === "number" ? null : (
     <Input
-      w={150}
       size={"sm"}
       border={"1px"}
       borderColor={"gray.300"}

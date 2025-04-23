@@ -14,34 +14,34 @@ import { FaRegSun, FaRegMoon } from "react-icons/fa6";
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { toggleColorMode, colorMode } = useColorMode();
+  const [isShow, setIsShow] = useState<boolean>(true);
+
+  useEffect(() => {
+    const hide = setTimeout(() => {
+      setIsShow(false);
+    }, 1000 * 5)
+
+    return () => clearTimeout(hide)
+  }, [])
+
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
-      {
-        colorMode === "light" ? <IconButton
-          aria-label="Dark mode"
-          icon={<Icon as={FaRegMoon} />}
-          onClick={toggleColorMode}
-          colorScheme="teal"
-          size={['xs', 'sm']}
-          position="fixed"
-          top="5"
-          zIndex={5}
-          right="5"
-        /> : <IconButton
-          aria-label="Light mode"
-          icon={<Icon as={FaRegSun} />}
-          onClick={toggleColorMode}
-          colorScheme="teal"
-          size={['xs', 'sm']}
-          position="fixed"
-          top="5"
-          zIndex={5}
-          right="5"
-        />
-      }
+      <IconButton
+        aria-label="Theme"
+        icon={colorMode === "light" ? <Icon as={FaRegMoon} /> : <Icon as={FaRegSun} />}
+        onClick={toggleColorMode}
+        colorScheme="teal"
+        size={['xs', 'sm']}
+        position="fixed"
+        top="5"
+        zIndex={5}
+        right="5"
+      />
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
+        isShow={isShow}
+        setIsShow={setIsShow}
       />
       <Drawer
         autoFocus={false}
@@ -53,11 +53,11 @@ export default function SimpleSidebar({ children }: { children: ReactNode }) {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent onClose={onClose} isShow={isShow} setIsShow={setIsShow} />
         </DrawerContent>
       </Drawer>
       <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
-      <Box maxW={'100%'} ml={{ base: 0, md: 60 }} p="2">
+      <Box maxW={'100%'} ml={{ base: 0, md: isShow ? 60 : 24 }} p="2" transition={"all ease-in-out 0.3s"}>
         {children}
       </Box>
     </Box>
@@ -66,9 +66,11 @@ export default function SimpleSidebar({ children }: { children: ReactNode }) {
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
+  isShow: boolean;
+  setIsShow: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+const SidebarContent = ({ onClose, isShow, setIsShow, ...rest }: SidebarProps) => {
   const { role } = useAuthentication();
   const linkItems = role === "ADMIN" ? LinkItems : role === "MASTER_AGENT" ? LinkItemsMasterAgent : LinkItemsAgent;
 
@@ -77,16 +79,29 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       bgColor={useColorModeValue("white", "gray.900")}
       borderRight="1px"
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
-      w={{ base: "full", md: 60 }}
+      w={{ base: "full", md: isShow ? 60 : 24 }}
       pos="fixed"
       h="full"
       color={useColorModeValue("gray.600", "gray.200")}
+      transition={"all ease-in-out 0.3s"}
+      onMouseOver={() => setIsShow(true)}
+      onMouseLeave={() => {
+        const hide = setTimeout(() => {
+          setIsShow(false)
+        }, 1000 * 0.5)
+
+        return () => clearTimeout(hide)
+      }}
       {...rest}
     >
       <Flex h="20" alignItems="center" mx={20} justifyContent="space-between">
-        <Show above="md">
-          <Image src={logo} alt="logo" width={200} height={200} />
-        </Show>
+        {
+          isShow && (
+            <Show above="md">
+              <Image src={logo} alt="logo" width={200} height={200} />
+            </Show>
+          )
+        }
         <Show below="md">
           <Image src={logo} alt="logo" width={100} height={100} />
         </Show>
@@ -98,14 +113,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         />
       </Flex>
       {linkItems.map((link) => (
-        <NavItem index={link.index} key={link.name} icon={link.icon} onClose={onClose}>
+        <NavItem index={link.index} key={link.name} icon={link.icon} onClose={onClose} isShow={isShow} setIsShow={setIsShow}>
           {link.name}
         </NavItem>
       ))}
       <Divider my="4" />
       {(role === "ADMIN" || role === "MASTER_AGENT") && (
         <>
-          <NavItem index={LinkItems.length + 2} icon={GiFamilyTree}>
+          <NavItem index={LinkItems.length + 2} icon={GiFamilyTree} isShow={isShow} setIsShow={setIsShow}>
             에이전트 트리
           </NavItem>
 
@@ -113,7 +128,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </>
       )}
 
-      <NavItem index={LinkItems.length + 1} icon={FiLogOut}>
+      <NavItem index={LinkItems.length + 1} icon={FiLogOut} isShow={isShow} setIsShow={setIsShow}>
         로그 아웃
       </NavItem>
     </Box>
@@ -125,8 +140,10 @@ interface NavItemProps extends FlexProps {
   children: string;
   index: number;
   onClose?: () => void;
+  isShow: boolean;
+  setIsShow: React.Dispatch<React.SetStateAction<boolean>>
 }
-const NavItem = ({ index, icon, onClose, children, ...rest }: NavItemProps) => {
+const NavItem = ({ index, icon, onClose, children, isShow, setIsShow, ...rest }: NavItemProps) => {
   const { depositCount, inquiryCount, withdrawalCount, depositInquiryCount, changeCounts } = useChanges();
   const { changeMenu, selectedMenu } = useNavigation();
   const { changeAuthentication } = useAuthentication();
@@ -192,7 +209,11 @@ const NavItem = ({ index, icon, onClose, children, ...rest }: NavItemProps) => {
             as={icon}
           />
         )}
-        <Text fontWeight="medium">{children}</Text>
+        {
+          isShow && (
+            <Text fontWeight="medium" whiteSpace={"nowrap"}>{children}</Text>
+          )
+        }
 
       </HStack>
       {
