@@ -57,15 +57,23 @@ const randomData = (
   //return value is Array<{tradinghours: Date, result: 0 | 1}>
   let data = [];
   let date = new Date(startDate);
+
+  const minutes = date.getMinutes();
+  const roundedMinutes = Math.floor(minutes / interval) * interval
+
+  date.setMinutes(roundedMinutes, 0, 0)
+
   for (let i = 0; i < count; i++) {
-    date = new Date(date.getTime() + interval * 60 * 1000);
-    date.setSeconds(0, 0);
+    // date = new Date(date.getTime() + interval * 60 * 1000);
+    // date.setSeconds(0, 0);
     data.push({
-      tradinghours: date,
+      tradinghours: new Date(date),
       result: Math.round(Math.random()) === 0 ? false : true,
       type,
       id: Math.random().toString(36).substring(7),
     });
+
+    date = new Date(date.getTime() + interval * 60 * 1000)
   }
   return data;
 };
