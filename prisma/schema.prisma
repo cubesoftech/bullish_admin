@@ -95,8 +95,8 @@ model membertrades {
   tradePNL         Int
   membersId        String
   type             membertrades_type
-  remainingBalance Int?
   origTradeAmount  Int?
+  remainingBalance Int?
   members          members           @relation(fields: [membersId], references: [id], onDelete: Cascade, map: "MemberTrades_membersId_fkey")
 
   @@index([membersId], map: "MemberTrades_membersId_fkey")
