@@ -18,6 +18,7 @@ import { Input, HStack, VStack, Button, Select, Text, useDisclosure, Flex, Switc
 import { Table as ChakraTable, Thead, Th, Tr, Td, Tbody, TableContainer } from "@chakra-ui/react"
 import OrderHistoryDrawer from "../Drawer/OrderHistoryDrawer";
 import axios from "axios";
+import { useFilter } from "../Dashboard/OrderHistory";
 
 export default function OrderHistoryTable({
   data,
@@ -25,8 +26,6 @@ export default function OrderHistoryTable({
   pagination,
   setPagination,
   rowSelection,
-  selectedUser,
-  setSelectedUser,
   setRowSelection,
   setRefetch,
 }: {
@@ -37,13 +36,6 @@ export default function OrderHistoryTable({
   rowSelection: RowSelectionState;
   setRowSelection: React.Dispatch<React.SetStateAction<{}>>;
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedUser: { tester: boolean; realUsers: boolean };
-  setSelectedUser: React.Dispatch<
-    React.SetStateAction<{
-      tester: boolean;
-      realUsers: boolean;
-    }>
-  >;
 }) {
   const refetch = () => {
     setRefetch(true);
@@ -68,6 +60,7 @@ export default function OrderHistoryTable({
   });
 
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { tester, setTester, realUser, setRealUser } = useFilter()
 
   return (
     <VStack bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"} boxShadow={"lg"} p={5}>
@@ -116,21 +109,21 @@ export default function OrderHistoryTable({
             <Text fontSize={['x-small', 'medium']}>가라유저</Text>
             <Switch
               size={['sm', "md"]}
+              isChecked={tester}
               onChange={(e) => {
-                setSelectedUser({ ...selectedUser, tester: e.target.checked });
-                refetch()
+                setTester(!tester)
+                refetch();
               }}
-              isChecked={selectedUser.tester}
             ></Switch>
           </HStack>
           <HStack m={1}>
             <Text fontSize={['x-small', 'medium']}>실유저</Text>
             <Switch
               size={['sm', "md"]}
-              isChecked={selectedUser.realUsers}
+              isChecked={realUser}
               onChange={(e) => {
-                refetch()
-                setSelectedUser({ ...selectedUser, realUsers: e.target.checked });
+                setRealUser(!realUser)
+                refetch();
               }}
             ></Switch>
           </HStack>

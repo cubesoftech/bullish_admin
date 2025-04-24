@@ -9,6 +9,30 @@ import axios from "axios";
 import { FiRotateCcw } from "react-icons/fi";
 import OrderHistoryTable from "../Tables/OrderHistoryTable";
 import { useAuthentication } from "@/utils/storage";
+import { create } from "zustand";
+import { devtools, persist, createJSONStorage } from "zustand/middleware";
+
+interface Filter {
+  realUser: boolean;
+  tester: boolean;
+  setRealUser: (realUser: boolean) => void;
+  setTester: (tester: boolean) => void
+}
+
+export const useFilter = create<Filter>()(
+  persist<Filter>(
+    (set) => ({
+      realUser: true,
+      tester: true,
+      setRealUser: (realUser: boolean) => set({ realUser }),
+      setTester: (tester: boolean) => set({ tester })
+    }),
+    {
+      name: "filter-storage",
+      storage: createJSONStorage(() => localStorage)
+    }
+  )
+)
 
 export default function OrderHistory() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -18,10 +42,7 @@ export default function OrderHistory() {
 
   const { role, id, userId } = useAuthentication();
   const [rowSelection, setRowSelection] = React.useState({});
-  const [selectedUser, setSelectedUser] = React.useState({
-    tester: true,
-    realUsers: true,
-  });
+  const { realUser, tester } = useFilter()
   const columns = useMemo<ColumnDef<OrderHistoryColumnInterface>[]>(
     () => [
       {
@@ -149,15 +170,12 @@ export default function OrderHistory() {
           origTradeAmount
         } = history;
         const { balance, name, bank, email, nickname, agentsId, agentID } = members;
-        if (!selectedUser.tester) {
-          if (email.includes("test")) {
-            return;
-          }
+        if (!tester && email.includes("test")) {
+          return;
         }
-        if (!selectedUser.realUsers) {
-          if (!email.includes("test")) {
-            return;
-          }
+        if (!realUser && !email.includes("test")) {
+          console.log("real")
+          return;
         }
         const tradeResult = trade ? "LONG" : "SHORT";
         const result =
@@ -232,8 +250,6 @@ export default function OrderHistory() {
         columns={columns}
         data={data}
         rowSelection={rowSelection}
-        selectedUser={selectedUser}
-        setSelectedUser={setSelectedUser}
         setRefetch={setRefetch}
         setRowSelection={setRowSelection}
       />

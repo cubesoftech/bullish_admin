@@ -420,7 +420,8 @@ export default function UserManagement() {
             force: user.force,
             switchBet: user.switchBet,
             changeTrades: user.changeTrades,
-            maxBet: user.maxBet
+            maxBet: user.maxBet,
+            phonenumber: user.phonenumber
           },
         ]);
       });

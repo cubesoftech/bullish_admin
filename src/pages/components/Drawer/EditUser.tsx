@@ -38,6 +38,7 @@ function EditUser({
     nickname,
     password,
     status,
+    phonenumber
   } = user;
 
   const [userState, setUserState] = useState<UserColumn>(user);
@@ -97,6 +98,16 @@ function EditUser({
                 defaultValue={email}
                 onChange={(e) => {
                   setUserState({ ...userState, email: e.target.value });
+                }}
+              />
+            </VStack>
+            <VStack justifyContent={"flex-start"} alignItems={"flex-start"} w={"100%"}>
+              <Text>휴대폰번호</Text>
+              <Input
+                type="number"
+                defaultValue={phonenumber}
+                onChange={(e) => {
+                  setUserState({ ...userState, phonenumber: e.target.value });
                 }}
               />
             </VStack>

@@ -43,6 +43,7 @@ export interface UserColumn {
   force: boolean;
   switchBet: boolean;
   maxBet: boolean;
+  phonenumber: string;
 }
 
 export interface InquryColumn {
