@@ -24,7 +24,7 @@ const useTab = create<Tab>()(
       setTab: (tab: number) => set({ tab })
     }),
     {
-      name: "tab-storage",
+      name: "stock-tab-storage",
       storage: createJSONStorage(() => localStorage)
     }
   )
