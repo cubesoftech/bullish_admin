@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 interface Authentication {
   isAuthenticated: boolean;
@@ -42,7 +42,10 @@ export const useNavigation = create<Navigation>()(
         selectedMenu: 0,
         changeMenu: (selectedMenu) => set({ selectedMenu }),
       }),
-      { name: "useNavigation" }
+      {
+        name: "useNavigation",
+        storage: createJSONStorage(() => sessionStorage)
+      }
     )
   )
 );
