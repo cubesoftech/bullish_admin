@@ -3,7 +3,7 @@ import { IconButton, Box, CloseButton, Flex, Icon, useColorModeValue, Drawer, Dr
 import { FiMenu, FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import Image from "next/image";
-import logo from "../../../assets/sjinvestment_logo.jpg";
+// import logo from "../../../assets/sjinvestment_logo.jpg";
 import { useAuthentication, useChanges, useNavigation } from "@/utils/storage";
 import { LinkItems, LinkItemsAgent, LinkItemsMasterAgent } from "@/utils";
 import { GiFamilyTree } from "react-icons/gi";
@@ -98,12 +98,12 @@ const SidebarContent = ({ onClose, isShow, setIsShow, ...rest }: SidebarProps) =
         {
           isShow && (
             <Show above="md">
-              <Image src={logo} alt="logo" width={200} height={200} />
+              {/* <Image src={logo} alt="logo" width={200} height={200} /> */}
             </Show>
           )
         }
         <Show below="md">
-          <Image src={logo} alt="logo" width={100} height={100} />
+          {/* <Image src={logo} alt="logo" width={100} height={100} /> */}
         </Show>
 
         <CloseButton
