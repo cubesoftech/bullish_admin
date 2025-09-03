@@ -88,16 +88,14 @@ model agents {
 }
 
 model membertrades {
-  id               String            @id @unique(map: "MemberTrades_id_key")
-  timeExecuted     DateTime          @default(now())
-  trade            Boolean
-  tradeAmount      Int
-  tradePNL         Int
-  membersId        String
-  type             membertrades_type
-  origTradeAmount  Int?
-  remainingBalance Int?
-  members          members           @relation(fields: [membersId], references: [id], onDelete: Cascade, map: "MemberTrades_membersId_fkey")
+  id           String            @id @unique(map: "MemberTrades_id_key")
+  timeExecuted DateTime          @default(now())
+  trade        Boolean
+  tradeAmount  Int
+  tradePNL     Int
+  membersId    String
+  type         membertrades_type
+  members      members           @relation(fields: [membersId], references: [id], onDelete: Cascade, map: "MemberTrades_membersId_fkey")
 
   @@index([membersId], map: "MemberTrades_membersId_fkey")
 }
