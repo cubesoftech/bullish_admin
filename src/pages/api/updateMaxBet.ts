@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (pendingTrades.length > 0) {
             await Promise.all(
                 pendingTrades.map(async trade => {
-                    const { id, membersId, tradeAmount, remainingBalance, origTradeAmount } = trade
+                    const { id, membersId, tradeAmount } = trade
 
                     // check if there are othher trades
                     const otherTrades = await prisma.membertrades.findMany({
@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                     let balance = member?.balance || 0
 
-                    if (trade && balance >= 0 && remainingBalance && origTradeAmount) {
+                    if (trade && balance >= 0) {
                         await prisma.membertrades.update({
                             where: {
                                 id
@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             data: {
                                 tradeAmount: value
                                     ? balance / otherTrades.length
-                                    : origTradeAmount
+                                    : balance
                             }
                         })
 
@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                                 id: membersId
                             },
                             data: {
-                                balance: value ? 0 : remainingBalance
+                                balance: value ? 0 : balance
                             }
                         })
                     }

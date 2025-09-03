@@ -24,10 +24,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ message: "Trade not found." })
         }
 
-        const { origTradeAmount, tradeAmount, remainingBalance } = trade
+        const { tradeAmount } = trade
 
-        if (origTradeAmount && tradeAmount && remainingBalance) {
-            if (newAmount < origTradeAmount || newAmount < tradeAmount) {
+        if (tradeAmount) {
+            if (newAmount < tradeAmount) {
                 await prisma.membertrades.update({
                     where: {
                         id: tradeID,
@@ -35,11 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         tradePNL: 0
                     },
                     data: {
-                        origTradeAmount: newAmount,
                         tradeAmount: newAmount,
-                        remainingBalance: {
-                            increment: (origTradeAmount - newAmount)
-                        }
                     }
                 })
                 await prisma.members.update({
@@ -48,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     },
                     data: {
                         balance: {
-                            increment: (origTradeAmount - newAmount)
+                            increment: newAmount
                         }
                     }
                 })
@@ -60,11 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         tradePNL: 0
                     },
                     data: {
-                        origTradeAmount: newAmount,
                         tradeAmount: newAmount,
-                        remainingBalance: {
-                            decrement: (newAmount - origTradeAmount)
-                        }
                     }
                 })
                 await prisma.members.update({
@@ -73,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     },
                     data: {
                         balance: {
-                            decrement: (newAmount - origTradeAmount)
+                            decrement: newAmount
                         }
                     }
                 })

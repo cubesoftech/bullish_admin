@@ -36,14 +36,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ message: "Not enough asset." })
         }
 
-        if (trade && trade.origTradeAmount && trade.remainingBalance && balance >= 0) {
-            const { origTradeAmount, remainingBalance, tradeAmount } = trade
+        if (trade && balance >= 0) {
+            const { tradeAmount } = trade
             await prisma.membertrades.update({
                 where: {
                     id
                 },
                 data: {
-                    tradeAmount: value ? balance + tradeAmount : origTradeAmount
+                    tradeAmount: value ? balance + tradeAmount : balance
                 }
             })
             await prisma.members.update({
@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     id: memberId
                 },
                 data: {
-                    balance: value ? 0 : remainingBalance
+                    balance: value ? 0 : balance
                 }
             })
             return res.status(200).json({ message: "Trade updated." })
