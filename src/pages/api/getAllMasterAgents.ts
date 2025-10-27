@@ -10,8 +10,8 @@ export default async function handler(
       agents: {
         include: {
           referredmembers: true,
-        },
-      },
+        }
+      }
     },
   });
 

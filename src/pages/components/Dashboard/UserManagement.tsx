@@ -3,7 +3,7 @@ import { VStack, Heading, Icon, HStack, useToast, Text, useDisclosure, useColorM
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverBody, PopoverFooter, PopoverArrow, PopoverCloseButton, PopoverAnchor, } from '@chakra-ui/react'
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUser, UserColumn, UserTrades, TradesType } from "@/utils/interface";
-import { trades_type } from "@prisma/client";
+import { members_eurusd_trade as trades_type } from "@prisma/client";
 import axios from "axios";
 import { FiStar } from "react-icons/fi";
 import UserTable from "../Tables/UserTable";
@@ -72,15 +72,21 @@ const ChangeTrade = ({ id, setRefetch }: { id: string, setRefetch: React.Dispatc
   const changeTrades = useDisclosure()
 
   const Trades = [
-    { label: "USD/KRW", value: userTrades?.krw_trade },
-    { label: "EUR/USD", value: userTrades?.eur_trade },
-    { label: "JPY/USD", value: userTrades?.jpy_trade },
+    { label: "NASDAQ", value: userTrades?.nasdaq },
+    { label: "GOLD", value: userTrades?.gold },
+    { label: "EURUSD", value: userTrades?.eurusd },
+    { label: "PLTR", value: userTrades?.pltr },
+    { label: "TSLA", value: userTrades?.tsla },
+    { label: "NVDA", value: userTrades?.nvda },
   ]
 
   const Options: { label: string, value: trades_type }[] = [
-    { label: "USD/KRW", value: "usdkrw" },
-    { label: "EUR/USD", value: "eurusd" },
-    { label: "JPY/USD", value: "jpyusd" }
+    { label: "NASDAQ", value: "nasdaq" },
+    { label: "GOLD", value: "gold" },
+    { label: "EURUSD", value: "eurusd" },
+    { label: "PLTR", value: "pltr" },
+    { label: "TSLA", value: "tsla" },
+    { label: "NVDA", value: "nvda" },
   ]
 
   useEffect(() => {

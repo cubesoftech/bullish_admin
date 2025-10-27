@@ -41,30 +41,38 @@ export default function TradesTab() {
 
   const { tab, setTab } = useTab()
 
-  useEffect(() => {
-    console.log("selected tab: ", tab)
-  }, [tab]);
-
   if (isLoading) return <div>loading...</div>;
   if (!data) return <div>no data</div>;
   return (
     <VStack boxShadow={"lg"} bgColor={useColorModeValue("whiteAlpha.800", "gray.700")} w={"100%"}>
       <Tabs isFitted w={"100%"} defaultIndex={tab} onChange={(index) => setTab(index)}>
         <TabList overflow={'scroll'}>
-          <Tab>USD/KRW</Tab>
-          <Tab>EUR/USD</Tab>
-          <Tab>JPY/USD</Tab>
+          <Tab>NASDAQ</Tab>
+          <Tab>GOLD</Tab>
+          <Tab>EURO</Tab>
+          <Tab>PALANTIR</Tab>
+          <Tab>TESLA</Tab>
+          <Tab>NVIDIA</Tab>
         </TabList>
 
         <TabPanels>
           <TabPanel>
-            <StockTab stock={data.krw} />
+            <StockTab stock={data.nasdaq} />
           </TabPanel>
           <TabPanel>
-            <StockTab stock={data.eur} />
+            <StockTab stock={data.gold} />
           </TabPanel>
           <TabPanel>
-            <StockTab stock={data.jpy} />
+            <StockTab stock={data.eurusd} />
+          </TabPanel>
+          <TabPanel>
+            <StockTab stock={data.pltr} />
+          </TabPanel>
+          <TabPanel>
+            <StockTab stock={data.tsla} />
+          </TabPanel>
+          <TabPanel>
+            <StockTab stock={data.nvda} />
           </TabPanel>
         </TabPanels>
       </Tabs>

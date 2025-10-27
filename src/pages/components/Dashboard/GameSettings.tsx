@@ -304,14 +304,17 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
 };
 
 const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
-  const { id, krw, eur, jpy } = setting.site;
+  const { id, nasdaq, gold, eurusd, pltr, tsla, nvda } = setting.site;
 
   const initialRender = useRef(true)
 
   const tradingStatus = [
-    { label: "USD/KRW", status: krw ? "OPEN" : "CLOSED", },
-    { label: "EUR/USD", status: eur ? "OPEN" : "CLOSED" },
-    { label: "JPY/USD", status: jpy ? "OPEN" : "CLOSED" },
+    { label: "NASDAQ", status: nasdaq ? "OPEN" : "CLOSED", },
+    { label: "GOLD", status: gold ? "OPEN" : "CLOSED" },
+    { label: "EURUSD", status: eurusd ? "OPEN" : "CLOSED" },
+    { label: "PLTR", status: pltr ? "OPEN" : "CLOSED" },
+    { label: "TSLA", status: tsla ? "OPEN" : "CLOSED" },
+    { label: "NVDA", status: nvda ? "OPEN" : "CLOSED" },
   ]
 
   const [siteSettings, setSiteSettings] = useState(tradingStatus)

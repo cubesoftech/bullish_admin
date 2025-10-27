@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { UserTrades } from "@/utils/interface";
 import { prisma } from "@/utils";
 
-export default async function handler( req:NextApiRequest, res:NextApiResponse ) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id, trades } = req.body as { id: string, trades: UserTrades }
 
@@ -12,9 +12,12 @@ export default async function handler( req:NextApiRequest, res:NextApiResponse )
                 id
             },
             data: {
-                krw_trade: trades.krw_trade,
-                eur_trade: trades.eur_trade,
-                jpy_trade: trades.jpy_trade,
+                nasdaq_trade: trades.nasdaq,
+                gold_trade: trades.gold,
+                eurusd_trade: trades.eurusd,
+                pltr_trade: trades.pltr,
+                tsla_trade: trades.tsla,
+                nvda_trade: trades.tsla
             }
         })
 

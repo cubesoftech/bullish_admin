@@ -2,7 +2,7 @@ import {
   recenttrades_type,
   transaction_status,
   transaction_type,
-  trades_type
+  members_tsla_trade as trades_type
 } from "@prisma/client";
 
 export interface TransactionColumn {
@@ -248,9 +248,12 @@ export interface Site {
   oneMinLock: number;
   twoMinLock: number;
   fiveMinLock: number;
-  krw: boolean;
-  eur: boolean;
-  jpy: boolean;
+  eurusd: boolean;
+  gold: boolean;
+  nasdaq: boolean;
+  nvda: boolean;
+  pltr: boolean;
+  tsla: boolean;
   minimumAmount: number;
 }
 
@@ -286,9 +289,12 @@ export interface SocketListenerPayload {
 }
 
 export interface TradeLock {
-  krw: Stock;
-  eur: Stock;
-  jpy: Stock;
+  nasdaq: Stock;
+  gold: Stock;
+  eurusd: Stock;
+  pltr: Stock;
+  tsla: Stock;
+  nvda: Stock;
 }
 
 export interface Stock {
@@ -318,7 +324,10 @@ export interface Btc1__Min {
 }
 
 export interface UserTrades {
-  krw_trade: trades_type;
-  eur_trade: trades_type;
-  jpy_trade: trades_type;
+  nasdaq: trades_type;
+  gold: trades_type;
+  eurusd: trades_type;
+  pltr: trades_type;
+  tsla: trades_type;
+  nvda: trades_type;
 }

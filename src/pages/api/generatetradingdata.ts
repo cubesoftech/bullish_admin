@@ -1,23 +1,31 @@
-import { PrismaClient, membertrades_type, recenttrades_type } from "@prisma/client";
+import { membertrades_type, recenttrades_type } from "@prisma/client";
 //// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/utils"
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const types: recenttrades_type[] = [
-    "usdkrw_1_min",
-    "usdkrw_2_mins",
-    "usdkrw_5_mins",
+    "nasdaq_1_min",
+    "nasdaq_2_mins",
+    "nasdaq_5_mins",
+    "gold_1_min",
+    "gold_2_mins",
+    "gold_5_mins",
     "eurusd_1_min",
     "eurusd_2_mins",
     "eurusd_5_mins",
-    "jpyusd_1_min",
-    "jpyusd_2_mins",
-    "jpyusd_5_mins"
+    "pltr_1_min",
+    "pltr_2_mins",
+    "pltr_5_mins",
+    "tsla_1_min",
+    "tsla_2_mins",
+    "tsla_5_mins",
+    "nvda_1_min",
+    "nvda_2_mins",
+    "nvda_5_mins",
   ];
   await Promise.all(types.map((type) => generateData(type)));
   res.status(200).json({ status: "success" });

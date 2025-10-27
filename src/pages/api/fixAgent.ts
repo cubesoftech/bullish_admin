@@ -32,9 +32,6 @@ export default async function handler(
             role: "AGENT",
             confirmpassword: password,
             id: Math.floor(Math.random() * 1000000).toString(),
-            krw_trade: "usdkrw",
-            eur_trade: "eurusd",
-            jpy_trade: "jpyusd",
           },
         });
         const agent = await prisma.agents.create({
