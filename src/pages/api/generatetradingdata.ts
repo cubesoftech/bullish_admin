@@ -9,22 +9,22 @@ export default async function handler(
 ) {
   const types: recenttrades_type[] = [
     "nasdaq_1_min",
-    "nasdaq_2_mins",
+    "nasdaq_3_mins",
     "nasdaq_5_mins",
     "gold_1_min",
-    "gold_2_mins",
+    "gold_3_mins",
     "gold_5_mins",
     "eurusd_1_min",
-    "eurusd_2_mins",
+    "eurusd_3_mins",
     "eurusd_5_mins",
     "pltr_1_min",
-    "pltr_2_mins",
+    "pltr_3_mins",
     "pltr_5_mins",
     "tsla_1_min",
-    "tsla_2_mins",
+    "tsla_3_mins",
     "tsla_5_mins",
     "nvda_1_min",
-    "nvda_2_mins",
+    "nvda_3_mins",
     "nvda_5_mins",
   ];
   await Promise.all(types.map((type) => generateData(type)));
@@ -32,7 +32,7 @@ export default async function handler(
 }
 
 const generateData = async (type: membertrades_type) => {
-  const interval = type.includes("1_min") ? 1 : type.includes("2_mins") ? 2 : 5;
+  const interval = type.includes("1_min") ? 1 : type.includes("3_mins") ? 3 : 5;
   const lastData = await prisma.recenttrades.findFirst({
     where: {
       type,

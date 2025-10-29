@@ -188,10 +188,10 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
 };
 
 const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
-  const { oneMinLock, fiveMinLock, twoMinLock, id } = setting.site;
+  const { oneMinLock, fiveMinLock, threeMinLock, id } = setting.site;
   const tradingTime: Array<{ label: string; value: number }> = [
     { label: "1 Minute Trading", value: oneMinLock },
-    { label: "2 Minutes Trading", value: twoMinLock },
+    { label: "3 Minutes Trading", value: threeMinLock },
     { label: "5 Minutes Trading", value: fiveMinLock },
   ];
 
@@ -213,7 +213,7 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
           site: {
             id,
             oneMinLock: siteSettings[0].value,
-            twoMinLock: siteSettings[1].value,
+            threeMinLock: siteSettings[1].value,
             fiveMinLock: siteSettings[2].value,
           },
         });
@@ -238,35 +238,6 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
 
     return () => clearTimeout(updateSettings)
   }, [siteSettings]);
-
-  const updateSetting = async (value: number, index: number) => {
-    const url = "/api/updateSetting";
-    const label = ["oneMinLock", "twoMinLock", "fiveMinLock"];
-    try {
-      await axios.post<SiteSettting>(url, {
-        site: {
-          ...setting.site,
-          [label[index]]: value,
-        },
-      });
-      socket.emit("change_site_settings")
-      toast({
-        title: "Success",
-        description: "Setting updated successfully",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred while updating setting",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-  };
 
   return (
     <VStack m={3} alignItems={"flex-start"} spacing={7}>

@@ -246,7 +246,7 @@ export interface Site {
   id: string;
   returnOnWin: number;
   oneMinLock: number;
-  twoMinLock: number;
+  threeMinLock: number;
   fiveMinLock: number;
   eurusd: boolean;
   gold: boolean;
@@ -299,7 +299,7 @@ export interface TradeLock {
 
 export interface Stock {
   one_min: N1Min[];
-  two_min: N1Min[];
+  three_min: N1Min[];
   five_min: N1Min[];
 }
 

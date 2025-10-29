@@ -66,6 +66,7 @@ model members {
   member_login_logs     member_login_logs?
   agents                agents?                 @relation(fields: [agentsId], references: [id])
   membertrades          membertrades[]
+  refresh_tokens        refresh_tokens?
   transaction           transaction[]
   transaction_approvals transaction_approvals[]
 
@@ -174,7 +175,7 @@ model sitesettings {
   id            String  @id
   returnOnWin   Float
   oneMinLock    Int
-  twoMinLock    Int
+  threeMinLock  Int
   fiveMinLock   Int
   eurusd        Boolean
   gold          Boolean
@@ -238,6 +239,15 @@ model transaction_approvals {
   @@index([membersID], map: "Transaction_Approvals_fkey")
 }
 
+model refresh_tokens {
+  id        String   @id
+  memberId  String   @unique
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  members   members  @relation(fields: [memberId], references: [id], onDelete: Cascade, map: "Refresh_Tokens_MemberId_fkey")
+}
+
 enum transaction_type {
   deposit
   withdrawal
@@ -248,27 +258,6 @@ enum Role {
   MASTER_AGENT
   AGENT
   USER
-}
-
-enum recenttrades_type {
-  nasdaq_1_min
-  nasdaq_2_mins
-  nasdaq_5_mins
-  gold_1_min
-  gold_2_mins
-  gold_5_mins
-  eurusd_1_min
-  eurusd_2_mins
-  eurusd_5_mins
-  pltr_1_min
-  pltr_2_mins
-  pltr_5_mins
-  tsla_1_min
-  tsla_2_mins
-  tsla_5_mins
-  nvda_1_min
-  nvda_2_mins
-  nvda_5_mins
 }
 
 enum agents_withdrawals_status {
@@ -289,27 +278,6 @@ enum transaction_approvals_status {
   pending
   accepted
   rejected
-}
-
-enum membertrades_type {
-  nasdaq_1_min
-  nasdaq_2_mins
-  nasdaq_5_mins
-  gold_1_min
-  gold_2_mins
-  gold_5_mins
-  eurusd_1_min
-  eurusd_2_mins
-  eurusd_5_mins
-  pltr_1_min
-  pltr_2_mins
-  pltr_5_mins
-  tsla_1_min
-  tsla_2_mins
-  tsla_5_mins
-  nvda_1_min
-  nvda_2_mins
-  nvda_5_mins
 }
 
 enum transaction_approvals_type {
@@ -369,4 +337,46 @@ enum members_tsla_trade {
   pltr
   tsla
   nvda
+}
+
+enum recenttrades_type {
+  nasdaq_1_min
+  nasdaq_3_mins
+  nasdaq_5_mins
+  gold_1_min
+  gold_3_mins
+  gold_5_mins
+  eurusd_1_min
+  eurusd_3_mins
+  eurusd_5_mins
+  pltr_1_min
+  pltr_3_mins
+  pltr_5_mins
+  tsla_1_min
+  tsla_3_mins
+  tsla_5_mins
+  nvda_1_min
+  nvda_3_mins
+  nvda_5_mins
+}
+
+enum membertrades_type {
+  nasdaq_1_min
+  nasdaq_3_mins
+  nasdaq_5_mins
+  gold_1_min
+  gold_3_mins
+  gold_5_mins
+  eurusd_1_min
+  eurusd_3_mins
+  eurusd_5_mins
+  pltr_1_min
+  pltr_3_mins
+  pltr_5_mins
+  tsla_1_min
+  tsla_3_mins
+  tsla_5_mins
+  nvda_1_min
+  nvda_3_mins
+  nvda_5_mins
 }
