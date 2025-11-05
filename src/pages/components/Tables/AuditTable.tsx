@@ -20,64 +20,47 @@ import {
 import useSWR, { useSWRConfig } from "swr";
 import WithdrawalAdmin from "./AuditTables/WithdrawalAdmin";
 import WithdrawalNonAdmin from "./AuditTables/WithdrawalNonAdmin";
+import api from "@/utils/interfaceV2/api";
+import { MemberRoles } from "@/utils/interfaceV2/interfaces";
+import { GetAgentWithdrawalsResponse } from "@/utils/interfaceV2/interfaces/responses";
 
 function AuditTable({ income }: { income: GetIncomeInterface }) {
   const { role, id } = useAuthentication();
 
   const { mutate } = useSWRConfig();
 
-  const { data, error } = useSWR<WithdrawalAgentArray>(
-    "/api/getWithdrawals",
-    async (url: any) => {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ membersId: id, role: role }),
-      });
-      const data = await response.json();
-      return data;
-    }
+  const { data, error } = useSWR<GetAgentWithdrawalsResponse>(
+    "getAgentWithdrawals",
+    () => api.getAgentWithdrawals({
+      membersId: id,
+      role: role as MemberRoles,
+    })
   );
 
   const toast = useToast();
 
   const handleClick = async (id: string) => {
-    fetch("/api/approveWithdrawal", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          toast({
-            title: "Withdrawal Approved",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-        } else {
-          toast({
-            title: "Withdrawal Approval Failed",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-        mutate("/api/getWithdrawals");
+    try {
+      await api.updateWithdrawalStatus({
+        id: id,
+        status: "completed"
       })
-      .catch((error) => {
-        toast({
-          title: "Withdrawal Approval Failed",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-        mutate("/api/getWithdrawals");
+      toast({
+        title: "Withdrawal Approved",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
       });
+      mutate("getAgentWithdrawals");
+    } catch (error) {
+      toast({
+        title: "Withdrawal Approval Failed",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      mutate("getAgentWithdrawals");
+    }
   };
 
   return (
@@ -141,7 +124,7 @@ function AuditTable({ income }: { income: GetIncomeInterface }) {
                 </Tr>
               </Thead>
               <Tbody>
-                {data.withdrawal.map(
+                {data.data.map(
                   (withdrawal: WithdrawalAgent, index: number) => {
                     return (
                       <Tr key={index}>

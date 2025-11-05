@@ -1,4 +1,5 @@
 import { WithdrawalAgentArray, WithdrawalAgent } from "@/utils/interface_v2";
+import { GetAgentWithdrawalsResponse } from "@/utils/interfaceV2/interfaces/responses";
 import { useAuthentication } from "@/utils/storage";
 import {
   VStack,
@@ -35,18 +36,18 @@ function WithdrawalAdmin({
   data,
   handleClick,
 }: {
-  data: WithdrawalAgentArray;
+  data: GetAgentWithdrawalsResponse;
   handleClick: (id: string) => Promise<void>;
 }) {
-  const [data_, setData] = useState<WithdrawalAgentArray>({ withdrawal: [] });
+  const [data_, setData] = useState<GetAgentWithdrawalsResponse>({ data: [] });
   useEffect(() => {
-    const newData = data.withdrawal.map((withdrawal) => {
+    const newData = data.data.map((withdrawal) => {
       return {
         ...withdrawal,
         email: withdrawal.members?.email,
       };
     });
-    setData({ withdrawal: newData });
+    setData({ data: newData });
   }, [data]);
   const [rowSelection, setRowSelection] = useState({});
   const [pagination, setPagination] = useState<PaginationState>({
@@ -93,7 +94,7 @@ function WithdrawalAdmin({
 
   const table = useReactTable({
     columns,
-    data: data_.withdrawal,
+    data: data_.data,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),

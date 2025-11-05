@@ -38,6 +38,7 @@ import EditTransaction from "../Drawer/EditTransaction";
 import { useAuthentication } from "@/utils/storage";
 import { CSVLink } from 'react-csv';
 import _ from "lodash";
+import api from "@/utils/interfaceV2/api";
 
 export default function TransactionTable({
   data,
@@ -99,7 +100,7 @@ export default function TransactionTable({
             isDisabled={
               Object.keys(rowSelection ? rowSelection : {}).length === 0
             }
-            onClick={() => {
+            onClick={async () => {
               //log thw rowSelection object or data to console
               const selectedRows = Object.keys(rowSelection)
                 .filter((id) => rowSelection[id])
@@ -107,25 +108,17 @@ export default function TransactionTable({
               const selectedIds = selectedRows?.map((row) => row?.id);
               //removed the undefined values from the array
               const filteredIds = selectedIds.filter((id) => id);
-              const url = "/api/deletebulktransacation";
-              const payload = {
-                bulkId: filteredIds,
-              };
-              fetch(url, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-              })
-                .then((res) => {
-                  refetch();
-                  setRowSelection({});
+
+              try {
+                await api.deleteTransactions({
+                  transactionIds: filteredIds as string[],
                 })
-                .catch((error) => {
-                  refetch();
-                  setRowSelection({});
-                });
+                refetch();
+                setRowSelection({});
+              } catch (error) {
+                refetch();
+                setRowSelection({});
+              }
             }}
             colorScheme="red"
             size={['xs', "sm"]}

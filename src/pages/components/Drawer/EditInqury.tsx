@@ -15,6 +15,7 @@ import {
 import React from "react";
 import { InquiryPayload, InquryColumn } from "@/utils/interface";
 import axios from "axios";
+import api from "@/utils/interfaceV2/api";
 
 function EditInqury({
   isOpen,
@@ -44,9 +45,11 @@ function EditInqury({
     id: id,
   });
   const handleEdit = async () => {
-    const url = "/api/editInquiry";
     try {
-      await axios.post(url, payload);
+      await api.replyInquiry({
+        inquiryId: payload.id,
+        reply: payload.answer
+      })
       toast({
         title: "Inquiry Updated",
         description: "Inquiry has been updated",

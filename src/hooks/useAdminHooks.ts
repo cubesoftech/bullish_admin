@@ -1,10 +1,6 @@
-import { inject_setting } from "@prisma/client";
-import axios from "axios";
 import { useToast } from "@chakra-ui/react";
-
-const URL_INJECT_SETTING = '/api/injectSetting';
-
-type InjectSettingPayload = Omit<inject_setting, 'id'> & { id?: string };
+import api from "@/utils/interfaceV2/api";
+import { InjectSettingsPayload } from "@/utils/interfaceV2/interfaces/payload";
 
 export const useAdminHooks = () => {
 
@@ -19,31 +15,37 @@ export const useAdminHooks = () => {
         return errorMessage;
     }
 
-    const injectSetting = async (payload: InjectSettingPayload) => {
-        return axios.post(URL_INJECT_SETTING, payload)
-            .then((response) => {
-                return response.data;
+    const injectSetting = async (payload: InjectSettingsPayload) => {
+        try {
+            const data = await api.injectSettings({
+                multiplier: payload.multiplier,
+                settingsId: payload.settingsId,
+                status: payload.status,
+                userId: payload.userId,
             })
-            .catch((error) => {
-                toast({
-                    description: getErrorMessages(error)
-                })
-                return error;
-            });
+
+            return data;
+        } catch (error) {
+            toast({
+                description: error as string
+            })
+            return error;
+        }
     }
 
     const getInjectedSetting = async ({ id, showToastError }: { id: string, showToastError?: boolean }) => {
-        return axios.post<{ data: inject_setting }>('/api/getInjectedSetting', { id })
-            .then((response) => {
-                return response.data.data;
+        try {
+            const { data } = await api.getInjectedSettings({
+                userId: id
             })
-            .catch((error) => {
-                if (showToastError)
-                    toast({
-                        description: getErrorMessages(error)
-                    })
-                return null
-            });
+            return data
+        } catch (error) {
+            if (showToastError)
+                toast({
+                    description: error as string
+                })
+            return null
+        }
     }
 
 

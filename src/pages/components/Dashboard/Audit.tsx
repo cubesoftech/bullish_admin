@@ -16,6 +16,7 @@ import axios from "axios";
 import AuditTable from "../Tables/AuditTable";
 import { useAuthentication } from "@/utils/storage";
 import Withdraw from "../Drawer/Withdraw";
+import api from "@/utils/interfaceV2/api";
 
 export default function AUDIT() {
   const { role, id } = useAuthentication();
@@ -59,12 +60,20 @@ export default function AUDIT() {
   }, [role, id, data]);
 
   useEffect(() => {
+    const fetchIncome = async () => {
+      try {
+        const { data } = await api.getIncome({
+          month: selectedMonth,
+          role: role,
+          id: id
+        })
+        setData(data)
+      } catch (error) {
+        console.log("Error fetching income:", error);
+      }
+    }
     if (selectedMonth) {
-      axios
-        .get(`/api/getIncome?month=${selectedMonth}&role=${role}&id=${id}`)
-        .then((res) => {
-          setData(res.data);
-        });
+      fetchIncome
     }
   }, [selectedMonth, role, id]);
 

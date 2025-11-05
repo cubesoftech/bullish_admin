@@ -6,6 +6,7 @@ import axios from "axios";
 import MyTable from "../Tables/Transaction";
 import { FiHome } from "react-icons/fi";
 import { useAuthentication } from "@/utils/storage";
+import api from "@/utils/interfaceV2/api";
 
 export default function Withdrawals() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -142,9 +143,11 @@ export default function Withdrawals() {
     let page = 1;
     setData([]);
     while (hasMoreData) {
-      let url = `/api/getAllWithdrawals?page=${page}&startDate=${startDate}&endDate=${endDate}`;
-      const res = await axios.get<ArrayUserTransaction>(url);
-      let { hasMore, withdrawals } = res.data;
+      const { hasMore, withdrawals } = await api.getWithdrawals({
+        page,
+        startDate,
+        endDate
+      })
       //clean first the new data by removign the duplicates from the data
       //check if the id is already in the data
       withdrawals.map((withdrawal) => {

@@ -27,11 +27,8 @@ import {
 } from "@chakra-ui/react";
 import { UserColumn } from "@/utils/interface";
 import { use, useEffect, useState } from "react";
-import axios from "axios";
 import { useAdminHooks } from "@/hooks/useAdminHooks";
-import { inject_setting } from "@prisma/client";
-
-type InjectSettingPayload = Omit<inject_setting, 'id'> & { id?: string };
+import { InjectSettingsPayload } from "@/utils/interfaceV2/interfaces/payload";
 
 function InjectSetting({
     isOpen,
@@ -47,11 +44,11 @@ function InjectSetting({
         id,
     } = user;
 
-    const [setting, setSetting] = useState<InjectSettingPayload>({
-        createdAt: new Date(),
+    const [setting, setSetting] = useState<InjectSettingsPayload>({
         multiplier: 0,
         status: false,
         userId: id,
+        settingsId: ""
     });
 
     const { getInjectedSetting, injectSetting } = useAdminHooks();
@@ -61,13 +58,18 @@ function InjectSetting({
         getInjectedSetting({ id, showToastError: false })
             .then((response) => {
                 if (response) {
-                    setSetting(response);
+                    setSetting({
+                        multiplier: response.multiplier,
+                        status: response.status,
+                        userId: response.userId,
+                        settingsId: response.id
+                    });
                 } else {
                     setSetting({
-                        createdAt: new Date(),
                         multiplier: 0,
                         status: false,
                         userId: id,
+                        settingsId: ""
                     });
                 }
             })

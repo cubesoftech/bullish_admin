@@ -4,12 +4,13 @@ import { FiMenu, FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import Image from "next/image";
 // import logo from "../../../assets/sjinvestment_logo.jpg";
-import { useAuthentication, useChanges, useNavigation } from "@/utils/storage";
+import { useAuthentication, useChanges, useNavigation, useTokenStore } from "@/utils/storage";
 import { LinkItems, LinkItemsAgent, LinkItemsMasterAgent } from "@/utils";
 import { GiFamilyTree } from "react-icons/gi";
 import useSWR from "swr";
 import axios from "axios";
 import { FaRegSun, FaRegMoon } from "react-icons/fa6";
+import api from "@/utils/interfaceV2/api";
 
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -147,9 +148,12 @@ const NavItem = ({ index, icon, onClose, children, isShow, setIsShow, ...rest }:
   const { depositCount, inquiryCount, withdrawalCount, depositInquiryCount, changeCounts } = useChanges();
   const { changeMenu, selectedMenu } = useNavigation();
   const { changeAuthentication } = useAuthentication();
+  const { sa, sa2 } = useTokenStore()
   const handleClick = () => {
     if (index === LinkItems.length + 1) {
       changeAuthentication(false, "ADMIN", "", "");
+      sa(null)
+      sa2(null)
     } else {
       changeMenu(index);
     }
@@ -157,15 +161,16 @@ const NavItem = ({ index, icon, onClose, children, isShow, setIsShow, ...rest }:
   };
   const [count, setCount] = useState<number | null>(null);
 
-  useSWR<{ depositCount: number, withdrawalCount: number, inquiryCount: number, depositInquiryCount: number }>("/api/lookoutchanges", () => {
-    return axios.get("/api/lookoutchanges").then((res) => res.data);
-  }, {
-    onSuccess: (data) => {
-      const { depositCount, withdrawalCount, inquiryCount, depositInquiryCount } = data;
-      changeCounts(depositCount, withdrawalCount, inquiryCount, depositInquiryCount);
-    },
-    refreshInterval: 1000,
-  });
+  useSWR<{ depositCount: number, withdrawalCount: number, inquiryCount: number, depositInquiryCount: number }>(
+    "getChanges",
+    () => api.getChanges(),
+    {
+      onSuccess: (data) => {
+        const { depositCount, withdrawalCount, inquiryCount, depositInquiryCount } = data;
+        changeCounts(depositCount, withdrawalCount, inquiryCount, depositInquiryCount);
+      },
+      refreshInterval: 1000,
+    });
 
   useEffect(() => {
     if (children === "입금") {

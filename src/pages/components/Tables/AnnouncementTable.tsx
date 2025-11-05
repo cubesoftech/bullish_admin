@@ -14,12 +14,13 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import AddAnnouncement from "../Drawer/AddAnouncement";
-import { announcement } from "@prisma/client";
 import EditAnnouncement from "../Drawer/EditAnnouncement";
 import useSwr from "swr";
 import axios from "axios";
 import { useSWRConfig } from "swr";
 import { useAuthentication } from "@/utils/storage";
+import api from "@/utils/interfaceV2/api";
+import { Announcement } from "@/utils/interfaceV2/interfaces";
 
 function AnnouncementTable() {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -33,31 +34,24 @@ function AnnouncementTable() {
   } = useDisclosure();
 
   const deleteAnnouncement = async (id: string) => {
-    const url = "/api/deleteAnnouncement";
-    const data = {
-      id,
-    };
-    const res = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    mutate("/api/getAllAnnouncement");
+    try {
+      await api.deleteAnnouncement({ announcementId: id })
+    } catch (error) {
+      console.error("Failed to delete announcement:", error);
+    } finally {
+      mutate("getAnnouncement");
+    }
   };
 
-  const [announcements, setAnnouncements] = React.useState<announcement[]>([]);
+  const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
 
   useSwr(
-    "/api/getAllAnnouncement",
-    async (url) => {
-      const res = await axios.get<{ announcement: announcement[] }>(url);
-      return res.data;
-    },
+    "getAnnouncement",
+    () => api.getAnnouncement({}),
     {
       onSuccess(data, key, config) {
-        setAnnouncements(data.announcement);
+        const { data: apiData } = data
+        setAnnouncements(apiData);
       },
     }
   );
@@ -111,13 +105,7 @@ function AnnouncementRow({
   deleteAnnouncement,
   isAdmin,
 }: {
-  announcement: {
-    id: string;
-    title: string;
-    content: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  announcement: Announcement;
   index: number;
   isAdmin: boolean;
   deleteAnnouncement: (id: string) => Promise<void>;

@@ -1,14 +1,15 @@
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
+import { MemberRoles } from "./interfaceV2/interfaces";
 
 interface Authentication {
   isAuthenticated: boolean;
-  role: "ADMIN" | "AGENT" | "MASTER_AGENT";
+  role: MemberRoles;
   userId: string;
   id: string;
   changeAuthentication: (
     isAuthenticated: boolean,
-    role: "ADMIN" | "AGENT" | "MASTER_AGENT",
+    role: MemberRoles,
     id: string,
     userId: string
   ) => void;
@@ -78,3 +79,24 @@ export const useChanges = create<CHANGESINTERFACE>()(
     )
   )
 );
+
+interface AccessToken {
+  a: string | null,
+  a2: string | null,
+  sa: (a: string | null) => void
+  sa2: (a2: string | null) => void
+}
+
+export const useTokenStore = create<AccessToken>()(
+  persist(
+    (set) => ({
+      a: null,
+      a2: null,
+      sa: (a: string | null) => set({ a }),
+      sa2: (a2: string | null) => set({ a2 })
+    }),
+    {
+      name: "TS"
+    }
+  )
+)

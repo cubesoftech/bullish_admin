@@ -1,4 +1,3 @@
-import { DepositInterface } from "@/pages/api/createDeposit";
 import { useAuthentication } from "@/utils/storage";
 import {
   Button,
@@ -19,6 +18,8 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import { useSWRConfig } from "swr";
+import api from "@/utils/interfaceV2/api";
+import { CreateDepositPayload } from "@/utils/interfaceV2/interfaces/payload";
 
 function Withdraw({
   isOpen,
@@ -38,21 +39,20 @@ function Withdraw({
   const { mutate } = useSWRConfig();
 
   const handleSubmit = async () => {
-    const payload: DepositInterface = {
+    const payload: CreateDepositPayload = {
       amount: value,
-      membersId: id,
-      role: role,
+      membersID: id,
+      memberRole: role,
     };
-    const url = "/api/createDeposit";
     try {
-      await axios.post(url, payload);
+      await api.createDeposit({ ...payload })
       toast({
         title: "Withdrawal created successfully",
         status: "success",
         duration: 5000,
         isClosable: true,
       });
-      mutate("/api/getWithdrawals");
+      mutate("getAgentWithdrawals");
       onClose();
     } catch (error) {
       toast({
@@ -61,7 +61,7 @@ function Withdraw({
         duration: 5000,
         isClosable: true,
       });
-      mutate("/api/getWithdrawals");
+      mutate("getAgentWithdrawals");
       onClose();
     }
   };

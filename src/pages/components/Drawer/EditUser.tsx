@@ -15,6 +15,7 @@ import {
 import { UserColumn } from "@/utils/interface";
 import { useState } from "react";
 import axios from "axios";
+import api from "@/utils/interfaceV2/api";
 
 function EditUser({
   isOpen,
@@ -46,12 +47,24 @@ function EditUser({
   const toast = useToast();
 
   const updateUser = async () => {
-    const url = "/api/editUser";
     try {
       delete userState.agents;
       delete userState.agentID;
       delete userState.masteragentID;
-      await axios.post(url, userState);
+
+      await api.updateUserDetails({
+        userId: userState.id,
+        accountHolder: userState.accountholder,
+        accountNumber: userState.accountnumber,
+        balance: userState.balance,
+        bank: userState.bank,
+        email: userState.email,
+        name: userState.name,
+        nickname: userState.nickname,
+        password: userState.password,
+        phoneNumber: userState.phonenumber,
+        status: userState.status ?? false,
+      })
 
       toast({
         title: "User Updated",

@@ -19,6 +19,7 @@ import { Table as ChakraTable, Thead, Th, Tr, Td, Tbody, TableContainer } from "
 import OrderHistoryDrawer from "../Drawer/OrderHistoryDrawer";
 import axios from "axios";
 import { useFilter } from "../Dashboard/OrderHistory";
+import api from "@/utils/interfaceV2/api";
 
 export default function OrderHistoryTable({
   data,
@@ -69,7 +70,7 @@ export default function OrderHistoryTable({
           isDisabled={
             Object.keys(rowSelection ? rowSelection : {}).length === 0
           }
-          onClick={() => {
+          onClick={async () => {
             //log thw rowSelection object or data to console
             const selectedRows = Object.keys(rowSelection)
               .filter((id) => rowSelection[id])
@@ -78,25 +79,16 @@ export default function OrderHistoryTable({
             //removed the undefined values from the array
             const filteredIds = selectedIds.filter((id) => id);
 
-            const url = "/api/deletebulktransacation";
-            const payload = {
-              bulkId: filteredIds,
-            };
-            fetch(url, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(payload),
-            })
-              .then((res) => {
-                refetch();
-                setRowSelection({});
+            try {
+              await api.deleteTransactions({
+                transactionIds: filteredIds as string[],
               })
-              .catch((error) => {
-                refetch();
-                setRowSelection({});
-              });
+              refetch();
+              setRowSelection({});
+            } catch (error) {
+              refetch();
+              setRowSelection({});
+            }
           }}
           colorScheme="red"
           size={"sm"}
@@ -254,24 +246,15 @@ function OrderHistoryRow({ row, refetch }: { row: Row<OrderHistoryColumnInterfac
 
   const handleChangeTrade = async (id: string, data: boolean, refetch: () => void) => {
     try {
-      const url = "/api/switchTrade"
-      const res = await axios.post<{ message: string }>(url, { id, value: !data })
-      if (res.status === 200) {
-        refetch();
-      } else {
-        toast({
-          title: "Error",
-          description: res.data.message,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        })
-      }
+      await api.switchTrade({
+        tradeId: id,
+        value: !data
+      })
       refetch();
     } catch (e: any) {
       toast({
         title: "Error",
-        description: e.response.data.message,
+        description: e as string,
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -282,25 +265,17 @@ function OrderHistoryRow({ row, refetch }: { row: Row<OrderHistoryColumnInterfac
 
   const handleMaxTrade = async (id: string, memberId: string, isChecked: boolean, refetch: () => void) => {
     try {
-      const url = "/api/maxBet";
-      const res = await axios.post<{ message: string }>(url, { id, memberId, value: !isChecked })
+      await api.updateTradeMaxbet({
+        memberId: memberId,
+        tradeId: id,
+        status: !isChecked
+      })
 
-      if (res.status === 200) {
-        refetch();
-      } else {
-        toast({
-          title: "Error",
-          description: res.data.message,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        })
-      }
       refetch();
     } catch (e: any) {
       toast({
         title: "Error",
-        description: e.response.data.message,
+        description: e as string,
         status: "error",
         duration: 3000,
         isClosable: true,

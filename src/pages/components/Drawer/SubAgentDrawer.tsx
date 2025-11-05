@@ -79,7 +79,7 @@ function SubAgentDrawer({
                       <Td>{agent.member.email}</Td>
                       <Td>{agent.member.password}</Td>
                       <Td>{agent.royalty} %</Td>
-                      <Td>{agent.referredmembers.length}</Td>
+                      <Td>{agent.members.length}</Td>
                     </Tr>
                   );
                 })}

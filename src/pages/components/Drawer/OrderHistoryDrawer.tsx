@@ -19,6 +19,7 @@ import React, { useEffect, useState } from "react";
 import { MdCheckCircle } from "react-icons/md";
 import { OrderHistoryColumnInterface } from "@/utils/interface";
 import axios from "axios";
+import api from "@/utils/interfaceV2/api";
 
 
 
@@ -61,39 +62,27 @@ function OrderHistoryDrawer({
         membersId,
         newAmount: newTrade
       }
-      const url = "/api/changeHistory";
-      const res = await axios.post<{ message: string }>(url, payload)
 
-
-      if (res.status === 200) {
-        toast({
-          title: "Success",
-          description: res.data.message,
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: res.data.message,
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      }
+      const { message } = await api.updateMemberTrade({ ...payload })
+      toast({
+        title: "Success",
+        description: message,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
     } catch (e: any) {
-      const message = e.response?.data?.message || "Something went wrong"
       toast({
         title: "Error",
-        description: message,
+        description: e as string,
         status: "error",
         duration: 9000,
         isClosable: true,
       });
+    } finally {
+      onClose();
+      refetch();
     }
-    onClose();
-    refetch();
   };
   return (
     <Drawer isOpen={isOpen} placement="right" size={"md"} onClose={onClose}>

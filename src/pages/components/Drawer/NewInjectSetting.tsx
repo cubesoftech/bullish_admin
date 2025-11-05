@@ -2,10 +2,8 @@ import React, { useState, useEffect, use } from "react";
 import { Stack, Text, Button, Select, useToast } from "@chakra-ui/react";
 import { NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, } from "@chakra-ui/react"
 import { UserColumn } from "@/utils/interface";
-import { inject_setting } from "@prisma/client";
 import { useAdminHooks } from "@/hooks/useAdminHooks";
-
-type InjectSettingPayload = Omit<inject_setting, 'id'> & { id?: string };
+import { InjectSettingsPayload } from "@/utils/interfaceV2/interfaces/payload";
 
 export default function NewInjectSetting({ isOpen, onClose, user }: { isOpen: boolean, onClose: () => void, user: UserColumn }) {
 
@@ -13,11 +11,11 @@ export default function NewInjectSetting({ isOpen, onClose, user }: { isOpen: bo
 
     const { id } = user
 
-    const [setting, setSetting] = useState<InjectSettingPayload>({
-        createdAt: new Date(),
+    const [setting, setSetting] = useState<InjectSettingsPayload>({
         multiplier: 0,
         status: false,
         userId: id,
+        settingsId: ""
     });
 
     const { getInjectedSetting, injectSetting } = useAdminHooks();
@@ -26,13 +24,18 @@ export default function NewInjectSetting({ isOpen, onClose, user }: { isOpen: bo
         getInjectedSetting({ id, showToastError: false })
             .then((response) => {
                 if (response) {
-                    setSetting(response);
+                    setSetting({
+                        multiplier: response.multiplier,
+                        status: response.status,
+                        userId: response.userId,
+                        settingsId: response.id
+                    });
                 } else {
                     setSetting({
-                        createdAt: new Date(),
                         multiplier: 0,
                         status: false,
                         userId: id,
+                        settingsId: ""
                     });
                 }
             })

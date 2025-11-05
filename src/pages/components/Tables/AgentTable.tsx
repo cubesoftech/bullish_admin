@@ -21,6 +21,7 @@ import { ArrayMasterAgent, Masteragent } from "@/utils/interface";
 import SubAgentDrawer from "../Drawer/SubAgentDrawer";
 import { useAuthentication } from "@/utils/storage";
 import EditMasterAgent from "../Drawer/EditMasterAgent";
+import api from "@/utils/interfaceV2/api";
 
 function AgentsTable() {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -33,11 +34,8 @@ function AgentsTable() {
   });
 
   useSwr(
-    "/api/getAllMasterAgents",
-    async (url) => {
-      const res = await axios.get<ArrayMasterAgent>(url);
-      return res.data;
-    },
+    "getMasterAgents",
+    () => api.getMasterAgents(),
     {
       onSuccess(data, key, config) {
         setMasterAgent(data);
@@ -96,10 +94,11 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
   const { role } = useAuthentication();
 
   const deleteAgent = async () => {
-    const url = "/api/deleteMasterAgent";
     try {
-      const res = await axios.post(url, { id });
-      mutate("/api/getAllMasterAgents");
+      await api.deleteMasterAgent({
+        masterAgentId: id
+      })
+      mutate("getMasterAgents");
       toast({
         title: "Success",
         description: "Agent has been deleted",
@@ -120,10 +119,12 @@ function MasterAgent({ agent, index }: { agent: Masteragent; index: number }) {
   //agents is an array of agent under the master agent
 
   const activateMasterAgent = async () => {
-    const url = "/api/activateMasterAgent";
     try {
-      const res = await axios.post(url, { id: membersId, status: !status });
-      mutate("/api/getAllMasterAgents");
+      await api.updateMasterAgentStatus({
+        masterAgentId: membersId,
+        status: !status
+      })
+      mutate("getMasterAgents");
       toast({
         title: "Success",
         description: "Agent has been activated",

@@ -3,7 +3,6 @@ import { VStack, Heading, Icon, HStack, useToast, Text, useDisclosure, useColorM
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverBody, PopoverFooter, PopoverArrow, PopoverCloseButton, PopoverAnchor, } from '@chakra-ui/react'
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { ArrayUser, UserColumn, UserTrades, TradesType } from "@/utils/interface";
-import { members_eurusd_trade as trades_type } from "@prisma/client";
 import axios from "axios";
 import { FiStar } from "react-icons/fi";
 import UserTable from "../Tables/UserTable";
@@ -11,20 +10,24 @@ import { useAuthentication } from "@/utils/storage";
 import { useRouter } from "next/router";
 import User from "./User";
 import { socket } from "@/utils/socket";
+import api from "@/utils/interfaceV2/api";
 
 const SwitchButton = ({ id, isChecked, setRefetch }: { id: string, isChecked: boolean, setRefetch: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [checked, setChecked] = React.useState(isChecked);
 
-  const handleChange = () => {
+  const handleChange = async () => {
     setChecked(!checked);
-    axios.post(`/api/updateSwitch`, { id, force: !checked })
-      .then((res) => {
-        setChecked(!checked);
-        setRefetch(true);
+    try {
+      await api.forceLogoutUser({
+        userId: id,
+        forceLogout: !checked
       })
-      .catch((err) => {
-        setChecked(checked);
-      });
+      setChecked(!checked);
+      setRefetch(true);
+    } catch (error) {
+      console.log("Error updating switch:", error);
+      setChecked(checked);
+    }
   }
   return (
     <Switch
@@ -42,15 +45,17 @@ const ReverseBetSwitch = ({ id, isChecked, setRefetch }: { id: string, isChecked
   const toast = useToast()
 
   const handleChange = async () => {
-    const url = "/api/updateSwitchBet"
     setChecked(!checked);
-    const res = await axios.post(url, { id, value: !checked })
 
-    if (res.status === 200) {
+    try {
+      await api.updateUserSwitchBet({
+        userId: id,
+        status: !checked
+      })
       setChecked(!checked);
       setRefetch(true);
-    } else {
-      setChecked(checked);
+    } catch (error) {
+      console.log("Error updating switch bet:", error);
     }
   }
 
@@ -80,7 +85,7 @@ const ChangeTrade = ({ id, setRefetch }: { id: string, setRefetch: React.Dispatc
     { label: "NVDA", value: userTrades?.nvda },
   ]
 
-  const Options: { label: string, value: trades_type }[] = [
+  const Options: { label: string, value: TradesType }[] = [
     { label: "NASDAQ", value: "nasdaq" },
     { label: "GOLD", value: "gold" },
     { label: "EURUSD", value: "eurusd" },
@@ -92,9 +97,8 @@ const ChangeTrade = ({ id, setRefetch }: { id: string, setRefetch: React.Dispatc
   useEffect(() => {
     const fetch = async () => {
       try {
-        const url = "/api/getUserTrades"
-        const res = await axios.post<{ data: UserTrades }>(url, { id })
-        setUserTrades(res.data.data)
+        const { data } = await api.getUserTrades({ userId: id })
+        setUserTrades(data)
       } catch (e) {
         console.log("Error: ", e)
       }
@@ -103,22 +107,26 @@ const ChangeTrade = ({ id, setRefetch }: { id: string, setRefetch: React.Dispatc
   }, [id, changeTrades.isOpen])
 
   const handleUpdateUserTrades = async () => {
+    if (!userTrades) return;
     try {
-      const url = "/api/updateUserTrades"
 
-      const res = await axios.post(url, { id, trades: userTrades })
+      await api.updateUserTrades({
+        userId: id,
+        nasdaq: userTrades.nasdaq,
+        gold: userTrades.gold,
+        eurusd: userTrades.eurusd,
+        pltr: userTrades.pltr,
+        tsla: userTrades.tsla,
+        nvda: userTrades.nvda,
+      })
 
-      if (res.status === 200) {
-        toast({
-          title: "성공",
-          description: "거래가 변경되었습니다.",
-          status: "success"
-        })
-        socket.emit("change_site_settings")
-        setRefetch(true)
-      } else {
-        console.log("Something went wrong")
-      }
+      toast({
+        title: "성공",
+        description: "거래가 변경되었습니다.",
+        status: "success"
+      })
+      socket.emit("change_site_settings")
+      setRefetch(true)
     } catch (e) {
       console.error("Error: ", e)
     }
@@ -150,7 +158,7 @@ const ChangeTrade = ({ id, setRefetch }: { id: string, setRefetch: React.Dispatc
                       const trades = { ...userTrades };
                       const tradeKey = Object.keys(userTrades || [])[index] as keyof UserTrades;
                       if (tradeKey) {
-                        trades[tradeKey] = e.target.value as trades_type;
+                        trades[tradeKey] = e.target.value as TradesType;
                         setUserTrades(trades as UserTrades)
                       }
                     }} >
@@ -183,12 +191,12 @@ const MaxBetSwitch = ({ id, isChecked, setRefetch }: { id: string, isChecked: bo
 
   const handleChange = async () => {
     try {
-      const url = "/api/updateMaxBet"
-      const res = await axios.post(url, { id, value: !checked })
-      if (res.status === 200) {
-        setChecked(!checked)
-        setRefetch(true)
-      }
+      await api.updateUserMaxbet({
+        userId: id,
+        value: !checked
+      })
+      setChecked(!checked)
+      setRefetch(true)
     } catch (e) {
       toast({
         title: "Error",
@@ -366,9 +374,11 @@ export default function UserManagement() {
     let hasMoreData = true;
     let page = 1;
     while (hasMoreData) {
-      let url = `/api/getAllUsers?page=${page}&role=${role}&id=${id}`;
-      const res = await axios.get<ArrayUser>(url);
-      let { hasMore, users } = res.data;
+      const { hasMore, users } = await api.getUser({
+        page,
+        id,
+        role
+      })
       //clean first the new data by removign the duplicates from the data
       //check if the id is already in the data
       users.map((user) => {

@@ -14,8 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { TransactionColumn, TransactionPayload } from "@/utils/interface";
 import { useState } from "react";
-import axios from "axios";
-import { transaction_status } from "@prisma/client";
+import api from "@/utils/interfaceV2/api";
+import { TransactionStatus } from "@/utils/interfaceV2/interfaces";
 
 function EditTransaction({
   isOpen,
@@ -37,20 +37,23 @@ function EditTransaction({
     useState<TransactionColumn>(transaction);
 
   const [transactionStatus, setTransactionStatus] =
-    useState<transaction_status>(status as transaction_status);
+    useState<TransactionStatus>(status as TransactionStatus);
   const toast = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
   const updateUser = async () => {
     setIsLoading(true);
-    const url = "/api/editTransaction";
     const payload: TransactionPayload = {
       status: transactionStatus,
       id: transaction.id as string,
       type: isWithdrawal ? "withdrawal" : "deposit",
     };
     try {
-      await axios.post(url, payload);
+      await api.updateTransaction({
+        transactionId: payload.id,
+        newStatus: payload.status as TransactionStatus,
+        type: payload.type
+      })
       toast({
         title: "User Updated",
         description: "User has been updated",
@@ -111,7 +114,7 @@ function EditTransaction({
               <Select
                 w={"100%"}
                 onChange={(e) =>
-                  setTransactionStatus(e.target.value as transaction_status)
+                  setTransactionStatus(e.target.value as TransactionStatus)
                 }
                 defaultValue={transactionStatus}
               >

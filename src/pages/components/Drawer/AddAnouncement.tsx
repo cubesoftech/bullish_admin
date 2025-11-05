@@ -16,6 +16,7 @@ import React from "react";
 import { AnnouncementInterface } from "@/utils/interface";
 import { useSWRConfig } from "swr";
 import { Editor } from "@tinymce/tinymce-react";
+import api from "@/utils/interfaceV2/api";
 
 function AddAnnouncement({
   isOpen,
@@ -45,41 +46,27 @@ function AddAnnouncement({
       });
       return;
     }
-    const url = "/api/createAnnouncement";
-    const data = {
-      title: payload.title,
-      content: payload.content,
-      dateCreated: payload.dateCreated,
-    };
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        toast({
-          title: "Announcement created.",
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-        });
-        onClose();
-        mutate("/api/getAllAnnouncement");
-      })
-      .catch((error) => {
-        toast({
-          title: "An error occurred.",
-          description: error,
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-        onClose();
-        mutate("/api/getAllAnnouncement");
+    try {
+      await api.createAnnouncement({ ...payload })
+      toast({
+        title: "Announcement created.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
       });
+      onClose();
+      mutate("getAnnouncement");
+    } catch (error) {
+      toast({
+        title: "An error occurred.",
+        description: error as string,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      onClose();
+      mutate("getAnnouncement");
+    }
   };
 
   return (

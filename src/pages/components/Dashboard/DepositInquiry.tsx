@@ -6,6 +6,7 @@ import axios from "axios";
 import { FiStar } from "react-icons/fi";
 import InquiryTable from "../Tables/InquiryTable";
 import { useAuthentication } from "@/utils/storage";
+import api from "@/utils/interfaceV2/api";
 
 export default function DepositInquiry() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -57,11 +58,12 @@ export default function DepositInquiry() {
   const requestInquiries = async () => {
     let hasMoreData = true;
     let page = 1;
-    const url = `/api/getAllInquiries?page=${page}&filter=deposit`;
     setData([]);
     while (hasMoreData) {
-      const res = await axios.get<ArrayInquiry>(url);
-      let { hasMore, inquries } = res.data;
+      const { hasMore, inquries } = await api.getInquiries({
+        page,
+        filter: "deposit"
+      })
       //clean first the new data by removign the duplicates from the data
       //check if the id is already in the data
       inquries.map((inqury) => {

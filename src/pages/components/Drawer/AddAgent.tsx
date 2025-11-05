@@ -14,6 +14,7 @@ import {
 import React from "react";
 import { AgentInterface } from "@/utils/interface";
 import { useSWRConfig } from "swr";
+import api from "@/utils/interfaceV2/api";
 
 function AddAgent({
   isOpen,
@@ -52,36 +53,15 @@ function AddAgent({
       });
       return;
     }
-    const url = "/api/addAgent";
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // toast({
-        //   title: "MasterAgent created.",
-        //   status: "success",
-        //   duration: 9000,
-        //   isClosable: true,
-        // });
-        onClose();
-        mutate("/api/getAllMasterAgents");
-      })
-      .catch((error) => {
-        // toast({
-        //   title: "An error occurred.",
-        //   description: error,
-        //   status: "error",
-        //   duration: 9000,
-        //   isClosable: true,
-        // });
-        onClose();
-        mutate("/api/getAllAnnouncement");
-      });
+
+    try {
+      await api.createAgent({ ...payload })
+      onClose();
+      mutate("getMasterAgents");
+    } catch (error) {
+      onClose();
+      mutate("getAnnouncement");
+    }
   };
 
   return (

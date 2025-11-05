@@ -6,6 +6,7 @@ import axios from "axios";
 import MyTable from "../Tables/Transaction";
 import { FiTrendingUp } from "react-icons/fi";
 import { useAuthentication } from "@/utils/storage";
+import api from "@/utils/interfaceV2/api";
 
 export default function Deposits() {
   const [pagination, setPagination] = React.useState<PaginationState>({
@@ -144,23 +145,25 @@ export default function Deposits() {
     let page = 1;
     setData([]);
     while (hasMoreData) {
-      let url = `/api/getAllDeposits?page=${page}&startDate=${startDate}&endDate=${endDate}`;
-      const res = await axios.get<ArrayUserTransaction>(url);
-      let { hasMore, withdrawals } = res.data;
+      const { deposits, hasMore } = await api.getDeposits({
+        page,
+        startDate,
+        endDate
+      })
       //clean first the new data by removign the duplicates from the data
       //check if the id is already in the data
-      withdrawals.map((withdrawal) => {
+      deposits.map((deposit) => {
         const {
           members: { name, email, bank, accountnumber, accountholder },
           amount,
           createdAt,
           status,
           id,
-        } = withdrawal;
+        } = deposit;
         let created = new Date(createdAt);
         let created_ = `${created.toDateString()} ${created.toLocaleTimeString()}`;
         if (role === "AGENT" || role === "MASTER_AGENT") {
-          if (userId === withdrawal.agentID) {
+          if (userId === deposit.agentID) {
             setData((data) => [
               ...data,
               {
@@ -173,8 +176,8 @@ export default function Deposits() {
                 amount,
                 "Date Requested": created_,
                 status,
-                agentID: withdrawal.agentID,
-                masteragentID: withdrawal.masteragentID,
+                agentID: deposit.agentID,
+                masteragentID: deposit.masteragentID,
               },
             ]);
           }
@@ -191,8 +194,8 @@ export default function Deposits() {
               amount,
               "Date Requested": created_,
               status,
-              agentID: withdrawal.agentID,
-              masteragentID: withdrawal.masteragentID,
+              agentID: deposit.agentID,
+              masteragentID: deposit.masteragentID,
             },
           ]);
         }

@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import { IconType } from "react-icons";
 import {
   FiHome,
@@ -11,8 +10,6 @@ import {
 } from "react-icons/fi";
 import { FaChartPie } from "react-icons/fa";
 import { TbMessage2Dollar } from "react-icons/tb";
-
-export const prisma = new PrismaClient();
 
 interface LinkItemProps {
   name: string;

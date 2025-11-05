@@ -17,6 +17,7 @@ import {
 import { N1Min } from "@/utils/interface";
 import { useSWRConfig } from "swr";
 import { use, useEffect, useState } from "react";
+import api from "@/utils/interfaceV2/api";
 
 export default function HourTab({ trades }: { trades: N1Min[] }) {
   const toast = useToast();
@@ -53,16 +54,12 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
               const [timeCounter, setTimeCounter] = useState(timeLeft / 1000);
 
               const handleClick = async (id: string, result: boolean) => {
-                const url = "/api/changetraderesult";
                 const data = { result, id };
                 try {
-                  await fetch(url, {
-                    method: "POST",
-                    body: JSON.stringify(data),
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                  });
+                  await api.updateTradeResult({
+                    tradeId: data.id,
+                    result: data.result
+                  })
                   toast({
                     title: "Trade result changed.",
                     status: "success",
@@ -78,7 +75,7 @@ export default function HourTab({ trades }: { trades: N1Min[] }) {
                     isClosable: true,
                   });
                 } finally {
-                  await mutate("/api/trades");
+                  await mutate("getTrades");
                 }
               };
 

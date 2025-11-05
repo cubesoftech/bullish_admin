@@ -13,6 +13,7 @@ import StockTab from "./TradesHour/StockTab";
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import api from "@/utils/interfaceV2/api";
 
 interface Tab {
   tab: number,
@@ -35,9 +36,13 @@ const useTab = create<Tab>()(
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function TradesTab() {
-  const { data, isLoading } = useSWR<TradeLock>("/api/trades", fetcher, {
-    refreshInterval: 1000,
-  });
+  const { data, isLoading } = useSWR<TradeLock>(
+    "getTrades",
+    () => api.getTrades(),
+    {
+      refreshInterval: 1000,
+    }
+  );
 
   const { tab, setTab } = useTab()
 

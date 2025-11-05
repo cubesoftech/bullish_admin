@@ -32,6 +32,7 @@ import {
 } from "@chakra-ui/react";
 import EditInqury from "../Drawer/EditInqury";
 import axios from "axios";
+import api from "@/utils/interfaceV2/api";
 
 export default function InquiryTable({
   data,
@@ -190,20 +191,15 @@ function InquiryTableRow({
   const { isOpen, onClose, onOpen } = useDisclosure();
   const inqury = row.original;
 
-  const handleClicked = () => {
-    const id = inqury.id;
-    const url = `/api/deleteInquiry/`;
-    axios
-      .delete(url, {
-        data: { id },
+  const handleClicked = async () => {
+    try {
+      await api.deleteInquiry({
+        inquiryId: inqury.id
       })
-      .then((res) => {
-        if (res.status === 200) {
-          refetch();
-        }
-      })
-      .catch((err) => {
-      });
+      refetch();
+    } catch (error) {
+      console.log("Error deleting inquiry:", error);
+    }
   };
   return (
     <Tr key={row.id}>

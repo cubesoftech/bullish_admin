@@ -1,9 +1,4 @@
-import {
-  recenttrades_type,
-  transaction_status,
-  transaction_type,
-  members_tsla_trade as trades_type
-} from "@prisma/client";
+import { MemberTradesType, TransactionStatus, TransactionType, MemberTrades } from "./interfaceV2/interfaces";
 
 export interface TransactionColumn {
   id?: string;
@@ -186,7 +181,7 @@ export interface Agent {
   memberId: string;
   royalty: number;
   referralCode: string;
-  referredmembers: Members[];
+  members: Members[];
   masteragentsId: string;
   member: Member;
 }
@@ -257,12 +252,12 @@ export interface Site {
   minimumAmount: number;
 }
 
-export type TradesType = trades_type
+export type TradesType = MemberTrades
 
 export interface TransactionPayload {
-  status: transaction_status;
+  status: TransactionStatus;
   id: string;
-  type: transaction_type;
+  type: TransactionType;
 }
 
 export interface OrderHistoryChangerPayload {
@@ -305,7 +300,7 @@ export interface Stock {
 
 export interface N1Min {
   id: string;
-  type: recenttrades_type;
+  type: MemberTradesType;
   tradinghours: Date;
   result: boolean;
 }
@@ -324,10 +319,10 @@ export interface Btc1__Min {
 }
 
 export interface UserTrades {
-  nasdaq: trades_type;
-  gold: trades_type;
-  eurusd: trades_type;
-  pltr: trades_type;
-  tsla: trades_type;
-  nvda: trades_type;
+  nasdaq: MemberTrades;
+  gold: MemberTrades;
+  eurusd: MemberTrades;
+  pltr: MemberTrades;
+  tsla: MemberTrades;
+  nvda: MemberTrades;
 }

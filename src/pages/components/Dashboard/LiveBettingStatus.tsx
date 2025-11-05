@@ -18,15 +18,19 @@ import axios from "axios";
 import { OngoingTradeResult } from "@/utils/interface";
 import { Chart } from 'react-google-charts'
 import { title } from "process";
+import api from "@/utils/interfaceV2/api";
 
 export default function LiveBettingStatus() {
 
   const [result, setResult] = useState<OngoingTradeResult>({});
 
   const fetchOngoingTradeResult = async () => {
-    axios.get<OngoingTradeResult>("/api/getAllOngoingTrade").then((res) => {
-      setResult(res.data);
-    })
+    try {
+      const { data } = await api.getOngoingTrades()
+      setResult(data);
+    } catch (error) {
+      console.log("Error fetching ongoing trade result:", error);
+    }
   }
 
   useEffect(() => {
@@ -107,10 +111,10 @@ function DisplayTradeStatus({ data, index, keys }: { data: OngoingTradeResult, i
   const handleClick = async () => {
     setLoading(true);
     try {
-      await axios.post('/api/changetraderesult', {
-        id: data[keys].tradeID,
-        result: !result,
-      });
+      await api.updateTradeResult({
+        tradeId: data[keys].tradeID,
+        result: !result
+      })
     } catch (error) {
       console.error(error);
     } finally {

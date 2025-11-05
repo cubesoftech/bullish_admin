@@ -14,6 +14,7 @@ import {
 import { Masteragent } from "@/utils/interface";
 import { useState } from "react";
 import { useSWRConfig } from "swr";
+import api from "@/utils/interfaceV2/api";
 
 function EditMasterAgent({
   isOpen,
@@ -41,14 +42,13 @@ function EditMasterAgent({
   const { mutate } = useSWRConfig();
   const handleSave = async () => {
     try {
-      const res = await fetch("/api/modifyMasterAgent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-      await mutate("/api/getAllMasterAgents");
+      await api.updateMasterAgent({
+        masterAgentId: payload.masterAgentId,
+        membersId: payload.membersId,
+        password: payload.password,
+        royalty: payload.royalty
+      })
+      await mutate("getMasterAgents");
       onClose();
     } catch (error) {
       onClose();

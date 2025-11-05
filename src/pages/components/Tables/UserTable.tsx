@@ -10,6 +10,7 @@ import { useAuthentication } from "@/utils/storage";
 import InjectSetting from "../Drawer/InjectSetting";
 import { CSVLink } from "react-csv";
 import NewInjectSetting from "../Drawer/NewInjectSetting";
+import api from "@/utils/interfaceV2/api";
 
 export default function UserTable({
   data,
@@ -71,7 +72,7 @@ export default function UserTable({
           isDisabled={
             Object.keys(rowSelection ? rowSelection : {}).length === 0
           }
-          onClick={() => {
+          onClick={async () => {
             //log thw rowSelection object or data to console
             const selectedRows = Object.keys(rowSelection)
               .filter((id) => rowSelection[id])
@@ -80,25 +81,16 @@ export default function UserTable({
             //removed the undefined values from the array
             const filteredIds = selectedIds.filter((id) => id);
 
-            const url = "/api/deletebulktransacation";
-            const payload = {
-              bulkId: filteredIds,
-            };
-            fetch(url, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(payload),
-            })
-              .then((res) => {
-                refetch();
-                setRowSelection({});
+            try {
+              await api.deleteTransactions({
+                transactionIds: filteredIds as string[],
               })
-              .catch((error) => {
-                refetch();
-                setRowSelection({});
-              });
+              refetch();
+              setRowSelection({});
+            } catch (error) {
+              refetch();
+              setRowSelection({});
+            }
           }}
           colorScheme="red"
           size={["xs", "sm"]}
@@ -370,28 +362,16 @@ function UserRow({
             수정
           </Button>
           <Button
-            onClick={() => {
-              // const url = "/api/deleteuser";
-              // const payload = {
-              //   id: row.original.id,
-              // };
-              const url = "/api/deletebulkuser"
-              const payload = {
-                bulkId: [row.original.id],
-              };
-              fetch(url, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-              })
-                .then((res) => {
-                  refetch();
+            onClick={async () => {
+              try {
+                await api.deleteUsers({
+                  userIds: [row.original.id]
                 })
-                .catch((error) => {
-                  refetch();
-                });
+              } catch (error) {
+                console.log(error);
+              } finally {
+                refetch();
+              }
             }}
             colorScheme="red"
             size={"sm"}

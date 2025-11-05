@@ -14,6 +14,7 @@ import {
 import React from "react";
 import { MasterAgentInterface } from "@/utils/interface";
 import { useSWRConfig } from "swr";
+import api from "@/utils/interfaceV2/api";
 
 function AddMasterAgent({
   isOpen,
@@ -49,36 +50,21 @@ function AddMasterAgent({
       });
       return;
     }
-    const url = "/api/createMasterAgent";
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // toast({
-        //   title: "MasterAgent created.",
-        //   status: "success",
-        //   duration: 9000,
-        //   isClosable: true,
-        // });
-        onClose();
-        mutate("/api/getAllMasterAgents");
-      })
-      .catch((error) => {
-        toast({
-          title: "An error occurred.",
-          description: "Same userId already exists.",
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-        onClose();
-        mutate("/api/getAllAnnouncement");
+    try {
+      await api.createMasterAgent({ ...payload })
+      onClose();
+      mutate("getMasterAgents");
+    } catch (error) {
+      toast({
+        title: "An error occurred.",
+        description: "Same userId already exists.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
       });
+      onClose();
+      mutate("getAnnouncement");
+    }
   };
 
   return (

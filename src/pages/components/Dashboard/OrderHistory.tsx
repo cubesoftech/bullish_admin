@@ -11,6 +11,7 @@ import OrderHistoryTable from "../Tables/OrderHistoryTable";
 import { useAuthentication } from "@/utils/storage";
 import { create } from "zustand";
 import { devtools, persist, createJSONStorage } from "zustand/middleware";
+import api from "@/utils/interfaceV2/api";
 
 interface Filter {
   realUser: boolean;
@@ -151,9 +152,11 @@ export default function OrderHistory() {
     let hasMoreData = true;
     let page = 1;
     while (hasMoreData) {
-      let url = `/api/getAllOrderHistory?page=${page}&id=${id}&role=${role}`;
-      const res = await axios.get<ArrayOrderHistory>(url);
-      let { hasMore, orderHistory } = res.data;
+      const { hasMore, orderHistory } = await api.getTradeHistory({
+        page,
+        id,
+        role
+      })
       //clean first the new data by removign the duplicates from the data
       //check if the id is already in the data
       orderHistory.map((history) => {

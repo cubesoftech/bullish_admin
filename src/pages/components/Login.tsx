@@ -12,11 +12,13 @@ import {
 import coverBackground from "../../assets/login_cover.jpg";
 import axios from "axios";
 import { useState } from "react";
-import { useAuthentication } from "@/utils/storage";
+import { useAuthentication, useTokenStore } from "@/utils/storage";
+import api from "@/utils/interfaceV2/api";
 
 export default function Login() {
   const [payload, setPayload] = useState({ email: "", password: "" });
   const { changeAuthentication } = useAuthentication();
+  const { sa, sa2 } = useTokenStore()
   const toast = useToast();
   const handleSignIn = async () => {
     if (!payload.email || !payload.password) {
@@ -29,37 +31,21 @@ export default function Login() {
       });
     }
     try {
-      const { data } = await axios.post<{
-        status: boolean;
-        role: "ADMIN" | "AGENT" | "MASTER_AGENT";
-        message: string;
-        id: string;
-        userId: string;
-      }>("/api/login", payload);
-      if (data.status) {
-        toast({
-          title: "Success",
-          description: data.message,
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-        });
-        changeAuthentication(true, data.role, data.id, data.userId);
-        return;
-      } else {
-        toast({
-          title: "Error",
-          description: data.message,
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-        return;
-      }
-    } catch (error: any) {
+      const { data, message } = await api.login({ ...payload })
+      changeAuthentication(true, data.role, data.id, data.userId);
+      sa(data.data1)
+      sa2(data.data2)
+      toast({
+        title: "Success",
+        description: message,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
       toast({
         title: "Error",
-        description: error.response.data.message,
+        description: error as string,
         status: "error",
         duration: 9000,
         isClosable: true,

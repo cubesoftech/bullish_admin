@@ -1,9 +1,8 @@
-import { useRouter } from 'next/router';
 import React from 'react'
-import { prisma } from '@/utils';
 import { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import useSWR from 'swr';
 import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Modal, ModalBody, ModalContent, ModalOverlay, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from '@chakra-ui/react';
+import api from '@/utils/interfaceV2/api';
 
 export interface Root {
     member: Member
@@ -41,10 +40,12 @@ export interface Tansaction {
 
 function User({ isOpen, onClose, id }: { isOpen: boolean, onClose: () => void, id: string }) {
     //access the query
-    const { data, error, isLoading } = useSWR<Root>(isOpen ? `/api/getUserDetails?id=${id}` : null, async (url: string) => {
-        const res = await fetch(url);
-        return res.json();
-    })
+    const { data, error, isLoading } = useSWR<Root>(
+        isOpen ? "getUserDetails" : null,
+        () => api.getUserDetails({
+            userId: id
+        })
+    )
     if (isLoading) {
         return (
             <Drawer

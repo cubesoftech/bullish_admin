@@ -5,6 +5,7 @@ import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import { FiCompass } from "react-icons/fi";
 import { socket } from "@/utils/socket";
+import api from "@/utils/interfaceV2/api";
 
 export default function GameSetting() {
   return (
@@ -36,14 +37,13 @@ export default function GameSetting() {
 }
 
 const Setting = () => {
-  const [setting, setSetting] = useState<SiteSettting | null>(null);
+  const [setting, setSetting] = useState<Site | null>(null);
 
   const toast = useToast();
   const fetchSetting = async () => {
-    const url = "/api/getsiteSetting";
     try {
-      const response = await axios.get<SiteSettting>(url);
-      setSetting(response.data);
+      const { data } = await api.getSiteSettings()
+      setSetting(data)
     } catch (error) {
       toast({
         title: "Error",
@@ -88,8 +88,8 @@ const Setting = () => {
   );
 };
 
-const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
-  const { returnOnWin } = setting.site;
+const GameReturnSetting = ({ setting }: { setting: Site }) => {
+  const { returnOnWin } = setting;
 
   const [siteSettings, setSiteSettings] = useState(returnOnWin)
 
@@ -103,14 +103,11 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
       return;
     }
     const updateSettings = setTimeout(async () => {
-      const url = "/api/updateSetting";
       try {
-        await axios.post<SiteSettting>(url, {
-          site: {
-            ...setting.site,
-            returnOnWin: siteSettings,
-          },
-        });
+        await api.updateSiteSettings({
+          ...setting,
+          returnOnWin: siteSettings
+        })
         socket.emit("change_site_settings")
         toast({
           title: "Success",
@@ -133,33 +130,6 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
     return () => clearTimeout(updateSettings)
   }, [siteSettings]);
 
-  const updateSetting = async (value: number) => {
-    const url = "/api/updateSetting";
-    try {
-      await axios.post<SiteSettting>(url, {
-        site: {
-          ...setting.site,
-          returnOnWin: value,
-        },
-      });
-      socket.emit("change_site_settings")
-      toast({
-        title: "Success",
-        description: "Setting updated successfully",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred while updating setting",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-  };
   return (
     <VStack
       m={3}
@@ -187,8 +157,8 @@ const GameReturnSetting = ({ setting }: { setting: SiteSettting }) => {
   );
 };
 
-const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
-  const { oneMinLock, fiveMinLock, threeMinLock, id } = setting.site;
+const BetDeadlineSetting = ({ setting }: { setting: Site }) => {
+  const { oneMinLock, fiveMinLock, threeMinLock, id } = setting;
   const tradingTime: Array<{ label: string; value: number }> = [
     { label: "1 Minute Trading", value: oneMinLock },
     { label: "3 Minutes Trading", value: threeMinLock },
@@ -207,16 +177,13 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
       return;
     }
     const updateSettings = setTimeout(async () => {
-      const url = "/api/updateSetting";
       try {
-        await axios.post<SiteSettting>(url, {
-          site: {
-            id,
-            oneMinLock: siteSettings[0].value,
-            threeMinLock: siteSettings[1].value,
-            fiveMinLock: siteSettings[2].value,
-          },
-        });
+        await api.updateSiteSettings({
+          ...setting,
+          oneMinLock: siteSettings[0].value,
+          threeMinLock: siteSettings[1].value,
+          fiveMinLock: siteSettings[2].value,
+        })
         socket.emit("change_site_settings")
         toast({
           title: "Success",
@@ -274,8 +241,8 @@ const BetDeadlineSetting = ({ setting }: { setting: SiteSettting }) => {
   );
 };
 
-const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
-  const { id, nasdaq, gold, eurusd, pltr, tsla, nvda } = setting.site;
+const TradingStatus = ({ setting }: { setting: Site }) => {
+  const { id, nasdaq, gold, eurusd, pltr, tsla, nvda } = setting;
 
   const initialRender = useRef(true)
 
@@ -298,26 +265,24 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
       return;
     }
     const updateSettings = setTimeout(async () => {
-      const url = "/api/updateSetting";
       try {
-        const res = await axios.post<SiteSettting>(url, {
-          site: {
-            id,
-            krw: siteSettings[0].status === "OPEN" ? true : false,
-            eur: siteSettings[1].status === "OPEN" ? true : false,
-            jpy: siteSettings[2].status === "OPEN" ? true : false,
-          }
+        await api.updateSiteSettings({
+          ...setting,
+          nasdaq: siteSettings[0].status === "OPEN" ? true : false,
+          gold: siteSettings[1].status === "OPEN" ? true : false,
+          eurusd: siteSettings[2].status === "OPEN" ? true : false,
+          pltr: siteSettings[3].status === "OPEN" ? true : false,
+          tsla: siteSettings[4].status === "OPEN" ? true : false,
+          nvda: siteSettings[5].status === "OPEN" ? true : false,
+        })
+        socket.emit("change_site_settings")
+        toast({
+          title: "Success",
+          description: "Setting updated successfully",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
         });
-        if (res.status === 200) {
-          socket.emit("change_site_settings")
-          toast({
-            title: "Success",
-            description: "Setting updated successfully",
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-          });
-        }
       } catch (e) {
         toast({
           title: "Error",
@@ -333,34 +298,6 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
   }, [siteSettings])
 
   const options = ["OPEN", "CLOSED"];
-
-  const updateSetting = async (value: string, index: number) => {
-    const url = "/api/updateSetting";
-    const label = ["btc", "bnb", "eth", "xrp", "sol", "gold", "nasdaq", "wti"];
-    try {
-      await axios.post<SiteSettting>(url, {
-        site: {
-          ...setting.site,
-          [label[index]]: value === "OPEN",
-        },
-      });
-      toast({
-        title: "Success",
-        description: "Setting updated successfully",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred while updating setting",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-  };
 
   return (
     <VStack m={3} alignItems={"flex-start"} spacing={7}>
@@ -399,8 +336,8 @@ const TradingStatus = ({ setting }: { setting: SiteSettting }) => {
   );
 };
 
-const BalanceSetting = ({ setting }: { setting: SiteSettting }) => {
-  const { minimumAmount } = setting.site;
+const BalanceSetting = ({ setting }: { setting: Site }) => {
+  const { minimumAmount } = setting;
   const toast = useToast();
 
   const [siteSettings, setSiteSettings] = useState(minimumAmount)
@@ -413,14 +350,11 @@ const BalanceSetting = ({ setting }: { setting: SiteSettting }) => {
       return;
     }
     const updateSettings = setTimeout(async () => {
-      const url = "/api/updateSetting";
       try {
-        await axios.post<SiteSettting>(url, {
-          site: {
-            ...setting.site,
-            minimumAmount: siteSettings,
-          },
-        });
+        await api.updateSiteSettings({
+          ...setting,
+          minimumAmount: siteSettings
+        })
         socket.emit("change_site_settings")
         toast({
           title: "Success",
@@ -443,33 +377,6 @@ const BalanceSetting = ({ setting }: { setting: SiteSettting }) => {
     return () => clearTimeout(updateSettings)
   }, [siteSettings]);
 
-  const updateSetting = async (value: number) => {
-    const url = "/api/updateSetting";
-    try {
-      await axios.post<SiteSettting>(url, {
-        site: {
-          ...setting.site,
-          minimumAmount: value,
-        },
-      });
-      socket.emit("change_site_settings")
-      toast({
-        title: "Success",
-        description: "Setting updated successfully",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred while updating setting",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-  };
   return (
     <VStack
       justifyContent={"flex-start"}

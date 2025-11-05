@@ -13,8 +13,9 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import React from "react";
-import { announcement } from "@prisma/client";
 import { Editor } from "@tinymce/tinymce-react";
+import api from "@/utils/interfaceV2/api";
+import { Announcement } from "@/utils/interfaceV2/interfaces";
 
 function EditAnnouncement({
   isOpen,
@@ -23,7 +24,7 @@ function EditAnnouncement({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  announcement: announcement;
+  announcement: Announcement;
 }) {
   const { content, createdAt, id, title } = announcement;
   const editorRef = React.useRef<any>(null);
@@ -31,29 +32,29 @@ function EditAnnouncement({
   const toast = useToast();
 
   const handleEdit = async () => {
-    const url = "/api/editAnnouncement";
     const data = {
       title: title,
       content: content_,
       id: id,
     };
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (result.message) {
+
+    try {
+      const { message } = await api.updateAnnouncement({
+        announcementId: data.id,
+        newTitle: data.title,
+        newContent: data.content
+      })
       toast({
-        title: result.message,
+        title: message,
         status: "success",
         duration: 9000,
         isClosable: true,
       });
+    } catch (error) {
+      console.log("Error editing announcement:", error);
+    } finally {
+      onClose()
     }
-    onClose();
   };
 
   return (
